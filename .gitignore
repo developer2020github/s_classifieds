@@ -2,3 +2,4 @@
 ref/
 *test_module*.py
 s_catalog/static/bower_components
+s_catalog/.idea
