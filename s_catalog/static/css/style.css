@@ -1,0 +1,35 @@
+body {
+    background-color: #505050;
+}
+
+.categories-bar {
+    background-color: #A3A0A0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.latest-ads {
+    background-color: #A3A0A0;
+}
+
+.top-buffer {
+    margin-top: 20px;
+}
+
+.top-buffer-sm {
+    margin-top: 10px;
+}
+
+.panel-main {
+    min-height: 33px;
+    text-align: center;
+    line-height: 33px;
+}
+
+.search-panel {
+    background-color: #A3A0A0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
