@@ -24,8 +24,8 @@
             </div>
             <div class="col-md-3">
                 <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default">Sign in</button>
-                    <a href="myads.html" class="btn btn-default">My ads</a>
+                    <a href="signin" class="btn btn-default">Sign in</a>
+                    <a href="myads" class="btn btn-default">My ads</a>
                     <button type="button" class="btn btn-default">New ad</button>
                 </div>
             </div>
@@ -34,29 +34,14 @@
             <div class="col-md-3">
             </div>
             <div class="col-md-9 form-inline">
+            {% for category in categories.keys() %}
                 <select class="form-control">
-                    <option selected disabled>Motors</option>
-                    <option>Cars for sale</option>
-                    <option>Boats for sale</option>
+                    <option selected disabled>{{ category }}</option>
+                    {% for item in categories[category] %}
+                    <option>{{ item }}</option>
+                    {% endfor %}
                 </select>
-                <select class="form-control">
-                    <option selected disabled>Rentals</option>
-                    <option>Apartments for rent</option>
-                    <option>Houses for rent</option>
-                    <option>Rooms for rent</option>
-                </select>
-                <select class="form-control">
-                    <option selected disabled>Electronics</option>
-                    <option>Computers</option>
-                    <option>Laptops</option>
-                    <option>Tablets</option>
-                    <options>Phones></options>
-                </select>
-                <select class="form-control">
-                    <option selected disabled>Properties for sale</option>
-                    <option>Houses for sale</option>
-                    <option>Condos for sale</option>
-                </select>
+            {% endfor %}
             </div>
         </div>
         <div class="row top-buffer">
