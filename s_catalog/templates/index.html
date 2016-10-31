@@ -34,14 +34,14 @@
             <div class="col-md-3">
             </div>
             <div class="col-md-9 form-inline">
-            {% for category in categories.keys() %}
+                {% for category in categories.keys() %}
                 <select class="form-control">
                     <option selected disabled>{{ category }}</option>
                     {% for item in categories[category] %}
-                    <option>{{ item }}</option>
+                    	<option>{{ item }}</option>
                     {% endfor %}
                 </select>
-            {% endfor %}
+                {% endfor %}
             </div>
         </div>
         <div class="row top-buffer">
@@ -56,17 +56,14 @@
                         <option>City 2</option>
                         <option>City 3</option>
                     </select>
-                    <select class="form-control">
-                        <option selected disabled>Category: all</option>
-                        <option>Motors</option>
-                        <option>Rentals</option>
-                        <option>Electronics</option>
+                    <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
+                        <option selected disabled>Select category</option>
+                        {% for category in categories.keys() %}
+                        	<option value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
                     </select>
-                    <select class="form-control">
-                        <option selected disabled>Sub - Category: all</option>
-                        <option>Motors</option>
-                        <option>Rentals</option>
-                        <option>Electronics</option>
+                    <select id="sub-category-selected" class="form-control">
+                        <option selected disabled>Sub-Category: select category first</option>
                     </select>
                     <select class="form-control">
                         <option selected disabled>Ads posted: any time</option>
@@ -86,6 +83,26 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+    <script language="JavaScript">
+    function populate_sub_categories_in_search_bar() {
+        //populate sub-categories in search bar according to category selected by user 
+        //called on change in category
+        var selected_category = $("#category-selected").val();
+        var all_categories = {{ categories_json | safe }};
+        var selected_sub_category_id = $("#sub-category-selected");
+
+        var list_of_selected_sub_categories = all_categories[selected_category];
+
+        //reset menu if there was some category selected before and show user that 
+        //they can now select a sub-category
+        selected_sub_category_id.find("option").remove().end();
+        selected_sub_category_id.append($("<option selected disabled/>").val("Select Sub - Category").text("Select Sub - Category"));
+        $.each(list_of_selected_sub_categories, function(index, value) {
+            selected_sub_category_id.append($("<option />").val(value).text(value));
+        });
+    }
+    </script>
 </body>
 
 </html>
