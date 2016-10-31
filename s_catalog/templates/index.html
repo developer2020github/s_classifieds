@@ -14,10 +14,11 @@
                 S-classifieds
             </div>
             <div class="col-md-3  form-inline">
-                <select class="form-control">
-                    <option>City1</option>
-                    <option>City2</option>
-                    <option>City3</option>
+                <select id = "main-city-select" class="form-control">
+                    <option selected disabled>Location: all</option>
+                	{% for city in cities %}
+                		<option value="{{ city }}">{{ city }}</option>
+                	{% endfor %}
                 </select>
             </div>
             <div class="col-md-3">
@@ -50,12 +51,12 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">SEARCH</div>
                     </div>
-                    <select class="form-control">
-                        <option selected disabled>Location: all</option>
-                        <option>City 1</option>
-                        <option>City 2</option>
-                        <option>City 3</option>
-                    </select>
+                    <select id = "search-city-select" class="form-control">
+                    <option selected disabled>Location: all</option>
+                	{% for city in cities %}
+                		<option value="{{ city }}">{{ city }}</option>
+                	{% endfor %}
+                </select>
                     <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
                         <option selected disabled>Select category</option>
                         {% for category in categories.keys() %}

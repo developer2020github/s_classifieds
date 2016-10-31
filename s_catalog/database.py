@@ -1,5 +1,7 @@
 import json
 
+cities = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
+
 categories_with_sub_categories = {
     "Motors": ["cars", "boats", "motorcycles"],
     "Electronics": ["computers", "laptops", "tablets"],

@@ -5,13 +5,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_browse_page():
-    categories  = database.categories_with_sub_categories
-    return render_template("index.html", categories=categories, categories_json=database.get_categories_json())
+    categories = database.categories_with_sub_categories
+    return render_template("index.html", categories=categories, categories_json=database.get_categories_json(),
+                           cities=database.cities)
 
 
 @app.route("/myads")
 def my_ads_page():
     return render_template("myads.html")
+
 
 @app.route("/signin")
 def sign_in_page():
