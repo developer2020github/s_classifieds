@@ -26,6 +26,9 @@ body {
     line-height: 33px;
 }
 
+.panel-text {
+	background-color: #F3F1F1;
+}
 .search-panel {
     background-color: #A3A0A0;
     padding-top: 20px;

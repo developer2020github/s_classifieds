@@ -1,6 +1,5 @@
 #this module is to be used to generate data for testing purposes
 
-import database
 import random
 import string
 import datetime
@@ -9,7 +8,27 @@ import os
 EMAIL_DOMAINS = ["yahoo.com", "gmail.com", "hotmail.com", "outlook.com"]
 LIST_OF_NAMES = list()
 CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
+LIST_OF_ADS = list()
 
+categories_with_sub_categories = {
+    "Motors": ["cars", "boats", "motorcycles"],
+    "Electronics": ["computers", "laptops", "tablets"],
+    "rentals": ["houses", "apartments", "rooms"],
+    "real estate for sale": ["houses", "apartments"]
+}
+
+def init_list_of_ads():
+    global LIST_OF_ADS
+    if not LIST_OF_ADS:
+        print "generating ads"
+        LIST_OF_ADS = generate_random_ads(54)
+        print LIST_OF_ADS
+
+def get_sub_categories(category):
+    return categories_with_sub_categories[category]
+
+def get_categories():
+    return categories_with_sub_categories.keys()
 
 def get_random_date(within_days_from_now=365):
 
@@ -101,7 +120,7 @@ def print_ad(ad):
     print format_key_value("contact_email", ad)
     print format_key_value("ad_title", ad)
     print format_key_value("price", ad)
-
+    print format_key_value("ad_id", ad)
     print "ad text: "
     print str(ad["text"])
 
@@ -113,24 +132,33 @@ def generate_random_ads(number_of_ads):
     for i in range(0, number_of_ads):
         ad = dict()
         ad["city"] = random.choice(CITIES_LIST)
-        ad["category"] = random.choice(database.get_categories())
-        ad["sub_category"] = random.choice(database.get_sub_categories(ad["category"]))
+        ad["category"] = random.choice(get_categories())
+        ad["sub_category"] = random.choice(get_sub_categories(ad["category"]))
         ad["user_name"] = get_random_name()
         ad["date"] = get_random_date()
         ad["contact_phone"] = get_random_phone_number()
         ad["ad_title"] = get_random_sentence(2, 7)
         ad["contact_email"] = get_random_email(ad["user_name"])
-        ad["text"] = get_random_text(10, 45)
+        ad["text"] = get_random_text(50, 70)
         ad["price"] = random.randint(50, 10000)
+        ad["ad_id"] = i+1
 
         ads.append(ad)
     return ads
 
-if __name__ == "__main__":
-    random_ads = generate_random_ads(54)
-    for current_ad in random_ads:
-        print ""
-        print ""
-        print_ad(current_ad)
 
+def get_ad_by_id(ad_id):
+    print("gen_data.get_ad_by_id")
+    print ad_id
+    ad = filter(lambda ad1: ad1['ad_id'] == int(ad_id), LIST_OF_ADS)[0]
+    print LIST_OF_ADS
+    print ad
+    return ad
+
+if __name__ == "__main__":
+    init_list_of_ads()
+    print_ad(get_ad_by_id(36))
+
+else:
+    init_list_of_ads()
 

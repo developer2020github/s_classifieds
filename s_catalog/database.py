@@ -1,21 +1,23 @@
 import json
+import generate_data
+cities = generate_data.CITIES_LIST
 
-cities = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
+categories_with_sub_categories = generate_data.categories_with_sub_categories
 
-categories_with_sub_categories = {
-    "Motors": ["cars", "boats", "motorcycles"],
-    "Electronics": ["computers", "laptops", "tablets"],
-    "rentals": ["houses", "apartments", "rooms"],
-    "real estate for sale": ["houses", "apartments"]
-}
+def get_ad_by_id(ad_id):
+    print(ad_id)
+    return generate_data.get_ad_by_id(ad_id)
+
+def get_total_number_of_ads():
+    return 500
 
 
 def get_categories():
-    return categories_with_sub_categories.keys()
+    return generate_data.categories_with_sub_categories.keys()
 
 
 def get_sub_categories(category):
-    return categories_with_sub_categories[category]
+    return generate_data.categories_with_sub_categories[category]
 
 
 def get_categories_json():

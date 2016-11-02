@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/bootstrap.min.css') }}" >
+  <link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/style.css') }}" >
 </head>
 
 <body>
@@ -81,12 +81,15 @@
             </div>
             <div class="col-md-9">
 	            <div class = "latest-ads panel panel-default panel-main">
-	                <h4>Latests ads : total of {{ number_of_ads_selected }} ads</h4>
+	                <h4>Selected ad {{ selected_ad["city"] }} >  {{ selected_ad["category"] }} >  {{ selected_ad["sub_category"] }} > {{ selected_ad["ad_title"] }} Price : {{ selected_ad["price"] }}</h4>
+	            </div>
+	             <div class = "latest-ads panel panel-default panel-main panel-text">
+	                {{ selected_ad["text"] }}
 	            </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script language="JavaScript">
     function populate_sub_categories_in_search_bar() {
         //populate sub-categories in search bar according to category selected by user 
