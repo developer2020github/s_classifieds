@@ -86,7 +86,30 @@
 	             <div class = "latest-ads panel panel-default panel-main panel-text">
 	                {{ selected_ad["text"] }}
 	            </div>
-            </div>
+	             <div class = "latest-ads panel panel-default panel-main panel-text">
+	                {{ selected_ad["date"] }} - date
+
+	                {{ selected_ad["contact_phone"] }} - phone
+	                {{ selected_ad["contact_email"] }} - email
+	                {{ selected_ad["user_name"] }} - name
+	            </div>
+			               <div class="row">
+			               <div class = "latest-ads panel panel-default panel-main panel-text">
+		      				<div class="col-md-3 latest-ads panel panel-default panel-main panel-text">
+		        				{{ selected_ad["date"] }} - date
+		      				</div>
+		      				<div class="col-md-3 latest-ads panel panel-default panel-main panel-text">
+		        				{{ selected_ad["contact_phone"] }} - phone
+		      				</div>
+		      					<div class="col-md-3 latest-ads panel panel-default panel-main panel-text">
+		        				{{ selected_ad["contact_email"] }} - email
+		      				</div>
+		      				<div class="col-md-3 latest-ads panel panel-default panel-main panel-text">
+		        				{{ selected_ad["user_name"] }} - name
+		      				</div>
+		      				</div>
+		    				</div>
+              </div>
         </div>
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>

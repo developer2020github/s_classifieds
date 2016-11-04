@@ -12,10 +12,14 @@
  	<input id="email" name="email" type="text">
  	<input type="submit">
 
- 	{% for user in myUser %}
+
+ </form>
+  	{% for user in myUser %}
  	 <li>{{ user.id }}. {{ user.username }} - {{ user.email }}</li>
  	{% endfor %}
- </form>
+
+ 	{{ oneItem.username }}
+ 	
  	
 </body>
 </html>
