@@ -1,7 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+'''
+this module populates database with test (fake) data
+'''
 
-from create_database import Base, Ad
+import create_database
+
 # from flask.ext.sqlalchemy import SQLAlchemy
 from random import randint
 import datetime
@@ -16,6 +20,8 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Add ads
+
+
 ad = Ad(category="first category", sub_category="first sub_category")
 session.add(ad)
 

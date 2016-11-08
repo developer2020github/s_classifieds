@@ -1,6 +1,9 @@
 import json
 import generate_data
 cities = generate_data.CITIES_LIST
+'''this is a fake DB, used for now to drive the applciation.
+real one is defined in create_database. 
+'''
 
 categories_with_sub_categories = generate_data.categories_with_sub_categories
 
