@@ -17,7 +17,7 @@
                 <select id = "main-city-select" class="form-control">
                     <option selected disabled>Location: all</option>
                 	{% for city in cities %}
-                		<option value="{{ city }}">{{ city }}</option>
+                		<option value="{{ city.name }}">{{ city.name }}</option>
                 	{% endfor %}
                 </select>
             </div>
@@ -54,7 +54,7 @@
                     <select id = "search-city-select" class="form-control">
                     <option selected disabled>Location: all</option>
                 	{% for city in cities %}
-                		<option value="{{ city }}">{{ city }}</option>
+                		<option value="{{ city.name }}">{{ city.name }}</option>
                 	{% endfor %}
                 </select>
                     <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">

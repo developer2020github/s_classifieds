@@ -20,6 +20,11 @@ create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
+def get_cities():
+    query_cities = session.query(create_database.City)
+    return query_cities.all()
+
 def get_categories_with_subcategories():
     #returns dictionary of lists of subcategories by category name
     query_sub_categories = session.query(create_database.SubCategory)
@@ -51,12 +56,9 @@ def get_sub_categories(category):
     return generate_data.categories_with_sub_categories[category]
 
 
-def get_categories_json():
-    return json.dumps(categories_with_sub_categories)
 
 
 '''
-code below works with real databaase
 '''
 if __name__ == "__main__":
     d = get_categories_with_subcategories()
