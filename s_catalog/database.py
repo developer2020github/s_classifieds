@@ -1,11 +1,39 @@
-import json
+
 import generate_data
+#real imports, to be kept
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import create_database
+import json
+
+
 cities = generate_data.CITIES_LIST
 '''this is a fake DB, used for now to drive the applciation.
+to be reaplced with real database interface code
 real one is defined in create_database. 
 '''
 
 categories_with_sub_categories = generate_data.categories_with_sub_categories
+
+engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
+create_database.Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+def get_categories_with_subcategories():
+    #returns dictionary of lists of subcategories by category name
+    query_sub_categories = session.query(create_database.SubCategory)
+    query_categories = session.query(create_database.Category)
+    cats_with_sub_cats = dict()
+    for category in query_categories.all():
+        cats_with_sub_cats[category.name] = list()
+        print category.name
+
+    for sub_category in query_sub_categories.all():
+        cats_with_sub_cats[sub_category.category.name].append(sub_category.name)
+
+    return cats_with_sub_cats
+
 
 def get_ad_by_id(ad_id):
     print(ad_id)
@@ -26,8 +54,10 @@ def get_sub_categories(category):
 def get_categories_json():
     return json.dumps(categories_with_sub_categories)
 
-if __name__ == "__main__":
-    print get_categories()
-    print get_sub_categories("electronics")
 
-    print json.dumps(categories_with_sub_categories)
+'''
+code below works with real databaase
+'''
+if __name__ == "__main__":
+    d = get_categories_with_subcategories()
+    print d

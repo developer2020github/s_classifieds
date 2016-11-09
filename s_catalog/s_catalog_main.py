@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_browse_page():
-    categories = database.categories_with_sub_categories
+    categories = database.get_categories_with_subcategories()
     return render_template("index.html", categories=categories, categories_json=database.get_categories_json(),
                            cities=database.cities, number_of_ads_selected="500")
 

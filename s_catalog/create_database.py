@@ -45,7 +45,8 @@ class SubCategory(Base):
     name = Column(String(250), nullable=False)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship("Category", back_populates="sub_categories")
-    ads = relationship("Ad", back_populates ="ad") # this should be list of ads in current sub-category
+    ads = relationship("Ad", back_populates ="sub_category") # this should be list of ads in current sub-category
+
 
 class City(Base):
     __tablename__ = 'city'
