@@ -9,6 +9,7 @@ EMAIL_DOMAINS = ["yahoo.com", "gmail.com", "hotmail.com", "outlook.com"]
 LIST_OF_NAMES = list()
 CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
 LIST_OF_ADS = list()
+LIST_OF_USERS = list()
 
 categories_with_sub_categories = {
     "Motors": ["cars", "boats", "motorcycles"],
@@ -17,12 +18,28 @@ categories_with_sub_categories = {
     "real estate for sale": ["houses", "apartments"]
 }
 
+
+def get_list_of_users():
+    return LIST_OF_USERS
+
+
 def init_list_of_ads():
     global LIST_OF_ADS
+    global LIST_OF_USERS
     if not LIST_OF_ADS:
         print "generating ads"
         LIST_OF_ADS = generate_random_ads(54)
-        print LIST_OF_ADS
+       #print LIST_OF_ADS
+    if not LIST_OF_USERS:
+        print "generating list of users"
+        if not LIST_OF_NAMES:
+            load_list_of_names_from_file()
+        for name in LIST_OF_NAMES:
+            user = dict()
+            user["name"] = name
+            user["email"] = get_random_email(name)
+            user["phone"] = get_random_phone_number()
+            LIST_OF_USERS.append(user)
 
 def get_sub_categories(category):
     return categories_with_sub_categories[category]

@@ -4,10 +4,10 @@ import generate_data
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import create_database
-import json
 
 
-cities = generate_data.CITIES_LIST
+
+
 '''this is a fake DB, used for now to drive the applciation.
 to be reaplced with real database interface code
 real one is defined in create_database. 
@@ -24,6 +24,7 @@ session = DBSession()
 def get_cities():
     query_cities = session.query(create_database.City)
     return query_cities.all()
+
 
 def get_categories_with_subcategories():
     #returns dictionary of lists of subcategories by category name
@@ -47,13 +48,6 @@ def get_ad_by_id(ad_id):
 def get_total_number_of_ads():
     return 500
 
-
-def get_categories():
-    return generate_data.categories_with_sub_categories.keys()
-
-
-def get_sub_categories(category):
-    return generate_data.categories_with_sub_categories[category]
 
 
 

@@ -56,7 +56,17 @@ def populate_application_initial_data():
 
     session.commit()
 
-populate_application_initial_data()
+
+def populate_application_test_data():
+    users = generate_data.get_list_of_users()
+
+    for user in users:
+        new_user = create_database.User(name=user['name'], email=user['email'], phone=user['phone'])
+        session.add(new_user)
+
+    session.commit()
+#populate_application_initial_data()
+populate_application_test_data()
 
 
 
