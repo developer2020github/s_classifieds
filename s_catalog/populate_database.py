@@ -68,8 +68,32 @@ def populate_user_data():
     session.commit()
 
 
+def populate_ads_data():
+    ads = generate_data.generate_random_ads(900)
+    sub_categories = session.query(create_database.SubCategory).all()
+    cities = session.query(create_database.City).all()
+    users = session.query(create_database.User).all()
+
+    for ad in ads:
+        new_ad = create_database.Ad(sub_category_id = get_id(sub_categories, ad["sub_category"]),
+                                    city_id=get_id(cities, ad["city"]),
+                                    time_created=ad["date"],
+                                    user_id=get_id(users, ad["user_name"]),
+                                    contact_name=ad["user_name"],
+                                    primary_contact=ad["contact_email"],
+                                    contact_email=ad["contact_email"],
+                                    contact_phone=ad["contact_phone"],
+                                    text=ad["text"],
+                                    price=ad["price"],
+                                    currency="USD")
+        session.add(new_ad)
+
+    session.commit()
+
+
 def populate_application_test_data():
     populate_user_data()
+    populate_ads_data()
 
 
 def drop_application_tables():

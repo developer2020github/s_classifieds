@@ -157,7 +157,7 @@ def generate_random_ads(number_of_ads):
         ad["ad_title"] = get_random_sentence(2, 7)
         ad["contact_email"] = get_random_email(ad["user_name"])
         ad["text"] = get_random_text(50, 70)
-        ad["price"] = random.randint(50, 10000)
+        ad["price"] = random.uniform(50.0, 10000.0)
         ad["ad_id"] = i+1
 
         ads.append(ad)
