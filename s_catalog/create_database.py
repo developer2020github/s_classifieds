@@ -93,7 +93,12 @@ class Ad(Base):
     currency = Column(String(10))
     title = Column(String(250))
 
-if __name__ == "__main__":
+
+def create():
     engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
     Base.metadata.create_all(engine)
+
+
+if __name__ == "__main__":
+    create()
 

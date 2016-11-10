@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import create_database
 '''
 this module populates database
 '''
@@ -57,7 +58,7 @@ def populate_application_initial_data():
     session.commit()
 
 
-def populate_application_test_data():
+def populate_user_data():
     users = generate_data.get_list_of_users()
 
     for user in users:
@@ -65,8 +66,29 @@ def populate_application_test_data():
         session.add(new_user)
 
     session.commit()
-#populate_application_initial_data()
-populate_application_test_data()
 
 
+def populate_application_test_data():
+    populate_user_data()
 
+
+def drop_application_tables():
+    tables_to_drop = [create_database.Ad, create_database.SubCategory, create_database.Category,
+                      create_database.City, create_database.User]
+    drop_tables(tables_to_drop)
+
+
+def drop_tables(tables):
+    for table in tables:
+        table.__table__.drop(engine, checkfirst=True)
+
+
+def repopulate_all_tables():
+    drop_application_tables()
+    create_database.create()
+    populate_application_initial_data()
+    populate_application_test_data()
+
+
+if __name__ == "__main__":
+     repopulate_all_tables()
