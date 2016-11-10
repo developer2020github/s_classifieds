@@ -40,20 +40,36 @@ def get_categories_with_subcategories():
 
     return cats_with_sub_cats
 
+def ad_to_dict(ad):
+    dict_ad  = dict()
+    dict_ad["city"] =""
+    #STOPPED_HERE
 
 def get_ad_by_id(ad_id):
-    print(ad_id)
-    return generate_data.get_ad_by_id(ad_id)
+    #print(ad_id)
+    #return generate_data.get_ad_by_id(ad_id)
+    return session.query(create_database.Ad).filter(create_database.Ad.id == ad_id).first()
 
 def get_total_number_of_ads():
     return 500
 
 
+def print_ad(ad):
+    print ""
+    print ad.id
+    print ad.user.name
+    print ad.title
+    print ad.text
 
+
+def test_get_ad_by_id():
+    for i in range(1, 10):
+        print_ad (get_ad_by_id(i))
 
 
 '''
 '''
 if __name__ == "__main__":
-    d = get_categories_with_subcategories()
-    print d
+    #d = get_categories_with_subcategories()
+    #print d
+    test_get_ad_by_id()

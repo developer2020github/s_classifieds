@@ -83,6 +83,7 @@ def populate_ads_data():
                                     primary_contact=ad["contact_email"],
                                     contact_email=ad["contact_email"],
                                     contact_phone=ad["contact_phone"],
+                                    title = ad["ad_title"],
                                     text=ad["text"],
                                     price=ad["price"],
                                     currency="USD")
