@@ -85,7 +85,7 @@ def populate_ads_data():
                                     contact_phone=ad["contact_phone"],
                                     title = ad["ad_title"],
                                     text=ad["text"],
-                                    price=ad["price"],
+                                    price_cents=ad["price_cents"],
                                     currency="USD")
         session.add(new_ad)
 

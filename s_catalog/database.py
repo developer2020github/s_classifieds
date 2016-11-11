@@ -33,17 +33,37 @@ def get_categories_with_subcategories():
     cats_with_sub_cats = dict()
     for category in query_categories.all():
         cats_with_sub_cats[category.name] = list()
-        print category.name
+        #print category.name
 
     for sub_category in query_sub_categories.all():
         cats_with_sub_cats[sub_category.category.name].append(sub_category.name)
 
     return cats_with_sub_cats
 
+
 def ad_to_dict(ad):
-    dict_ad  = dict()
-    dict_ad["city"] =""
-    #STOPPED_HERE
+    '''
+    converts ad object into dictionary of strings:
+    some of the fields (such as category) do not need to be stored in
+    database, and others (like sub-category) are represntedby ID, not strings
+    which is not convenient for displaying them
+    :param ad: Ad object
+    :return: dictionayr of string fileds
+    '''
+
+    dict_ad = dict()
+    dict_ad["city"] = ad.city.name
+    dict_ad["category"] = ad.sub_category.category.name
+    dict_ad["sub_category"] = ad.sub_category.name
+    dict_ad["ad_title"] = ad.title
+    dict_ad["text"] = ad.text
+    dict_ad["contact_phone"] = ad.contact_phone
+    dict_ad["contact_email"] = ad.contact_email
+    dict_ad["contact_name"] = ad.contact_name
+    dict_ad["date"] = ad.time_created
+    dict_ad["price"] = str(ad.price_cents/100.0)
+
+    return dict_ad
 
 def get_ad_by_id(ad_id):
     #print(ad_id)

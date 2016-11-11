@@ -16,11 +16,13 @@ def main_browse_page():
 
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):
-    selected_ad = database.get_ad_by_id(ad_id)
+    selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
     print selected_ad
-    categories = database.categories_with_sub_categories
-    return render_template("ad.html", categories=categories, categories_json=database.get_categories_json(),
-                           cities=database.cities, selected_ad=selected_ad)
+    categories_with_sub_categories = database.get_categories_with_subcategories()
+    categories_json = json.dumps(categories_with_sub_categories)
+    cities = database.get_cities()
+    return render_template("ad.html", categories=categories_with_sub_categories, categories_json=categories_json,
+                           cities=cities, selected_ad=selected_ad)
 
 @app.route("/myads")
 def my_ads_page():

@@ -89,7 +89,7 @@ class Ad(Base):
     contact_email = Column(String(250))
     contact_phone = Column(String(250))
     text = Column(Text())
-    price = Column(Float())
+    price_cents = Column(Integer())
     currency = Column(String(10))
     title = Column(String(250))
 
