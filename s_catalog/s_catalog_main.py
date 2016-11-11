@@ -14,6 +14,12 @@ def main_browse_page():
                            cities=cities, number_of_ads_selected="500")
 
 
+@app.route('/show_more_ads')
+def show_more_ads():
+    current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
+
+    return jsonify(result=5)
+
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):
     selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
