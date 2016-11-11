@@ -14,11 +14,14 @@ def main_browse_page():
                            cities=cities, number_of_ads_selected="500")
 
 
-@app.route('/show_more_ads')
+@app.route('/update_ads_list')
 def show_more_ads():
-    current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
-
-    return jsonify(result=5)
+    #current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
+    r= request.args.get('show_next', False, type=bool)
+    list_of_ads = list()
+    for i in range (0, 10):
+        list_of_ads.append(render_template("displayed_ad.html", idx=str(i)))
+    return jsonify(list_of_ads)
 
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):

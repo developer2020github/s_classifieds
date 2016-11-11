@@ -2,7 +2,7 @@ function populate_sub_categories_in_search_bar() {
     //populate sub-categories in search bar according to category selected by user 
     //called on change in category
     var selected_category = $("#category-selected").val();
-   
+
     var selected_sub_category_id = $("#sub-category-selected");
 
     var list_of_selected_sub_categories = all_categories[selected_category];
@@ -15,3 +15,32 @@ function populate_sub_categories_in_search_bar() {
         selected_sub_category_id.append($("<option />").val(value).text(value));
     });
 }
+
+
+
+function update_displayed_ads(ads) {
+    var selected_ads_id = $("#displayed_ads");
+    selected_ads_id.html("");
+    console.log(ads);
+    $.each(ads, function(index, value) {
+
+        selected_ads_id.append(value);
+    });
+}
+
+
+function show_next_ads() {
+    var request = { "show_next": true };
+    var request_url = "/update_ads_list";
+
+    $.ajax({
+        dataType: "json",
+        url: request_url,
+        data: request,
+        success: update_displayed_ads
+    });
+
+
+}
+
+$("#next_button").click(show_next_ads);
