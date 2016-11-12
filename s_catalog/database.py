@@ -13,12 +13,27 @@ to be reaplced with real database interface code
 real one is defined in create_database. 
 '''
 
-categories_with_sub_categories = generate_data.categories_with_sub_categories
 
 engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
 create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+def get_ads_to_display(city_id=-1, sub_category_id=-1, created_in_days="", sort_by_date="", sort_by_price="",
+                       min_idx=0, number_of_records_to_include=10):
+        filters = dict()
+        if city_id>-1:
+            filters["city_id"] = city_id
+        if sub_category_id>-1:
+            filters["sub_category_id"] = sub_category_id
+
+        all_ads = session.query(create_database.Ad).filter_by(**filters).offset(min_idx).limit(
+            number_of_records_to_include)
+
+        return all_ads
+
+
 
 
 def get_cities():
@@ -78,8 +93,10 @@ def print_ad(ad):
     print ""
     print ad.id
     print ad.user.name
+    print ad.city.name
     print ad.title
     print ad.text
+
 
 
 def test_get_ad_by_id():

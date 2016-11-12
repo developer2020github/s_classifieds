@@ -17,20 +17,23 @@ function populate_sub_categories_in_search_bar() {
 }
 
 
+var current_ads_idx = 0; 
 
 function update_displayed_ads(ads) {
     var selected_ads_id = $("#displayed_ads");
     selected_ads_id.html("");
-    console.log(ads);
+    //console.log(ads);
     $.each(ads, function(index, value) {
-
         selected_ads_id.append(value);
     });
+
+    current_ads_idx = current_ads_idx + 10; 
 }
 
 
+
 function show_next_ads() {
-    var request = { "show_next": true };
+    var request = { "show_next": true, "min_idx" : current_ads_idx};
     var request_url = "/update_ads_list";
 
     $.ajax({

@@ -9,7 +9,7 @@ app = Flask(__name__)
 def main_browse_page():
     categories_with_sub_categories = database.get_categories_with_subcategories()
     categories_json = json.dumps(categories_with_sub_categories)
-    cities  = database.get_cities()
+    cities = database.get_cities()
     return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
                            cities=cities, number_of_ads_selected="500")
 
@@ -18,6 +18,11 @@ def main_browse_page():
 def show_more_ads():
     #current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
     r= request.args.get('show_next', False, type=bool)
+    #query.(Model).filter(something).limit(5).all()
+
+    min_idx = request.args.get('min_idx', 0, type=int)
+    print "min_idx:"
+    print min_idx
     list_of_ads = list()
     for i in range (0, 10):
         list_of_ads.append(render_template("displayed_ad.html", idx=str(i)))
