@@ -20,9 +20,22 @@ function populate_sub_categories_in_search_bar() {
     });
 }
 
+function build_filters(){
 
-function apply_filters(){
-    
+    var selected_city = $("#search-city-select").val();
+    var selected_category_id  =  $("#category-selected").val();
+    var selected_sub_category_id = $("#sub-category-selected").val();
+    var select_ads_within_days = $("#select-ads-within-days").val();
+
+    var filters = { "selected_city": selected_city, "selected_category_id" : selected_category_id,
+    "selected_sub_category_id" : selected_sub_category_id, "select_ads_within_days" : select_ads_within_days };
+
+    console.log(filters);
+}
+
+
+function search_button(){
+    build_filters();   
 }
 
 
@@ -54,3 +67,5 @@ function show_next_ads() {
 }
 
 $("#next_button").click(show_next_ads);
+$("#search-button").click(search_button);
+

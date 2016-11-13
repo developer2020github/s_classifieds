@@ -53,31 +53,31 @@
                         <div class="panel-heading">SEARCH</div>
                     </div>
                     <select id = "search-city-select" class="form-control">
-                    <option selected disabled>Location: all</option>
+                    <option value = "-1" selected="selected">Location: all</option>
                 	{% for city in cities %}
                 		<option value="{{ city.name }}">{{ city.name }}</option>
                 	{% endfor %}
                 </select>
                     <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
-                        <option selected disabled>Select category</option>
+                        <option value ="-1" selected="selected">Select category</option>
                         {% for category in categories.keys() %}
                         	<option value="{{ categories[category].id }}">{{ category }}</option>
                         {% endfor %}
                     </select>
                     <select id="sub-category-selected" class="form-control">
-                        <option selected disabled>Sub-Category: select category first</option>
+                        <option value = "-1" selected="selected">Sub-Category: select category first</option>
                     </select>
-                    <select class="form-control">
-                        <option selected disabled>Ads posted: any time</option>
-                        <option>Within 3 days</option>
-                        <option>Within 1 week</option>
-                        <option>Within 2 weeks</option>
-                        <option>Within 3 weeks</option>
-                        <option>Within 1 months</option>
-                        <option>Within 3 months</option>
-                        <option>Within 6 months</option>
+                    <select id="select-ads-within-days" class="form-control">
+                        <option value = "-1" selected="selected">Ads posted: any time</option>
+                        <option value = "3">Within 3 days</option>
+                        <option value = "7">Within 1 week</option>
+                        <option value = "14">Within 2 weeks</option>
+                        <option value = "21">Within 3 weeks</option>
+                        <option value = "30">Within 1 months</option>
+                        <option value = "90">Within 3 months</option>
+                        <option value = "180">Within 6 months</option>
                     </select>
-                    <button class="btn btn-block">SEARCH</button>
+                    <button id="search-button" class="btn btn-block">SEARCH</button>
                 </div>
             </div>
             <div class="col-md-9">
