@@ -4,7 +4,7 @@ import generate_data
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import create_database
-
+import datetime
 
 
 
@@ -20,20 +20,39 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-def get_ads_to_display(city_id=-1, sub_category_id=-1, created_in_days="", sort_by_date="", sort_by_price="",
+def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by_date="", sort_by_price="",
                        min_idx=0, number_of_records_to_include=10):
         filters = dict()
-        if city_id>-1:
+        if city_id > -1:
             filters["city_id"] = city_id
-        if sub_category_id>-1:
+
+        if sub_category_id > -1:
             filters["sub_category_id"] = sub_category_id
 
-        all_ads = session.query(create_database.Ad).filter_by(**filters).offset(min_idx).limit(
-            number_of_records_to_include)
+        if created_within_days> 0:
+            oldest_ad_date_to_include = datetime.datetime.now()
+            oldest_ad_date_to_include += datetime.timedelta(days=-created_within_days)
+            ads_within_date = session.query(create_database.Ad).filter(create_database.Ad.time_created >= oldest_ad_date_to_include)
+        else:
+            ads_within_date = session.query(create_database.Ad)
+
+        ads_within_date = ads_within_date.filter_by(**filters)
+
+        if sort_by_price == "desc":
+            all_ads = ads_within_date.order_by(create_database.Ad.price_cents.desc())
+        elif sort_by_price == "asc":
+            all_ads = ads_within_date.order_by(create_database.Ad.price_cents.asc())
+        elif sort_by_price == "desc":
+            all_ads = ads_within_date.order_by(create_database.Ad.price_cents.desc())
+        elif sort_by_date == "asc":
+            print " sort asc"
+            all_ads = ads_within_date.order_by(create_database.Ad.time_created.asc())
+        elif sort_by_date == "desc":
+            all_ads = ads_within_date.order_by(create_database.Ad.time_created.desc())
+
+        all_ads = all_ads.offset(min_idx).limit(number_of_records_to_include)
 
         return all_ads
-
-
 
 
 def get_cities():
@@ -47,11 +66,16 @@ def get_categories_with_subcategories():
     query_categories = session.query(create_database.Category)
     cats_with_sub_cats = dict()
     for category in query_categories.all():
-        cats_with_sub_cats[category.name] = list()
+        cats_with_sub_cats[category.name] = dict()
+        cats_with_sub_cats[category.name]["id"] = str(category.id)
+        cats_with_sub_cats[category.name]["value"] = list()
         #print category.name
 
     for sub_category in query_sub_categories.all():
-        cats_with_sub_cats[sub_category.category.name].append(sub_category.name)
+        d_sub_category = dict()
+        d_sub_category["id"] = str(sub_category.id)
+        d_sub_category["name"]= str(sub_category.name)
+        cats_with_sub_cats[sub_category.category.name]["value"].append(d_sub_category)
 
     return cats_with_sub_cats
 
@@ -61,7 +85,9 @@ def ad_to_dict(ad):
     converts ad object into dictionary of strings:
     some of the fields (such as category) do not need to be stored in
     database, and others (like sub-category) are represntedby ID, not strings
-    which is not convenient for displaying them
+    which is not convenient for displaying them. Since number of
+    ads displayed at any time is small, and all data is already attached
+    to ad object via backref it makes no sense to run SQL joins.
     :param ad: Ad object
     :return: dictionayr of string fileds
     '''
@@ -77,6 +103,7 @@ def ad_to_dict(ad):
     dict_ad["contact_name"] = ad.contact_name
     dict_ad["date"] = ad.time_created
     dict_ad["price"] = str(ad.price_cents/100.0)
+    dict_ad["id"] = str(ad.id)
 
     return dict_ad
 
@@ -92,8 +119,10 @@ def get_total_number_of_ads():
 def print_ad(ad):
     print ""
     print ad.id
+    print ad.time_created
     print ad.user.name
     print ad.city.name
+    print "price: " + str(ad.price_cents/100.0)
     print ad.title
     print ad.text
 

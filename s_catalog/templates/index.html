@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 
 <body>
@@ -38,8 +39,8 @@
                 {% for category in categories.keys() %}
                 <select class="form-control">
                     <option selected disabled>{{ category }}</option>
-                    {% for item in categories[category] %}
-                    	<option>{{ item }}</option>
+                    {% for item in categories[category]["value"] %}
+                    	<option value="{{ item["id"] }}">{{ item["name"] }}</option>
                     {% endfor %}
                 </select>
                 {% endfor %}
@@ -60,7 +61,7 @@
                     <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
                         <option selected disabled>Select category</option>
                         {% for category in categories.keys() %}
-                        	<option value="{{ category }}">{{ category }}</option>
+                        	<option value="{{ categories[category].id }}">{{ category }}</option>
                         {% endfor %}
                     </select>
                     <select id="sub-category-selected" class="form-control">

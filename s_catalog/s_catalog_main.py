@@ -21,12 +21,15 @@ def show_more_ads():
     #query.(Model).filter(something).limit(5).all()
 
     min_idx = request.args.get('min_idx', 0, type=int)
-    print "min_idx:"
-    print min_idx
-    list_of_ads = list()
-    for i in range (0, 10):
-        list_of_ads.append(render_template("displayed_ad.html", idx=str(i)))
-    return jsonify(list_of_ads)
+
+    ads_html = list()
+
+    ads = database.get_ads_to_display(min_idx=5, number_of_records_to_include=10,
+                                      sort_by_price="asc", created_within_days=250)
+    for ad in ads:
+        ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
+
+    return jsonify(ads_html)
 
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):
