@@ -1,4 +1,5 @@
-var current_ads_idx = 0; 
+var current_ads_idx = 0;
+var ADS_UPDATE_STEP = 10;
 
 function populate_sub_categories_in_search_bar() {
     //populate sub-categories in search bar according to category selected by user 
@@ -20,52 +21,85 @@ function populate_sub_categories_in_search_bar() {
     });
 }
 
-function build_filters(){
+function build_filters() {
 
     var selected_city = $("#search-city-select").val();
-    var selected_category_id  =  $("#category-selected").val();
+    var selected_category_id = $("#category-selected").val();
     var selected_sub_category_id = $("#sub-category-selected").val();
     var select_ads_within_days = $("#select-ads-within-days").val();
+    var min_idx = current_ads_idx;
 
-    var filters = { "selected_city": selected_city, "selected_category_id" : selected_category_id,
-    "selected_sub_category_id" : selected_sub_category_id, "select_ads_within_days" : select_ads_within_days };
+    var filters = {
+        "selected_city": selected_city,
+        "selected_category_id": selected_category_id,
+        "selected_sub_category_id": selected_sub_category_id,
+        "select_ads_within_days": select_ads_within_days,
+        "min_idx": min_idx
+    };
 
-    console.log(filters);
+    return filters;
+}
+
+function reset_ads_counter() {
+    current_ads_idx = 0;
+}
+
+function increment_ads_counter() {
+    current_ads_idx = current_ads_idx + ADS_UPDATE_STEP;
+}
+
+function decrement_ads_counter() {
+    current_ads_idx = current_ads_idx - ADS_UPDATE_STEP;
+    if (current_ads_idx<0){
+        current_ads_idx = 0;
+    }
+}
+
+function search_button() {
+    reset_ads_counter();
+    filters = build_filters();
+    update_ads(filters);
 }
 
 
-function search_button(){
-    build_filters();   
-}
-
-
-function update_displayed_ads(ads) {
+function render_ads_list(ads) {
     var selected_ads_id = $("#displayed_ads");
     selected_ads_id.html("");
-    //console.log(ads);
+ 
     $.each(ads, function(index, value) {
         selected_ads_id.append(value);
     });
 
-    current_ads_idx = current_ads_idx + 10; 
 }
 
 
-
-function show_next_ads() {
-    var request = { "show_next": true, "min_idx" : current_ads_idx};
+function update_ads(request) {
     var request_url = "/update_ads_list";
 
     $.ajax({
         dataType: "json",
         url: request_url,
         data: request,
-        success: update_displayed_ads
+        success: render_ads_list
     });
 
 
 }
 
-$("#next_button").click(show_next_ads);
-$("#search-button").click(search_button);
+function update_ads_list(counter_update_function){
+    counter_update_function();
+    filters = build_filters();
+    update_ads(filters);
+}
 
+function show_next_ads(){
+    update_ads_list(increment_ads_counter);
+}
+
+function show_prev_ads(){
+    update_ads_list(decrement_ads_counter);
+}
+
+$("#next_button").click(show_next_ads);
+$("#prev_button").click(show_prev_ads);
+$("#search-button").click(search_button);
