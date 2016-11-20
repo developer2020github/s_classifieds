@@ -69,8 +69,11 @@ function render_ads_list(ads) {
     $.each(ads.ads_html, function(index, value) {
         selected_ads_id.append(value);
     });
+
+    var ads_sts = "Total of " + ads.total_number_of_ads + " ads selected.";
+    ads_sts +="Displaying ads from " + ads.min_ad_idx_displayed + " to " + ads.max_ad_idx_displayed; 
     
-    $("#total-ads-selected").text(" Total of " + ads.total_number_of_ads + " ads selected");
+    $("#total-ads-selected").text(ads_sts);
 }
 
 

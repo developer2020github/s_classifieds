@@ -31,7 +31,7 @@ def show_more_ads():
     min_idx = request.args.get('min_idx', -1, type=int)
     print "request debug data"
     print selected_sub_category_id, select_ads_within_days, min_idx
-    ads, total_number_of_ads = database.get_ads_to_display(min_idx=min_idx, number_of_records_to_include=10, sub_category_id=selected_sub_category_id,
+    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed = database.get_ads_to_display(min_idx=min_idx, number_of_records_to_include=10, sub_category_id=selected_sub_category_id,
                                       created_within_days = select_ads_within_days,
                                       sort_by_price="asc")
     for ad in ads:
@@ -42,6 +42,9 @@ def show_more_ads():
     ads_data = dict()
     ads_data["ads_html"] = ads_html
     ads_data["total_number_of_ads"] = str(total_number_of_ads)
+    ads_data["min_ad_idx_displayed"] = str(min_ad_idx_displayed)
+    ads_data["max_ad_idx_displayed"] = str(max_ad_idx_displayed)
+
     return jsonify(ads_data)
 
 @app.route("/ads/<int:ad_id>/current_ad")
