@@ -28,6 +28,13 @@ function build_filters() {
     var selected_category_id = $("#category-selected").val();
     var selected_sub_category_id = $("#sub-category-selected").val();
     var select_ads_within_days = $("#select-ads-within-days").val();
+    
+    var requested_sort_by = $("#arrange-results-by").val();
+    var sort_by ="";
+    if  (requested_sort_by !=="no_sorting"){
+         sort_by = requested_sort_by;
+    }
+    
     var min_idx = requested_ads_min_idx;
 
     var filters = {
@@ -35,7 +42,8 @@ function build_filters() {
         "selected_category_id": selected_category_id,
         "selected_sub_category_id": selected_sub_category_id,
         "select_ads_within_days": select_ads_within_days,
-        "min_idx": min_idx
+        "min_idx": min_idx;
+        "sort_by": sort_by
     };
 
     return filters;
@@ -78,7 +86,7 @@ function render_ads_list(ads) {
     ads_sts += "Displaying ads from " + ads.min_ad_idx_displayed + " to " + ads.max_ad_idx_displayed;
 
     $("#total-ads-selected").text(ads_sts);
-    
+
     requested_ads_min_idx = parseInt(ads.min_ad_idx_displayed);
 
     //if total number of ads available is not set yet - this is initialization step, so set it

@@ -85,7 +85,7 @@ def get_categories_with_subcategories():
     for sub_category in query_sub_categories.all():
         d_sub_category = dict()
         d_sub_category["id"] = str(sub_category.id)
-        d_sub_category["name"]= str(sub_category.name)
+        d_sub_category["name"] = str(sub_category.name)
         cats_with_sub_cats[sub_category.category.name]["value"].append(d_sub_category)
 
     return cats_with_sub_cats
