@@ -116,4 +116,4 @@ def repopulate_all_tables():
 
 
 if __name__ == "__main__":
-     repopulate_all_tables()
+    repopulate_all_tables()

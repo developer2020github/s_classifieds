@@ -92,6 +92,14 @@ function update_ads_list(counter_update_function){
     update_ads(filters);
 }
 
+function load_initial_list_of_ads(){
+    //called on initialization, shows all ads in database by 10 sorted by date 
+    //
+    console.log("load_inital_list_of_ads");
+    update_ads_list(increment_ads_counter);
+
+}
+
 function show_next_ads(){
     update_ads_list(increment_ads_counter);
 }
@@ -103,3 +111,4 @@ function show_prev_ads(){
 $("#next_button").click(show_next_ads);
 $("#prev_button").click(show_prev_ads);
 $("#search-button").click(search_button);
+$(document).ready(load_initial_list_of_ads);
