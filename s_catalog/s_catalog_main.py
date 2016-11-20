@@ -11,7 +11,7 @@ def main_browse_page():
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
     return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, number_of_ads_selected="500")
+                           cities=cities)
 
 
 @app.route('/update_ads_list')
@@ -31,13 +31,18 @@ def show_more_ads():
     min_idx = request.args.get('min_idx', -1, type=int)
     print "request debug data"
     print selected_sub_category_id, select_ads_within_days, min_idx
-    ads = database.get_ads_to_display(min_idx=min_idx, number_of_records_to_include=10, sub_category_id=selected_sub_category_id,
+    ads, total_number_of_ads = database.get_ads_to_display(min_idx=min_idx, number_of_records_to_include=10, sub_category_id=selected_sub_category_id,
                                       created_within_days = select_ads_within_days,
                                       sort_by_price="asc")
     for ad in ads:
         ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
 
-    return jsonify(ads_html)
+    print total_number_of_ads
+
+    ads_data = dict()
+    ads_data["ads_html"] = ads_html
+    ads_data["total_number_of_ads"] = str(total_number_of_ads)
+    return jsonify(ads_data)
 
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):

@@ -66,10 +66,11 @@ function render_ads_list(ads) {
     var selected_ads_id = $("#displayed_ads");
     selected_ads_id.html("");
  
-    $.each(ads, function(index, value) {
+    $.each(ads.ads_html, function(index, value) {
         selected_ads_id.append(value);
     });
-
+    
+    $("#total-ads-selected").text(" Total of " + ads.total_number_of_ads + " ads selected");
 }
 
 
@@ -96,6 +97,7 @@ function load_initial_list_of_ads(){
     //called on initialization, shows all ads in database by 10 sorted by date 
     //
     console.log("load_inital_list_of_ads");
+    $("#total-ads-selected").text(" Total of 0 ads selected");
     update_ads_list(increment_ads_counter);
 
 }

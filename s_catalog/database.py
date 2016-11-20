@@ -50,9 +50,10 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
         elif sort_by_date == "desc":
             all_ads = ads_within_date.order_by(create_database.Ad.time_created.desc())
 
-        all_ads = all_ads.offset(min_idx).limit(number_of_records_to_include)
+        total_number_of_ads = all_ads.count()
+        selected_ads = all_ads.offset(min_idx).limit(number_of_records_to_include)
 
-        return all_ads
+        return selected_ads, total_number_of_ads
 
 
 def get_cities():
