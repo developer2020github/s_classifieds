@@ -42,7 +42,7 @@ function build_filters() {
         "selected_category_id": selected_category_id,
         "selected_sub_category_id": selected_sub_category_id,
         "select_ads_within_days": select_ads_within_days,
-        "min_idx": min_idx;
+        "min_idx": min_idx,
         "sort_by": sort_by
     };
 
@@ -93,6 +93,8 @@ function render_ads_list(ads) {
     if (total_number_of_ads_in_database  === -1) {
         total_number_of_ads_in_database  = parseInt(ads.total_number_of_ads)
     }
+
+    update_selected_ads_info();
 }
 
 
@@ -126,8 +128,7 @@ function load_initial_list_of_ads() {
     console.log("load_inital_list_of_ads");
     $("#total-ads-selected").text(" Total of 0 ads selected");
     update_ads_list();
- 
-
+    update_selected_ads_info();
 }
 
 function show_next_ads() {
@@ -136,6 +137,15 @@ function show_next_ads() {
 
 function show_prev_ads() {
     update_ads_list(decrement_ads_counter);
+}
+
+function update_selected_ads_info(){
+
+    $("#displayed-selected-city").text($("#search-city-select option:selected" ).text());
+    $("#displayed-selected-category").text($("#category-selected option:selected" ).text());
+    $("#displayed-selected-subcategory").text($( "#sub-category-selected option:selected" ).text());
+    $("#displayed-ads-posted-time").text($("#select-ads-within-days option:selected" ).text());
+    $("#displayed-results-arranged-by").text($( "#arrange-results-by option:selected" ).text());   
 }
 
 $("#next_button").click(show_next_ads);

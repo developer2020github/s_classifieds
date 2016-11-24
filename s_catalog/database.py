@@ -7,20 +7,13 @@ import create_database
 import datetime
 
 
-
-'''this is a fake DB, used for now to drive the applciation.
-to be reaplced with real database interface code
-real one is defined in create_database. 
-'''
-
-
 engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
 create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by_date="", sort_by_price="",
+def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
                        min_idx=0, number_of_records_to_include=10):
         filters = dict()
         if city_id > -1:
@@ -38,17 +31,16 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 
         ads_within_date = ads_within_date.filter_by(**filters)
 
-        if sort_by_price == "desc":
+        if sort_by=="price_desc":
             all_ads = ads_within_date.order_by(create_database.Ad.price_cents.desc())
-        elif sort_by_price == "asc":
+        elif sort_by == "price_asc":
             all_ads = ads_within_date.order_by(create_database.Ad.price_cents.asc())
-        elif sort_by_price == "desc":
-            all_ads = ads_within_date.order_by(create_database.Ad.price_cents.desc())
-        elif sort_by_date == "asc":
-            print " sort asc"
+        elif sort_by == "date_asc":
             all_ads = ads_within_date.order_by(create_database.Ad.time_created.asc())
-        elif sort_by_date == "desc":
+        elif sort_by == "date_desc":
             all_ads = ads_within_date.order_by(create_database.Ad.time_created.desc())
+        else:
+            all_ads = ads_within_date
 
         total_number_of_ads = all_ads.count()
         min_idx = max(min_idx, 0)
@@ -115,6 +107,7 @@ def ad_to_dict(ad):
     dict_ad["date"] = ad.time_created
     dict_ad["price"] = str(ad.price_cents/100.0)
     dict_ad["id"] = str(ad.id)
+    dict_ad["formatted_date"] = ad.time_created.strftime("%d-%B-%Y at %H:%M")
 
     return dict_ad
 

@@ -1,5 +1,6 @@
 <div class='latest-ads panel panel-default panel-main panel-text'>
-    <h4>{{ ad["city"] }} >  {{ ad["category"] }} >  {{ ad["sub_category"] }} > {{ ad["ad_title"] }} Price : {{ ad["price"] }}</h4>
+    <h4>{{ ad["ad_title"] }}</h4>
+    <h4>Price : {{ ad["price"] }} Posted on : {{ ad["formatted_date"] }}</h4>
     <div>
         <a href="ads/{{ ad["id"] }}/current_ad">details</a>
     </div>

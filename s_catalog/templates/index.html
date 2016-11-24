@@ -36,14 +36,12 @@
             <div class="col-md-3">
             </div>
             <div class="col-md-9 form-inline">
-                {% for category in categories.keys() %}
-                <select class="form-control">
-                    <option selected disabled>{{ category }}</option>
-                    {% for item in categories[category]["value"] %}
-                    	<option value="{{ item["id"] }}">{{ item["name"] }}</option>
-                    {% endfor %}
-                </select>
-                {% endfor %}
+                <span class = "label label-default label-info-one" id = "displayed-selected-city"></span>
+                    <span class = "label label-default label-info-one" id="displayed-selected-category"></span>
+                    </span>
+                    <span class = "label label-default label-info-one" id="displayed-selected-subcategory"></span>
+                    <span class = "label label-default label-info-one" id="displayed-ads-posted-time"></span>
+                    <span class = "label label-default label-info-one" id="displayed-results-arranged-by"></span>
             </div>
         </div>
         <div class="row top-buffer">
@@ -81,8 +79,8 @@
                         <option value = "no_sorting" selected="selected">Arrange result by:</option>
                         <option value = "price_desc">Price: high to low</option>
                         <option value = "price_asc">Price: low to high</option>
-                        <option value = "date_desc">Oldest first</option>
-                        <option value = "date_asc">Newest first</option>
+                        <option value = "date_asc">Oldest first</option>
+                        <option value = "date_desc">Newest first</option>
                     </select>
                     <button id="search-button" class="btn btn-block">SEARCH</button>
                 </div>

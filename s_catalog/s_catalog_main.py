@@ -29,11 +29,15 @@ def show_more_ads():
     selected_sub_category_id = request.args.get('selected_sub_category_id', -1, type=int)
     select_ads_within_days = request.args.get('select_ads_within_days', -1, type=int)
     min_idx = request.args.get('min_idx', -1, type=int)
+    sort_by = request.args.get('sort_by', "", type=str)
     print "request debug data"
     print selected_sub_category_id, select_ads_within_days, min_idx
-    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed = database.get_ads_to_display(min_idx=min_idx, number_of_records_to_include=10, sub_category_id=selected_sub_category_id,
-                                      created_within_days = select_ads_within_days,
-                                      sort_by_price="asc")
+    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed =\
+        database.get_ads_to_display(min_idx=min_idx,
+                                    number_of_records_to_include=10,
+                                    sub_category_id=selected_sub_category_id,
+                                    created_within_days = select_ads_within_days,
+                                    sort_by=sort_by)
     for ad in ads:
         ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
 
