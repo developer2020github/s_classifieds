@@ -86,11 +86,18 @@ function render_ads_list(ads) {
 
     var ads_sts = "";
     if (ads.total_number_of_ads > 0) {
-        ads_sts = "Total of " + ads.total_number_of_ads + " ads selected.";
-        ads_sts += "Displaying ads from " + ads.min_ad_idx_displayed + " to " + ads.max_ad_idx_displayed;
+        ads_sts = "Total of " + ads.total_number_of_ads + " ads selected. ";
+        var min_idx_displayed = ads.min_ad_idx_displayed;
+        if (min_idx_displayed ==="0"){
+            min_idx_displayed = "1";
+        }
+        ads_sts += "Displaying ads from " + min_idx_displayed + " to " + ads.max_ad_idx_displayed;
+        ads_sts +="."
     } else {
-        ads_sts = "No ads meet your search criteria"
+        ads_sts = "No ads meet your search criteria."
     }
+
+
 
     $("#total-ads-selected").text(ads_sts);
 
