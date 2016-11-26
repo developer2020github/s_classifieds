@@ -14,13 +14,7 @@
             <div class="col-md-3 panel panel-default panel-main">
                 S-classifieds
             </div>
-            <div class="col-md-3  form-inline">
-                <select id = "main-city-select" class="form-control">
-                    <option selected disabled>Location: all</option>
-                	{% for city in cities %}
-                		<option value="{{ city.name }}">{{ city.name }}</option>
-                	{% endfor %}
-                </select>
+            <div class="col-md-3">
             </div>
             <div class="col-md-3">
             </div>
@@ -76,7 +70,7 @@
                         <option value = "180">Within 6 months</option>
                     </select>
                     <select id="arrange-results-by" class="form-control">
-                        <option value = "no_sorting" selected="selected">Arrange result by:</option>
+                        <option value = "-1" selected="selected">Arrange result by:</option>
                         <option value = "price_desc">Price: high to low</option>
                         <option value = "price_asc">Price: low to high</option>
                         <option value = "date_asc">Oldest first</option>
