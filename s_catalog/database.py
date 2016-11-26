@@ -18,7 +18,8 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 
         if debug_print:
             print "get_ads_to_display inputs : city_id: {0}, sub_category_id: {1}," \
-                  " sort_by :{2}, min_idx: {3}, number_of_records_to_include {4}".format(city_id, sub_category_id,
+                  "created_within_days :{2},"\
+                  " sort_by :{3}, min_idx: {4}, number_of_records_to_include {5}".format(city_id, sub_category_id,
                                                                                          created_within_days, sort_by,
                                                                                          min_idx,
                                                                                          number_of_records_to_include)
@@ -29,7 +30,7 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
         if sub_category_id > -1:
             filters["sub_category_id"] = sub_category_id
 
-        if created_within_days> 0:
+        if created_within_days > 0:
             oldest_ad_date_to_include = datetime.datetime.now()
             oldest_ad_date_to_include += datetime.timedelta(days=-created_within_days)
             ads_within_date = session.query(create_database.Ad).filter(create_database.Ad.time_created >= oldest_ad_date_to_include)
@@ -52,7 +53,7 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
         total_number_of_ads = all_ads.count()
         min_idx = max(min_idx, 0)
 
-        if (min_idx+number_of_records_to_include) >= total_number_of_ads:
+        if (min_idx+number_of_records_to_include) >= total_number_of_ads > 0:
 
             if total_number_of_ads % number_of_records_to_include > 0:
                 min_idx = total_number_of_ads - total_number_of_ads % number_of_records_to_include

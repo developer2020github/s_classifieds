@@ -39,8 +39,10 @@ def show_more_ads():
                                     sub_category_id=selected_sub_category_id,
                                     created_within_days = select_ads_within_days,
                                     sort_by=sort_by, debug_print=True)
-    for ad in ads:
-        ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
+
+    if total_number_of_ads>0:
+        for ad in ads:
+            ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
 
     print total_number_of_ads
 
