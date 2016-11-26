@@ -24,7 +24,7 @@ function populate_sub_categories_in_search_bar() {
 
 function build_filters() {
 
-    var selected_city = $("#search-city-select").val();
+    var selected_city_id = $("#search-city-select").val();
     var selected_category_id = $("#category-selected").val();
     var selected_sub_category_id = $("#sub-category-selected").val();
     var select_ads_within_days = $("#select-ads-within-days").val();
@@ -38,7 +38,7 @@ function build_filters() {
     var min_idx = requested_ads_min_idx;
 
     var filters = {
-        "selected_city": selected_city,
+        "selected_city_id": selected_city_id,
         "selected_category_id": selected_category_id,
         "selected_sub_category_id": selected_sub_category_id,
         "select_ads_within_days": select_ads_within_days,

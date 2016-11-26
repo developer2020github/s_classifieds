@@ -14,7 +14,14 @@ session = DBSession()
 
 
 def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
-                       min_idx=0, number_of_records_to_include=10):
+                       min_idx=0, number_of_records_to_include=10, debug_print = False):
+
+        if debug_print:
+            print "get_ads_to_display inputs : city_id: {0}, sub_category_id: {1}," \
+                  " sort_by :{2}, min_idx: {3}, number_of_records_to_include {4}".format(city_id, sub_category_id,
+                                                                                         created_within_days, sort_by,
+                                                                                         min_idx,
+                                                                                         number_of_records_to_include)
         filters = dict()
         if city_id > -1:
             filters["city_id"] = city_id
@@ -60,7 +67,11 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 
 def get_cities():
     query_cities = session.query(create_database.City)
-    return query_cities.all()
+    all_cities = query_cities.all()
+    for city in all_cities:
+        print city.name
+        print city.id
+    return all_cities
 
 
 def get_categories_with_subcategories():
