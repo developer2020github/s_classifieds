@@ -28,13 +28,13 @@ function build_filters() {
     var selected_category_id = $("#category-selected").val();
     var selected_sub_category_id = $("#sub-category-selected").val();
     var select_ads_within_days = $("#select-ads-within-days").val();
-    
+
     var requested_sort_by = $("#arrange-results-by").val();
-    var sort_by ="";
-    if  (requested_sort_by !=="no_sorting"){
-         sort_by = requested_sort_by;
+    var sort_by = "";
+    if (requested_sort_by !== "no_sorting") {
+        sort_by = requested_sort_by;
     }
-    
+
     var min_idx = requested_ads_min_idx;
 
     var filters = {
@@ -55,7 +55,7 @@ function reset_ads_counter() {
 
 function increment_ads_counter() {
     requested_ads_min_idx = requested_ads_min_idx + ADS_UPDATE_STEP;
-    if (total_number_of_ads_in_database >-1){
+    if (total_number_of_ads_in_database > -1) {
         //limit request to max theoretically possible number.
         //no need to set limit as per result of currently active filters - 
         //number displayed will be what database returns. 
@@ -82,16 +82,21 @@ function render_ads_list(ads) {
         selected_ads_id.append(value);
     });
 
-    var ads_sts = "Total of " + ads.total_number_of_ads + " ads selected.";
-    ads_sts += "Displaying ads from " + ads.min_ad_idx_displayed + " to " + ads.max_ad_idx_displayed;
+    var ads_sts = "";
+    if (ads.total_number_of_ads > 0) {
+        ads_sts  = "Total of " + ads.total_number_of_ads + " ads selected.";
+        ads_sts += "Displaying ads from " + ads.min_ad_idx_displayed + " to " + ads.max_ad_idx_displayed;
+    } else {
+        ads_sts = "No ads meet your search criteria"
+    }
 
     $("#total-ads-selected").text(ads_sts);
 
     requested_ads_min_idx = parseInt(ads.min_ad_idx_displayed);
 
     //if total number of ads available is not set yet - this is initialization step, so set it
-    if (total_number_of_ads_in_database  === -1) {
-        total_number_of_ads_in_database  = parseInt(ads.total_number_of_ads)
+    if (total_number_of_ads_in_database === -1) {
+        total_number_of_ads_in_database = parseInt(ads.total_number_of_ads)
     }
 
     update_selected_ads_info();
@@ -139,13 +144,13 @@ function show_prev_ads() {
     update_ads_list(decrement_ads_counter);
 }
 
-function update_selected_ads_info(){
+function update_selected_ads_info() {
 
-    $("#displayed-selected-city").text($("#search-city-select option:selected" ).text());
-    $("#displayed-selected-category").text($("#category-selected option:selected" ).text());
-    $("#displayed-selected-subcategory").text($( "#sub-category-selected option:selected" ).text());
-    $("#displayed-ads-posted-time").text($("#select-ads-within-days option:selected" ).text());
-    $("#displayed-results-arranged-by").text($( "#arrange-results-by option:selected" ).text());   
+    $("#displayed-selected-city").text($("#search-city-select option:selected").text());
+    $("#displayed-selected-category").text($("#category-selected option:selected").text());
+    $("#displayed-selected-subcategory").text($("#sub-category-selected option:selected").text());
+    $("#displayed-ads-posted-time").text($("#select-ads-within-days option:selected").text());
+    $("#displayed-results-arranged-by").text($("#arrange-results-by option:selected").text());
 }
 
 $("#next_button").click(show_next_ads);
