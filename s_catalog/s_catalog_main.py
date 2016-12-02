@@ -1,9 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import session as login_session
+
 import database
 import json
+import s_catalog_lib
+
+
+from apiclient import discovery
+import httplib2
+from oauth2client import client
 
 app = Flask(__name__)
-
+current_email = ""
+# path to the Web application client_secret_*.json file downloaded from the
+# Google API Console: https://console.developers.google.com/apis/credentials
+GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = "client_secret.json"
 
 @app.route('/')
 def main_browse_page():
@@ -69,9 +80,51 @@ def my_ads_page():
     return render_template("myads.html")
 
 
-@app.route("/signin")
+@app.route("/login")
 def sign_in_page():
-    return render_template("signin.html")
+    state = s_catalog_lib.get_random_string()
+    login_session["state"] = state
+    print "current_email :"
+    print current_email
+    return render_template("login.html", session_state = login_session["state"], user_email=current_email)
+
+
+@app.route("/google_sign_in", methods = ["POST"])
+def google_sign_in():
+    global current_email
+    print "google_sign_in"
+    # ref https://developers.google.com/identity/sign-in/web/server-side-flow
+
+
+    # Exchange auth code for access token, refresh token, and ID token
+    auth_code = request.data
+    print "auth_code"
+    print auth_code
+    credentials = client.credentials_from_clientsecrets_and_code(
+        GOOGLE_SIGN_IN_CLIENT_SECRET_FILE,
+        ['https://www.googleapis.com/auth/plus.login', 'profile', 'email'],
+        auth_code)
+
+    # Call Google API
+    '''
+    http_auth = credentials.authorize(httplib2.Http())
+    drive_service = discovery.build('drive', 'v3', http=http_auth)
+    appfolder = drive_service.files().get(fileId='appfolder').execute()
+    '''
+
+    # Get profile info from ID token
+    userid = credentials.id_token['sub']
+    email = credentials.id_token['email']
+    #name = credentials.id_token["name"]
+    for k in credentials.id_token.keys():
+        print k
+    print userid
+    #print name
+    print email
+
+    current_email = email
+    return "ok"
+
 
 if __name__ == '__main__':
     app.debug = True

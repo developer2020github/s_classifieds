@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<!--https://developers.google.com/identity/sign-in/web/-->
+<!--https://developers.google.com/identity/sign-in/web/server-side-flow -->
+<!-- END Pre-requisites -->
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <!-- BEGIN Pre-requisites -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+    <script>
+    function start() {
+        gapi.load('auth2', function() {
+            auth2 = gapi.auth2.init({
+                client_id: '175017086009-rlcgvef5g9e76859q2u4vb6n1258hcpd.apps.googleusercontent.com',
+                // Scopes to request in addition to 'profile' and 'email'
+                //scope: 'additional_scope'
+            });
+        });
+    }
+    </script>
+</head>
+
+<body>
+    <h2>SIGN IN</h2> client id 175017086009-rlcgvef5g9e76859q2u4vb6n1258hcpd.apps.googleusercontent.com
+    <h1>current session state is {{ session_state }}</h1> client secret: UAPlLceolwjY5r9qfiNsa-Nd
+    <h1>User email is : {{ user_email }}</h1>
+    <div>
+        <button id="signinButton">Sign in with Google</button>
+        <script>
+        
+        $('#signinButton').click(function() {
+            // signInCallback defined in step 6.
+            auth2.grantOfflineAccess().then(signInCallback);
+        });
+
+        function signInCallback(authResult) {
+            if (authResult['code']) {
+
+                // Hide the sign-in button now that the user is authorized, for example:
+                $('#signinButton').attr('style', 'display: none');
+
+                // Send the code to the server
+                // Send the code to the server
+                var google_sign_in_redirect_uri = "/google_sign_in"
+                $.ajax({
+                    type: 'POST',
+                    url: google_sign_in_redirect_uri,
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function(result) {
+                        // Handle or verify the server response.
+                    },
+                    processData: false,
+                    data: authResult['code']
+                });
+            } else {
+                // There was an error.
+                console.log("sign in callaback error")
+            }
+        }
+        </script>
+    </div>
+</body>
+
+
+</html>
+
