@@ -13,17 +13,18 @@
     <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
 </head>
 
-<body>
-    <h2>SIGN IN</h2> client id 175017086009-rlcgvef5g9e76859q2u4vb6n1258hcpd.apps.googleusercontent.com
-    <h1>current session state is {{ session_state }}</h1> client secret: UAPlLceolwjY5r9qfiNsa-Nd
-    <h1>User email is : {{ user_email }}</h1>
+<body >
+    <div class = "white-text">
+    <h2>SIGN IN OR SIGN UP</h2>
     <div>
+    	Sign in with Goodle+: 
         <div id="signInButton">
             <span class="g-signin" data-scope="openid email" data-clientid="175017086009-rlcgvef5g9e76859q2u4vb6n1258hcpd.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback" data-approvalprompt="force">
           </span>
         </div>
     </div>
     <div id="result"></div>
+    </div>
     <script>
     function signInCallback(authResult) {
         if (authResult['code']) {

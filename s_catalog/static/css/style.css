@@ -57,3 +57,7 @@ body {
  
 }
 
+.white-text{
+    background-color: #505050;
+    color: white;
+}

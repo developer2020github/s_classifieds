@@ -13,6 +13,22 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+def get_user_from_email(email):
+    user = session.query(create_database.User).filter(create_database.User.email == email).first()
+    return user
+
+
+def add_new_user(email, name, phone_number):
+    new_user = create_database.User(name=name, email=email, phone=phone_number)
+    session.add(new_user)
+    session.commit()
+
+
+def add_user_if_does_not_exist(email, name="", phone_number=""):
+    if not get_user_from_email(email):
+        add_new_user(email, name, phone_number)
+
+
 def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
                        min_idx=0, number_of_records_to_include=10, debug_print = False):
 
@@ -123,10 +139,12 @@ def ad_to_dict(ad):
 
     return dict_ad
 
+
 def get_ad_by_id(ad_id):
     #print(ad_id)
     #return generate_data.get_ad_by_id(ad_id)
     return session.query(create_database.Ad).filter(create_database.Ad.id == ad_id).first()
+
 
 def get_total_number_of_ads():
     return 500
@@ -143,7 +161,6 @@ def print_ad(ad):
     print ad.text
 
 
-
 def test_get_ad_by_id():
     for i in range(1, 10):
         print_ad (get_ad_by_id(i))
@@ -151,7 +168,16 @@ def test_get_ad_by_id():
 
 '''
 '''
+
+
+def test_get_user_id_by_email():
+    existing_user_email = "deanne.pittenger@gmail.com"
+    non_existing_user_email = "does.notexits@nomail.com"
+    print get_user_from_email(existing_user_email)
+    print get_user_from_email(non_existing_user_email)
+
 if __name__ == "__main__":
     #d = get_categories_with_subcategories()
     #print d
-    test_get_ad_by_id()
+    #test_get_ad_by_id()
+    test_get_user_id_by_email()

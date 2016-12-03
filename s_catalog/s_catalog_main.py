@@ -30,6 +30,20 @@ def main_browse_page():
                            cities=cities)
 
 
+@app.route("/user_profile")
+def user_profile_page():
+    if "email" not in login_session:
+        return redirect("/login")
+
+    user = database.get_user_from_email(login_session["email"])
+    if not user:
+        return redirect("/login")
+
+    return render_template("user_profile.html", message_text="Your profile: ", user_name=user.name,
+                           user_email=user.email, user_phone = user.phone )
+
+
+
 @app.route('/update_ads_list')
 def show_more_ads():
     #current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
@@ -123,6 +137,11 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+
+def add_user_from_login_session(session):
+    database.add_user_if_does_not_exist(session["email"], session["username"])
+
+
 @app.route('/google_sign_in', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -178,6 +197,7 @@ def gconnect():
         response = make_response(json.dumps('Current user is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
+        add_user_from_login_session(login_session)
         return response
 
     # Store the access token in the session for later use.
@@ -194,7 +214,7 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-
+    add_user_from_login_session(login_session)
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
