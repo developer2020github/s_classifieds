@@ -12,6 +12,10 @@ create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+def validate_user_data_string(user_data_string):
+    if user_data_string.strip()=="":
+        return "Not set"
+    return user_data_string.strip()
 
 def get_user_from_email(email):
     user = session.query(create_database.User).filter(create_database.User.email == email).first()
@@ -19,12 +23,18 @@ def get_user_from_email(email):
 
 
 def add_new_user(email, name, phone_number):
-    new_user = create_database.User(name=name, email=email, phone=phone_number)
+    print "add_new_user"
+    print name
+    new_user = create_database.User(name=validate_user_data_string(name),
+                                    email=email,
+                                    phone=validate_user_data_string(phone_number))
     session.add(new_user)
     session.commit()
 
 
-def add_user_if_does_not_exist(email, name="", phone_number=""):
+def add_user_if_does_not_exist(email, name="not set", phone_number="not set"):
+    print "add_user_if_does_not_exist"
+    print name
     if not get_user_from_email(email):
         add_new_user(email, name, phone_number)
 
