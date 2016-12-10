@@ -1,7 +1,7 @@
 '''
 This module creates the database
 '''
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func, Text, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -61,7 +61,22 @@ class User(Base):
     name = Column(String(250), nullable=False)
     email = Column(String(250))
     phone = Column(String(50))
+    password = Column(String)
+    authenticated = Column(Boolean, default=False)
     ads = relationship("Ad", back_populates="user")
+
+# extra fields to support flask-login
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        return str(self.id)
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_anonymous(self):
+        return False
 
 
 class Ad(Base):

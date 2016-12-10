@@ -12,10 +12,25 @@ create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
+def get_user_ads(user):
+    if user is None:
+        return None
+
+    user_ads = session.query(create_database.Ad).filter(create_database.Ad.user_id == user.id).all()
+    return user_ads()
+
+
+def get_user_by_unicode_id(user_id):
+    user = session.query(create_database.User).filter(create_database.User.id == int(user_id)).first()
+    return user
+
+
 def validate_user_data_string(user_data_string):
     if user_data_string.strip()=="":
         return "Not set"
     return user_data_string.strip()
+
 
 def get_user_from_email(email):
     user = session.query(create_database.User).filter(create_database.User.email == email).first()

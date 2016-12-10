@@ -7,6 +7,10 @@ this module populates database
 
 import create_database
 import generate_data
+from flask import Flask
+import flask_bcrypt
+
+bcrypt = flask_bcrypt.Bcrypt()
 
 # from flask.ext.sqlalchemy import SQLAlchemy
 from random import randint
@@ -62,8 +66,10 @@ def populate_user_data():
     users = generate_data.get_list_of_users()
 
     for user in users:
-        new_user = create_database.User(name=user['name'], email=user['email'], phone=user['phone'])
+        password = bcrypt.generate_password_hash("s_classifieds")
+        new_user = create_database.User(name=user['name'], email=user['email'], phone=user['phone'], password = password)
         session.add(new_user)
+        print new_user.email
 
     session.commit()
 

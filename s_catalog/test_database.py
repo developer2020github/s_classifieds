@@ -1,3 +1,4 @@
+import create_database
 import database
 import json
 
@@ -30,4 +31,21 @@ def test_one():
             ads_html.append(database.ad_to_dict(ad))
 #test_#test_categories_with_subcategories()
 
-test_one()
+
+def test_empty_query():
+    ads =  database.session.query(create_database.Ad).filter(create_database.Ad.user_id == 1234546)
+    print ads.all()
+    print ads.count()
+
+
+def test_query():
+    ads =  database.session.query(create_database.Ad).filter(create_database.Ad.user_id == 9)
+    print ads.all()
+    print ads.count()
+
+#test_empty_query()
+
+print str(455).decode("utf-8")
+
+
+

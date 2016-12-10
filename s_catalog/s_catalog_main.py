@@ -1,23 +1,66 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask import session as login_session
-
+from forms import LoginForm
 import database
 import json
 import s_catalog_lib
-
+# references for login management
+#https://flask-bcrypt.readthedocs.io/en/latest/
+#https://flask-login.readthedocs.io/en/latest/
 
 from apiclient import discovery
 import httplib2
 from oauth2client import client
 import requests
+import flask_login
+import flask_bcrypt
+
+bcrypt = flask_bcrypt.Bcrypt()
 
 app = Flask(__name__)
+
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+
 current_email = ""
 # path to the Web application client_secret_*.json file downloaded from the
 # Google API Console: https://console.developers.google.com/apis/credentials
 GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = "client_secret.json"
 CLIENT_ID = json.loads(
     open(GOOGLE_SIGN_IN_CLIENT_SECRET_FILE, 'r').read())['web']['client_id']
+
+@login_manager.user_loader
+def user_loader(user_id):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+    """
+    return database.get_user_by_unicode_id(user_id)
+
+@app.route("/login_simple", methods=["GET", "POST"])
+def login():
+    """For GET requests, display the login form. For POSTS, login the current user
+    by processing the form."""
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        print "processing post request"
+        #return redirect("/")
+        #pass
+
+        user = database.get_user_from_email(form.email.data)
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+
+                user.authenticated = True
+                database.session.add(user)
+                database.session.commit()
+                flask_login.login_user(user, remember=True)
+                print "user " + user.email + " successfully logged in "
+                return redirect("/")
+
+    return render_template("login_simple.html", form=form)
+
 
 @app.route('/')
 def main_browse_page():
@@ -123,6 +166,8 @@ def gdisconnect():
     print 'result is '
     print result
     if result['status'] == '200':
+
+        # dels should probably be replaces with "pop" function
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
@@ -266,5 +311,5 @@ def google_sign_in():
 
 if __name__ == '__main__':
     app.debug = True
-    app.secret_key = "secret key"
+    app.secret_key = "secret key" #used to sign sessions, need to change it to a properly generated key
     app.run(port=5000)
