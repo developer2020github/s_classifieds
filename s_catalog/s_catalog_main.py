@@ -64,13 +64,19 @@ def login_simple():
 
     return render_template("login_simple.html", form=form)
 
+
 @app.route("/myads", methods=["GET"])
 @flask_login.login_required
 def myads():
     user = flask_login.current_user
-    myads = database.get_user_ads(user=user)
-    myads_dicts = map(database.ad_to_dict, myads)
-    return render_template("myads.html", my_ads = myads_dicts, user=user)
+    categories_with_sub_categories = database.get_categories_with_subcategories()
+    categories_json = json.dumps(categories_with_sub_categories)
+    cities = database.get_cities()
+    # print categories_json
+    # print cities
+    return render_template("myads.html", categories=categories_with_sub_categories, categories_json=categories_json,
+                           cities=cities, user=user)
+
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
@@ -119,6 +125,46 @@ def user_profile_page():
                            user_email=user.email, user_phone = user.phone )
 
 
+@app.route('/update_my_ads_list')
+def show_more_of_my_ads():
+    user_id = flask_login.current_user.id
+    #current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
+    r= request.args.get('show_next', False, type=bool)
+    #query.(Model).filter(something).limit(5).all()
+
+    min_idx = request.args.get('min_idx', 0, type=int)
+
+    ads_html = list()
+    city_id = request.args.get('selected_city_id', -1, type=int)
+    selected_category_id = request.args.get('selected_category_id', -1, type=int)
+    selected_sub_category_id = request.args.get('selected_sub_category_id', -1, type=int)
+    select_ads_within_days = request.args.get('select_ads_within_days', -1, type=int)
+    min_idx = request.args.get('min_idx', -1, type=int)
+    sort_by = request.args.get('sort_by', "", type=str)
+
+    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed =\
+        database.get_ads_to_display(city_id=city_id,
+                                    min_idx=min_idx,
+                                    number_of_records_to_include=10,
+                                    sub_category_id=selected_sub_category_id,
+                                    created_within_days = select_ads_within_days,
+                                    sort_by=sort_by,
+                                    user_id = user_id,
+                                    debug_print=True)
+
+    if total_number_of_ads>0:
+        for ad in ads:
+            ads_html.append(render_template("displayed_my_ad.html", ad=database.ad_to_dict(ad)))
+
+    print total_number_of_ads
+
+    ads_data = dict()
+    ads_data["ads_html"] = ads_html
+    ads_data["total_number_of_ads"] = str(total_number_of_ads)
+    ads_data["min_ad_idx_displayed"] = str(min_ad_idx_displayed)
+    ads_data["max_ad_idx_displayed"] = str(max_ad_idx_displayed)
+
+    return jsonify(ads_data)
 
 @app.route('/update_ads_list')
 def show_more_ads():

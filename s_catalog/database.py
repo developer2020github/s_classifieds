@@ -64,7 +64,7 @@ def add_user_if_does_not_exist(email, name="not set", phone_number="not set"):
 
 
 def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
-                       min_idx=0, number_of_records_to_include=10, debug_print = False):
+                       min_idx=0, number_of_records_to_include=10, debug_print = False, user_id = -1):
 
         if debug_print:
             print "get_ads_to_display inputs : city_id: {0}, sub_category_id: {1}," \
@@ -79,6 +79,9 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 
         if sub_category_id > -1:
             filters["sub_category_id"] = sub_category_id
+
+        if user_id > -1:
+            filters["user_id"] = user_id
 
         if created_within_days > 0:
             oldest_ad_date_to_include = datetime.datetime.now()
