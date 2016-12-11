@@ -2,13 +2,24 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
 </head>
 
 <body>
-   <h2>MY ADS</h2>
+    <h2>MY ADS</h2>
+    <h3>logged in as: {{ user.email}}</h3>
+    {% for ad in my_ads %}
+    <div class='latest-ads panel panel-default panel-main panel-text'>
+        <h4>{{ ad["ad_title"] }}</a></h4>
+        <h4>Price : {{ ad["price"] }} Posted on : {{ ad["formatted_date"] }}</h4>
+        <h3>User email: {{ ad["user"].email}}</h3>
+        <div>
+          {{ ad["text"] }}
+        </div>
+    </div>
+    {% endfor %}
 </body>
 
 </html>

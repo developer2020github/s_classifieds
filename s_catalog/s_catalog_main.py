@@ -64,6 +64,18 @@ def login_simple():
 
     return render_template("login_simple.html", form=form)
 
+@app.route("/myads", methods=["GET"])
+@flask_login.login_required
+def myads():
+    user = flask_login.current_user
+    myads = database.get_user_ads(user=user)
+    myads_dicts = map(database.ad_to_dict, myads)
+    return render_template("myads.html", my_ads = myads_dicts, user=user)
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect("/login_simple")
+
 @app.route("/logout_simple", methods=["GET", "POST"])
 @flask_login.login_required
 def logout():

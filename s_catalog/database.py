@@ -19,11 +19,15 @@ def set_user_authenticated_status(user, authenticated_status):
     session.commit()
 
 def get_user_ads(user):
+    print "get_user_ads"
+    print user
     if user is None:
         return None
+    print user.id
+    print user.email
 
     user_ads = session.query(create_database.Ad).filter(create_database.Ad.user_id == user.id).all()
-    return user_ads()
+    return user_ads
 
 
 def get_user_by_unicode_id(user_id):
@@ -154,6 +158,7 @@ def ad_to_dict(ad):
     '''
 
     dict_ad = dict()
+    dict_ad["user"] = session.query(create_database.User).filter(create_database.User.id == int(ad.user_id)).one()
     dict_ad["city"] = ad.city.name
     dict_ad["category"] = ad.sub_category.category.name
     dict_ad["sub_category"] = ad.sub_category.name
