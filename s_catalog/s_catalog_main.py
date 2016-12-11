@@ -214,6 +214,13 @@ def ad_page(ad_id):
     return render_template("ad.html", categories=categories_with_sub_categories, categories_json=categories_json,
                            cities=cities, selected_ad=selected_ad)
 
+
+@app.route("/ads/<int:ad_id>/edit_ad")
+def edit_ad(ad_id):
+    selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
+    return render_template("edit_my_ad.html", ad=selected_ad)
+
+
 @app.route("/myads")
 def my_ads_page():
     return render_template("myads.html")
