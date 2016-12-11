@@ -13,6 +13,11 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+def set_user_authenticated_status(user, authenticated_status):
+    user.authenticated = authenticated_status
+    session.add(user)
+    session.commit()
+
 def get_user_ads(user):
     if user is None:
         return None

@@ -4,6 +4,8 @@ from forms import LoginForm
 import database
 import json
 import s_catalog_lib
+from pprint import pprint
+
 # references for login management
 #https://flask-bcrypt.readthedocs.io/en/latest/
 #https://flask-login.readthedocs.io/en/latest/
@@ -37,8 +39,10 @@ def user_loader(user_id):
     """
     return database.get_user_by_unicode_id(user_id)
 
+
+
 @app.route("/login_simple", methods=["GET", "POST"])
-def login():
+def login_simple():
     """For GET requests, display the login form. For POSTS, login the current user
     by processing the form."""
 
@@ -50,16 +54,33 @@ def login():
 
         user = database.get_user_from_email(form.email.data)
         if user:
+            print  form.password.data
+            print user.password
             if bcrypt.check_password_hash(user.password, form.password.data):
-
-                user.authenticated = True
-                database.session.add(user)
-                database.session.commit()
+                database.set_user_authenticated_status(user, True)
                 flask_login.login_user(user, remember=True)
                 print "user " + user.email + " successfully logged in "
                 return redirect("/")
 
     return render_template("login_simple.html", form=form)
+
+@app.route("/logout_simple", methods=["GET", "POST"])
+@flask_login.login_required
+def logout():
+    """Logout the current user."""
+    user = flask_login.current_user
+    print "logout"
+    print user
+    print "user " + user.email + " successfully logged out "
+
+    pprint(vars(user))
+    database.set_user_authenticated_status(user, False)
+    flask_login.logout_user()
+
+    #if user was connected via google - we need to disconnect
+
+
+    return redirect("/")
 
 
 @app.route('/')
@@ -67,8 +88,8 @@ def main_browse_page():
     categories_with_sub_categories = database.get_categories_with_subcategories()
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
-    print categories_json
-    print cities
+    #print categories_json
+    #print cities
     return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
                            cities=cities)
 
@@ -149,6 +170,7 @@ def sign_in_page():
     return render_template("login.html", session_state = login_session["state"], user_email=current_email)
 
 
+#Initially, this was used as an URL as
 @app.route('/google_sign_out')
 def gdisconnect():
     access_token = login_session['access_token']
@@ -260,53 +282,27 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
     add_user_from_login_session(login_session)
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+
+    # now we can login user and actully disconnect from google, relying on Flask Login from now onwards
+
+    user = database.get_user_from_email(data['email'])
+    if user:
+        print "flask login from Google"
+        print user.email
+        database.set_user_authenticated_status(user, True)
+        flask_login.login_user(user, remember=True)
+        gdisconnect()
+
+        output = ''
+        output += '<h1>Welcome, '
+        output += user.name
+        output += user.email
+        output += '!</h1>'
+        flash("you are now logged in as %s" % user.email)
+
     print "done!"
     return output
 
-
-@app.route("/google_sign_in_old", methods = ["POST"])
-def google_sign_in():
-    global current_email
-    print "google_sign_in"
-    # ref https://developers.google.com/identity/sign-in/web/server-side-flow
-
-
-    # Exchange auth code for access token, refresh token, and ID token
-    auth_code = request.data
-    print "auth_code"
-    print auth_code
-    credentials = client.credentials_from_clientsecrets_and_code(
-        GOOGLE_SIGN_IN_CLIENT_SECRET_FILE,
-        ['https://www.googleapis.com/auth/plus.login', 'profile', 'email'],
-        auth_code)
-
-    # Call Google API
-    '''
-    http_auth = credentials.authorize(httplib2.Http())
-    drive_service = discovery.build('drive', 'v3', http=http_auth)
-    appfolder = drive_service.files().get(fileId='appfolder').execute()
-    '''
-
-    # Get profile info from ID token
-    userid = credentials.id_token['sub']
-    email = credentials.id_token['email']
-    #name = credentials.id_token["name"]
-    for k in credentials.id_token.keys():
-        print k
-    print userid
-    #print name
-    print email
-
-    current_email = email
-    return "ok"
 
 
 if __name__ == '__main__':
