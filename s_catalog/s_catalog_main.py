@@ -221,10 +221,11 @@ def edit_ad(ad_id):
     selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
     cities = database.get_cities()
     categories_json = json.dumps(categories_with_sub_categories)
-
+    selected_sub_categories = categories_with_sub_categories[selected_ad["category"]]["value"]
     return render_template("edit_my_ad.html", ad=selected_ad,
                            categories_json=categories_json,
                            categories=categories_with_sub_categories,
+                           selected_sub_categories = selected_sub_categories,
                            cities=cities)
 
 

@@ -16,7 +16,7 @@ function populate_sub_categories_in_search_bar() {
     //reset menu if there was some category selected before and show user that 
     //they can now select a sub-category
     selected_sub_category_id.find("option").remove().end();
-    selected_sub_category_id.append($("<option selected disabled/>").val("Select Sub - Category").text("Select Sub - Category"));
+    //selected_sub_category_id.append($("<option selected disabled/>").val("Select Sub - Category").text("Select Sub - Category"));
     $.each(list_of_selected_sub_categories, function(index, value) {
         selected_sub_category_id.append($("<option />").val(value.id).text(value.name));
     });
@@ -178,4 +178,4 @@ function update_selected_ads_info() {
 //$("#next_button").click(show_next_ads);
 //$("#prev_button").click(show_prev_ads);
 //$("#search-button").click(search_button);
-//$(document).ready(load_initial_list_of_ads);
+//$(document).ready(populate_sub_categories_in_search_bar);

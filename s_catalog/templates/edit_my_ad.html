@@ -69,7 +69,11 @@
          <div class="form-group">
             <label for="sub-category-selected">Select sub-category</label>
             <select id="sub-category-selected" class="form-control">
-                        <option value = "-1" selected="selected">Sub-Category: select category first</option>
+                        <option value ="{{ad["sub_category_id"]}}" selected="selected">{{ ad["sub_category"] }}</option>
+                        
+                         {% for sub_category in selected_sub_categories if not sub_category["name"] == ad["sub_category"]%}
+                        	<option value="{{ sub_category["id"] }}">{{ sub_category["name"] }}</option>
+                        {% endfor %}
              </select>
         </div>
         <div class="form-group">
