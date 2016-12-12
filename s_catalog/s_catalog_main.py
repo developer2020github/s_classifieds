@@ -222,7 +222,10 @@ def edit_ad(ad_id):
     cities = database.get_cities()
     categories_json = json.dumps(categories_with_sub_categories)
 
-    return render_template("edit_my_ad.html", ad=selected_ad, cities = cities)
+    return render_template("edit_my_ad.html", ad=selected_ad,
+                           categories_json=categories_json,
+                           categories=categories_with_sub_categories,
+                           cities=cities)
 
 
 @app.route("/myads")
