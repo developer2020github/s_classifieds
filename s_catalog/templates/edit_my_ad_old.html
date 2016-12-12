@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row top-buffer-sm ">
+            <div class="col-md-3 panel panel-default panel-main">
+                S-classifieds
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+                <div class="btn-group" role="group" aria-label="...">
+                    <a href="login_simple" class="btn btn-default">Log in</a>
+                    <a href="login" class="btn btn-default">Log in simple</a>
+                    <a href="../../myads" class="btn btn-default">My ads</a>
+                    <a href="google_sign_out" class="btn btn-default">Sign out google</a>
+                    <a href="user_profile" class="btn btn-default">My profile</a>
+                    <a href="logout_simple" class="btn btn-default">Sign Out</a>
+                    <button type="button" class="btn btn-default">New ad</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class='latest-ads panel panel-default panel-main panel-text'>
+                    <h4>{{ ad["ad_title"] }}</a></h4>
+                    <h4>Price : {{ ad["price"] }} Posted on : {{ ad["formatted_date"] }}</h4>
+                    <h4>User email: {{ ad["user"].email }}</h4>
+                    <h4>Category: {{ ad["category"] }}</h4>
+                    <h4>Sub Category: {{ ad["sub_category"] }}</h4>
+                    <h4>Location: {{ ad["city"] }}</h4>
+                    <div>
+                        {{ ad["text"] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

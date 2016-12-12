@@ -8,7 +8,8 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+
+  <div class="container-fluid">
         <div class="row top-buffer-sm ">
             <div class="col-md-3 panel panel-default panel-main">
                 S-classifieds
@@ -29,22 +30,72 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class='latest-ads panel panel-default panel-main panel-text'>
-                    <h4>{{ ad["ad_title"] }}</a></h4>
-                    <h4>Price : {{ ad["price"] }} Posted on : {{ ad["formatted_date"] }}</h4>
-                    <h4>User email: {{ ad["user"].email }}</h4>
-                    <h4>Category: {{ ad["category"] }}</h4>
-                    <h4>Sub Category: {{ ad["sub_category"] }}</h4>
-                    <h4>Location: {{ ad["city"] }}</h4>
-                    <div>
-                        {{ ad["text"] }}
-                    </div>
-                </div>
-            </div>
+
+
+    <div class "row">
+     <div class="col-md-3"></div>
+     <div class="col-md-6">
+    <form>
+        <div class="form-group">
+            <label for="contact_name">Contact name</label>
+            <input type="text" class="form-control" id="contact_name" value='{{ ad["contact_name"] }}'>
         </div>
+        <div class="form-group">
+            <label for="contact_email">Contact email</label>
+            <input type="email" class="form-control" id="contact_email" value='{{ ad["contact_email"] }}'>
+        </div>
+         <div class="form-group">
+            <label for="contact_phone">Contact phone</label>
+            <input type="phone" class="form-control" id="contact_phone" value='{{ ad["contact_phone"] }}'>
+        </div>
+        <div class="form-group">
+            <label for="select_city">City</label>
+            <select class="form-control" id="select_city">
+                <option>city1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="select_category">Select category</label>
+            <select class="form-control" id="select_category">
+                <option>cat1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+         <div class="form-group">
+            <label for="select_sub_category">Select sub-category</label>
+            <select class="form-control" id="select_sub_category">
+                <option>sub_cat_cat1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ad_price">Price:</label>
+            <input type="text" class="form-control" id="ad_price" value='{{ ad["price"] }}'>
+        </div>
+        <div class="form-group">
+            <label for="ad_title">Ad title:</label>
+            <input type="text" class="form-control" id="ad_title" value='{{ ad["ad_title"] }}'>
+        </div>
+        <div class="form-group">
+            <label for="ad_text">Description:</label>
+            <textarea class="form-control" id="ad_text" rows="8">{{ ad["text"] }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
     </div>
+    <div class="col-md-3"></div>
+   </div>
+   </div>
 </body>
 
 </html>
