@@ -217,8 +217,12 @@ def ad_page(ad_id):
 
 @app.route("/ads/<int:ad_id>/edit_ad")
 def edit_ad(ad_id):
+    categories_with_sub_categories = database.get_categories_with_subcategories()
     selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
-    return render_template("edit_my_ad.html", ad=selected_ad)
+    cities = database.get_cities()
+    categories_json = json.dumps(categories_with_sub_categories)
+
+    return render_template("edit_my_ad.html", ad=selected_ad, cities = cities)
 
 
 @app.route("/myads")

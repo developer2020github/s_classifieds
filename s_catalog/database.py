@@ -174,6 +174,7 @@ def ad_to_dict(ad):
     dict_ad["price"] = str(ad.price_cents/100.0)
     dict_ad["id"] = str(ad.id)
     dict_ad["formatted_date"] = ad.time_created.strftime("%d-%B-%Y at %H:%M")
+    dict_ad["city_id"] = str(ad.city_id)
 
     return dict_ad
 

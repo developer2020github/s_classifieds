@@ -51,11 +51,10 @@
         <div class="form-group">
             <label for="select_city">City</label>
             <select class="form-control" id="select_city">
-                <option>city1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+        		    <option value = "{{ad["city_id"]}}" selected="selected">{{ ad["city"] }}</option>
+                	{% for city in cities if not city.name == ad["city"]  %}
+                		<option value="{{ city.id }}">{{ city.name }}</option>
+                	{% endfor %}
             </select>
         </div>
         <div class="form-group">
