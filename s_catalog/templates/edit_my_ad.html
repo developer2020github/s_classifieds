@@ -60,8 +60,8 @@
         <div class="form-group">
             <label for="category-selected">Select category</label>
             <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
-                        <option value ="-1" selected="selected">Select category</option>
-                        {% for category in categories.keys() %}
+                        <option value ="{{ad["category_id"]}}" selected="selected">{{ ad["category"] }}</option>
+                        {% for category in categories.keys() if not category == ad["category"]%}
                         	<option value="{{ categories[category].id }}">{{ category }}</option>
                         {% endfor %}
             </select>

@@ -162,19 +162,29 @@ def ad_to_dict(ad):
 
     dict_ad = dict()
     dict_ad["user"] = session.query(create_database.User).filter(create_database.User.id == int(ad.user_id)).one()
+
     dict_ad["city"] = ad.city.name
+    dict_ad["city_id"] = str(ad.city_id)
+
     dict_ad["category"] = ad.sub_category.category.name
+    dict_ad["category_id"] = str(ad.sub_category.category_id)
+
     dict_ad["sub_category"] = ad.sub_category.name
+    dict_ad["sub_category_id"] = str(ad.sub_category.id)
+
     dict_ad["ad_title"] = ad.title
     dict_ad["text"] = ad.text
+
     dict_ad["contact_phone"] = ad.contact_phone
     dict_ad["contact_email"] = ad.contact_email
     dict_ad["contact_name"] = ad.contact_name
+
     dict_ad["date"] = ad.time_created
     dict_ad["price"] = str(ad.price_cents/100.0)
     dict_ad["id"] = str(ad.id)
     dict_ad["formatted_date"] = ad.time_created.strftime("%d-%B-%Y at %H:%M")
-    dict_ad["city_id"] = str(ad.city_id)
+
+
 
     return dict_ad
 
