@@ -35,22 +35,22 @@
     <div class "row">
      <div class="col-md-3"></div>
      <div class="col-md-6">
-    <form>
+    <form action = "{{ url_for('edit_ad', ad_id = ad['id'] ) }}" method="post">
         <div class="form-group">
             <label for="contact_name">Contact name</label>
-            <input type="text" class="form-control" id="contact_name" value='{{ ad["contact_name"] }}'>
+            <input type="text" class="form-control" id="contact_name" name="contact_name" value='{{ ad["contact_name"] }}'>
         </div>
         <div class="form-group">
             <label for="contact_email">Contact email</label>
-            <input type="email" class="form-control" id="contact_email" value='{{ ad["contact_email"] }}'>
+            <input type="email" class="form-control" id="contact_email" name="contact_email" value='{{ ad["contact_email"] }}'>
         </div>
          <div class="form-group">
             <label for="contact_phone">Contact phone</label>
-            <input type="phone" class="form-control" id="contact_phone" value='{{ ad["contact_phone"] }}'>
+            <input type="phone" class="form-control" id="contact_phone" name="contact_phone" value='{{ ad["contact_phone"] }}'>
         </div>
         <div class="form-group">
             <label for="select_city">City</label>
-            <select class="form-control" id="select_city">
+            <select class="form-control" name="select_city" id="select_city">
         		    <option value = "{{ad["city_id"]}}" selected="selected">{{ ad["city"] }}</option>
                 	{% for city in cities if not city.name == ad["city"]  %}
                 		<option value="{{ city.id }}">{{ city.name }}</option>
@@ -59,7 +59,7 @@
         </div>
         <div class="form-group">
             <label for="category-selected">Select category</label>
-            <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
+            <select id="category-selected" class="form-control" name = "category-selected" onchange="populate_sub_categories_in_search_bar()">
                         <option value ="{{ad["category_id"]}}" selected="selected">{{ ad["category"] }}</option>
                         {% for category in categories.keys() if not category == ad["category"]%}
                         	<option value="{{ categories[category].id }}">{{ category }}</option>
@@ -68,7 +68,7 @@
         </div>
          <div class="form-group">
             <label for="sub-category-selected">Select sub-category</label>
-            <select id="sub-category-selected" class="form-control">
+            <select id="sub-category-selected" class="form-control" name="sub-category-selected">
                         <option value ="{{ad["sub_category_id"]}}" selected="selected">{{ ad["sub_category"] }}</option>
                         
                          {% for sub_category in selected_sub_categories if not sub_category["name"] == ad["sub_category"]%}
@@ -78,15 +78,15 @@
         </div>
         <div class="form-group">
             <label for="ad_price">Price:</label>
-            <input type="text" class="form-control" id="ad_price" value='{{ ad["price"] }}'>
+            <input type="text" class="form-control" id="ad_price" name="ad_price" value='{{ ad["price"] }}'>
         </div>
         <div class="form-group">
             <label for="ad_title">Ad title:</label>
-            <input type="text" class="form-control" id="ad_title" value='{{ ad["ad_title"] }}'>
+            <input type="text" class="form-control" id="ad_title" name="ad_title" value='{{ ad["ad_title"] }}'>
         </div>
         <div class="form-group">
             <label for="ad_text">Description:</label>
-            <textarea class="form-control" id="ad_text" rows="8">{{ ad["text"] }}</textarea>
+            <textarea class="form-control" id="ad_text" name="ad_text" rows="8">{{ ad["text"] }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

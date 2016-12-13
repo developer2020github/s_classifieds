@@ -215,10 +215,21 @@ def ad_page(ad_id):
                            cities=cities, selected_ad=selected_ad)
 
 
-@app.route("/ads/<int:ad_id>/edit_ad")
+@app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
 def edit_ad(ad_id):
+    print "calling edit_ad"
+
+    selected_ad = database.ad_to_dict(database.get_ad_by_id(int(ad_id)))
+
+    if request.method == "POST":
+        print "form values: "
+        f = request.form
+        for key in f.keys():
+            for value in f.getlist(key):
+                print key, ":", value
+
     categories_with_sub_categories = database.get_categories_with_subcategories()
-    selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
+
     cities = database.get_cities()
     categories_json = json.dumps(categories_with_sub_categories)
     selected_sub_categories = categories_with_sub_categories[selected_ad["category"]]["value"]

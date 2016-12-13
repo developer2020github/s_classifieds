@@ -122,9 +122,11 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 def get_cities():
     query_cities = session.query(create_database.City)
     all_cities = query_cities.all()
+    '''
     for city in all_cities:
         print city.name
         print city.id
+    '''
     return all_cities
 
 
