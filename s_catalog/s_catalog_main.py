@@ -236,7 +236,7 @@ def update_ad_from_form_info(ad, form):
     """
     ad.text = form["ad_text"]
     ad.price_cents = int((float(form["ad_price"]) * 100))
-    ad.s = form["contact_email"]
+    ad.contact_email = form["contact_email"]
     ad.contact_name = str(form["contact_name"])
     ad.contact_phone = str(form["contact_phone"])
     ad.city_id = int(form["select_city"])
