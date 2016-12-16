@@ -30,6 +30,11 @@ def get_user_ads(user):
     return user_ads
 
 
+def update_ad(ad):
+    session.add(ad)
+    session.commit()
+
+
 def get_user_by_unicode_id(user_id):
     user = session.query(create_database.User).filter(create_database.User.id == int(user_id)).first()
     return user
@@ -159,7 +164,7 @@ def ad_to_dict(ad):
     ads displayed at any time is small, and all data is already attached
     to ad object via backref it makes no sense to run SQL joins.
     :param ad: Ad object
-    :return: dictionayr of string fileds
+    :return: dictionary of string fileds
     '''
 
     dict_ad = dict()

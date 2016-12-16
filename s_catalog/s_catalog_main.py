@@ -215,25 +215,52 @@ def ad_page(ad_id):
                            cities=cities, selected_ad=selected_ad)
 
 
+def print_request_form(input_request):
+    """"
+    Debug  helper function  - prints fields and values of request form
+    :param input_request: request to print form from
+    :return: none
+    """
+    f = input_request.form
+    for key in f.keys():
+        for value in f.getlist(key):
+            print key, ":", value
+
+
+def update_ad_from_form_info(ad, form):
+    """
+    Updates ad object from passed form and saves it to the database
+    :param ad: ad to be updated
+    :param form: forms to use as a source
+    :return: none
+    """
+    ad.text = form["ad_text"]
+    ad.price_cents = int((float(form["ad_price"]) * 100))
+    ad.s = form["contact_email"]
+    ad.contact_name = str(form["contact_name"])
+    ad.contact_phone = str(form["contact_phone"])
+    ad.city_id = int(form["select_city"])
+    ad.sub_category_id = int(form["sub-category-selected"])
+    ad.title = form["ad_title"]
+    database.update_ad(ad)
+
+
 @app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
 def edit_ad(ad_id):
     print "calling edit_ad"
 
-    selected_ad = database.ad_to_dict(database.get_ad_by_id(int(ad_id)))
+    selected_ad = database.get_ad_by_id(int(ad_id))
 
     if request.method == "POST":
-        print "form values: "
-        f = request.form
-        for key in f.keys():
-            for value in f.getlist(key):
-                print key, ":", value
+        update_ad_from_form_info(selected_ad, request.form)
 
     categories_with_sub_categories = database.get_categories_with_subcategories()
 
     cities = database.get_cities()
     categories_json = json.dumps(categories_with_sub_categories)
-    selected_sub_categories = categories_with_sub_categories[selected_ad["category"]]["value"]
-    return render_template("edit_my_ad.html", ad=selected_ad,
+    ad_dict = database.ad_to_dict(selected_ad)
+    selected_sub_categories = categories_with_sub_categories[ad_dict["category"]]["value"]
+    return render_template("edit_my_ad.html", ad=ad_dict,
                            categories_json=categories_json,
                            categories=categories_with_sub_categories,
                            selected_sub_categories = selected_sub_categories,
