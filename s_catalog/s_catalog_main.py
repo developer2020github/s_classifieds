@@ -67,11 +67,11 @@ def login_simple():
 
 @app.route("/myads", methods=["GET"])
 @flask_login.login_required
-def myads():
+def my_ads():
     user = flask_login.current_user
     categories_with_sub_categories = database.get_categories_with_subcategories_for_user(user)
     categories_json = json.dumps(categories_with_sub_categories)
-    cities = database.get_cities()
+    cities = database.get_user_specific_cities(user)
     # print categories_json
     # print cities
     return render_template("myads.html", categories=categories_with_sub_categories, categories_json=categories_json,

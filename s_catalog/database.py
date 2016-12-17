@@ -66,6 +66,7 @@ def add_user_if_does_not_exist(email, name="not set", phone_number="not set"):
         add_new_user(email, name, phone_number)
 
 
+
 def get_user_specific_categories(user, sub_categories=None):
     """
     :param user: user - user object
@@ -84,10 +85,28 @@ def get_user_specific_categories(user, sub_categories=None):
     return categories
 
 
+def get_user_specific_cities(user):
+    """
+    :param user: user object
+    :return: list of city objects in which user has ads
+    """
+
+    cities_to_include = []
+    ads = get_user_ads(user)
+    if ads:
+        city_ids_to_include = [ad.city_id for ad in ads]
+        city_ids_to_include = list(set(city_ids_to_include))
+        all_cities = get_cities()
+        cities_to_include = [city for city in all_cities if city.id in city_ids_to_include]
+
+    return cities_to_include
+
+
+
 def get_user_specific_sub_categories(user):
     """
-    :input: user - user object
-    :return: list of sub-categories in which current user has ads
+    :param user: user object
+    :return: list of sub-categories ids in which current user has ads
     """
     sub_categories = []
     ads = get_user_ads(user)
