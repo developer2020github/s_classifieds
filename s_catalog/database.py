@@ -66,13 +66,15 @@ def add_user_if_does_not_exist(email, name="not set", phone_number="not set"):
         add_new_user(email, name, phone_number)
 
 
-def get_user_specific_categories(user):
+def get_user_specific_categories(user, sub_categories=None):
     """
     :param user: user - user object
+    :param sub_categories: - optinal list of sub-category ids (in case it is already known)
     :return: list of  categories in which current user has ads
     """
     categories = []
-    sub_categories = get_user_specific_sub_categories(user)
+    if not sub_categories:
+        sub_categories = get_user_specific_sub_categories(user)
     if sub_categories:
         for sub_category in sub_categories:
             category = session.query(create_database.SubCategory).filter_by(id = sub_category).first().category_id
@@ -162,6 +164,19 @@ def get_cities():
     return all_cities
 
 
+def get_categories_with_subcategories_for_user(user):
+    """
+    Same as get_categories_with_subcategories, but filters in categories and sub categories only for a particular user
+    :param user: user object
+    :return: same data structure as return of get_categories_with_subcategories
+    """
+    sub_categories_to_include = get_user_specific_sub_categories(user)
+    categories_to_include = get_user_specific_categories(user, sub_categories_to_include)
+    cats_with_sub_cats = get_categories_with_subcategories(categories_to_include=categories_to_include,
+                                                           sub_categories_to_include=sub_categories_to_include)
+    return cats_with_sub_cats
+
+
 def get_categories_with_subcategories(categories_to_include = None, sub_categories_to_include = None):
     """
     :input: categories_to_include - optional list of categories to filter in
@@ -196,13 +211,13 @@ def get_categories_with_subcategories(categories_to_include = None, sub_categori
         return False
 
     for category in query_categories.all():
-        if category_or_subcategory_should_be_included(categories_to_include, category.id):
+        if category_or_subcategory_should_be_included(category.id, categories_to_include):
             cats_with_sub_cats[category.name] = dict()
             cats_with_sub_cats[category.name]["id"] = str(category.id)
             cats_with_sub_cats[category.name]["value"] = list()
 
     for sub_category in query_sub_categories.all():
-        if category_or_subcategory_should_be_included(sub_categories_to_include, sub_category.id):
+        if category_or_subcategory_should_be_included(sub_category.id, sub_categories_to_include):
             d_sub_category = dict()
             d_sub_category["id"] = str(sub_category.id)
             d_sub_category["name"] = str(sub_category.name)

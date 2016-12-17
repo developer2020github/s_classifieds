@@ -69,7 +69,7 @@ def login_simple():
 @flask_login.login_required
 def myads():
     user = flask_login.current_user
-    categories_with_sub_categories = database.get_categories_with_subcategories()
+    categories_with_sub_categories = database.get_categories_with_subcategories_for_user(user)
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
     # print categories_json
@@ -266,10 +266,11 @@ def edit_ad(ad_id):
                            selected_sub_categories = selected_sub_categories,
                            cities=cities)
 
-
+'''
 @app.route("/myads")
 def my_ads_page():
     return render_template("myads.html")
+'''
 
 
 @app.route("/login")
