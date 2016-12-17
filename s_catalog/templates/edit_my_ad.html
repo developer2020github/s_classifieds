@@ -32,7 +32,7 @@
         </div>
 
 
-    <div class "row">
+    <div class="row white-text">
      <div class="col-md-3"></div>
      <div class="col-md-6">
     <form action = "{{ url_for('edit_ad', ad_id = ad['id'] ) }}" method="post">
@@ -88,7 +88,7 @@
             <label for="ad_text">Description:</label>
             <textarea class="form-control" id="ad_text" name="ad_text" rows="8">{{ ad["text"] }}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-block black-text">Submit</button>
     </form>
     </div>
     <div class="col-md-3"></div>
