@@ -18,16 +18,16 @@ def set_user_authenticated_status(user, authenticated_status):
     session.add(user)
     session.commit()
 
+
 def get_user_ads(user):
-    print "get_user_ads"
-    print user
+
     if user is None:
         return None
-    print user.id
-    print user.email
 
     user_ads = session.query(create_database.Ad).filter(create_database.Ad.user_id == user.id).all()
-    return user_ads
+    if user_ads.count > 0:
+        return user_ads
+    return None
 
 
 def update_ad(ad):
@@ -52,8 +52,6 @@ def get_user_from_email(email):
 
 
 def add_new_user(email, name, phone_number):
-    print "add_new_user"
-    print name
     new_user = create_database.User(name=validate_user_data_string(name),
                                     email=email,
                                     phone=validate_user_data_string(phone_number))
@@ -66,6 +64,35 @@ def add_user_if_does_not_exist(email, name="not set", phone_number="not set"):
     print name
     if not get_user_from_email(email):
         add_new_user(email, name, phone_number)
+
+
+def get_user_specific_categories(user):
+    """
+    :param user: user - user object
+    :return: list of  categories in which current user has ads
+    """
+    categories = []
+    sub_categories = get_user_specific_sub_categories(user)
+    if sub_categories:
+        for sub_category in sub_categories:
+            category = session.query(create_database.SubCategory).filter_by(id = sub_category).first().category_id
+            categories.append(category)
+
+        categories = list(set(categories))
+    return categories
+
+
+def get_user_specific_sub_categories(user):
+    """
+    :input: user - user object
+    :return: list of sub-categories in which current user has ads
+    """
+    sub_categories = []
+    ads = get_user_ads(user)
+    if ads:
+        sub_categories = [ad.sub_category_id for ad in ads]
+        sub_categories = list(set(sub_categories))
+    return sub_categories
 
 
 def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
@@ -135,28 +162,57 @@ def get_cities():
     return all_cities
 
 
-def get_categories_with_subcategories():
-    #returns dictionary of lists of subcategories by category name
+def get_categories_with_subcategories(categories_to_include = None, sub_categories_to_include = None):
+    """
+    :input: categories_to_include - optional list of categories to filter in
+            sub_categories_to_include - optionals list of sub-categories to include
+            If optional inputs are empty, all categories and sub_categories will be included.
+            No checks whatsoever are done on the inputs - i.e. client s/w unig should
+            supply a correct combination of categories and sub-categories to include.
+
+    :return:  dictionary of lists of subcategories by category name.
+      Data is structured in following way:
+      a dictionary by names of categories
+      each item in the dictionary above is a dictionary itself and represents category and associated sub-categories.
+      It contains following fields:
+      "id" - id of the category converted to string
+       "value" - list of items, each representing a sub-category
+        In turn, each item in the list is a dictionary, representing a subcategory.
+        The subcategory dictionaries contain following fields:
+        "id" - id of the sub-category converted to string
+        "name" - name of the sub-category
+    """
     query_sub_categories = session.query(create_database.SubCategory)
     query_categories = session.query(create_database.Category)
     cats_with_sub_cats = dict()
+
+    def category_or_subcategory_should_be_included(item_id, items_to_include):
+        if not items_to_include:
+            return True
+
+        if item_id in items_to_include:
+            return True
+
+        return False
+
     for category in query_categories.all():
-        cats_with_sub_cats[category.name] = dict()
-        cats_with_sub_cats[category.name]["id"] = str(category.id)
-        cats_with_sub_cats[category.name]["value"] = list()
-        #print category.name
+        if category_or_subcategory_should_be_included(categories_to_include, category.id):
+            cats_with_sub_cats[category.name] = dict()
+            cats_with_sub_cats[category.name]["id"] = str(category.id)
+            cats_with_sub_cats[category.name]["value"] = list()
 
     for sub_category in query_sub_categories.all():
-        d_sub_category = dict()
-        d_sub_category["id"] = str(sub_category.id)
-        d_sub_category["name"] = str(sub_category.name)
-        cats_with_sub_cats[sub_category.category.name]["value"].append(d_sub_category)
+        if category_or_subcategory_should_be_included(sub_categories_to_include, sub_category.id):
+            d_sub_category = dict()
+            d_sub_category["id"] = str(sub_category.id)
+            d_sub_category["name"] = str(sub_category.name)
+            cats_with_sub_cats[sub_category.category.name]["value"].append(d_sub_category)
 
     return cats_with_sub_cats
 
 
 def ad_to_dict(ad):
-    '''
+    """
     converts ad object into dictionary of strings:
     some of the fields (such as category) do not need to be stored in
     database, and others (like sub-category) are represntedby ID, not strings
@@ -165,7 +221,7 @@ def ad_to_dict(ad):
     to ad object via backref it makes no sense to run SQL joins.
     :param ad: Ad object
     :return: dictionary of string fileds
-    '''
+    """
 
     dict_ad = dict()
     dict_ad["user"] = session.query(create_database.User).filter(create_database.User.id == int(ad.user_id)).one()
@@ -191,14 +247,10 @@ def ad_to_dict(ad):
     dict_ad["id"] = str(ad.id)
     dict_ad["formatted_date"] = ad.time_created.strftime("%d-%B-%Y at %H:%M")
 
-
-
     return dict_ad
 
 
 def get_ad_by_id(ad_id):
-    #print(ad_id)
-    #return generate_data.get_ad_by_id(ad_id)
     return session.query(create_database.Ad).filter(create_database.Ad.id == ad_id).first()
 
 
@@ -212,6 +264,8 @@ def print_ad(ad):
     print ad.time_created
     print ad.user.name
     print ad.city.name
+    print "sub_category:"
+    print ad.sub_category_id
     print "price: " + str(ad.price_cents/100.0)
     print ad.title
     print ad.text
@@ -232,8 +286,12 @@ def test_get_user_id_by_email():
     print get_user_from_email(existing_user_email)
     print get_user_from_email(non_existing_user_email)
 
+
+
+
 if __name__ == "__main__":
+    test_filtering_by_user()
     #d = get_categories_with_subcategories()
     #print d
     #test_get_ad_by_id()
-    test_get_user_id_by_email()
+    #test_get_user_id_by_email()

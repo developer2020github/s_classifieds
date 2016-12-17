@@ -43,9 +43,49 @@ def test_query():
     print ads.all()
     print ads.count()
 
-#test_empty_query()
 
-print str(455).decode("utf-8")
+def test_filtering_by_user():
+    print "testing get_user_specific_sub_categories and get_user_specific_categories"
+    users = database.session.query(create_database.User).all()
+    test_outcome = "all tests passed"
+
+    for user in users:
+        ads = database.get_user_ads(user)
+
+        sub_categories_to_check = []
+        categories_to_check = []
+        for ad in ads:
+            #print ad.sub_category_id
+            sub_categories_to_check.append(ad.sub_category_id)
+            sub_category = database.session.query(create_database.SubCategory).get(ad.sub_category_id)
+            category = database.session.query(create_database.Category).get(sub_category.category_id).id
+            categories_to_check.append(category)
+
+        sub_categories_to_check = list(set(sub_categories_to_check))
+        categories_to_check = list(set(categories_to_check))
+        user_ads_sub_categories = database.get_user_specific_sub_categories(user)
+        user_ads_categories = database.get_user_specific_categories(user)
+
+        if sub_categories_to_check.sort()==user_ads_sub_categories.sort() and \
+           categories_to_check.sort() == user_ads_categories.sort():
+            print "test ok"
+        else:
+            print "test failed"
+            test_outcome = "some test(s) failed"
+
+        print sub_categories_to_check
+        print user_ads_sub_categories
+
+        print categories_to_check
+        print user_ads_categories
+        print ""
+        print ""
+    print "tested get_user_specific_sub_categories and get_user_specific_categories:"
+    print test_outcome
+
+test_filtering_by_user()
+
+
 
 
 
