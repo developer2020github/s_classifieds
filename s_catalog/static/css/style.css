@@ -26,6 +26,13 @@ body {
     line-height: 33px;
 }
 
+.panel-text-left {
+    min-height: 33px;
+    line-height: 33px;
+    color: black;
+    background-color: #E2E2E2;
+}
+
 .panel-text {
 	background-color: #F3F1F1;
 }
