@@ -250,6 +250,39 @@ def get_categories_with_subcategories(categories_to_include = None, sub_categori
     return cats_with_sub_cats
 
 
+def get_ad_template(user):
+    """
+    To be  used for new ads: wherever possible, populates ad dictionary fields from user object.
+    The idea is to make same similar templates work for edit and new ad pages.
+    :param user:
+    :return: ad template as a dictionary (similar to ad_to_dict)
+    """
+    dict_ad = dict()
+    dict_ad["user"] = user.id
+
+    dict_ad["city"] = ""
+    dict_ad["city_id"] = ""
+
+    dict_ad["category"] = ""
+    dict_ad["category_id"] = ""
+
+    dict_ad["sub_category"] = ""
+    dict_ad["sub_category_id"] = ""
+
+    dict_ad["ad_title"] = "Enter ad title"
+    dict_ad["text"] = "Enter description"
+
+    dict_ad["contact_phone"] = user.phone
+    dict_ad["contact_email"] = user.email
+    dict_ad["contact_name"] = user.name
+
+    dict_ad["date"] = ""
+    dict_ad["price"] = "0.0"
+    dict_ad["id"] = ""
+    dict_ad["formatted_date"] = ""
+
+    return dict_ad
+
 def ad_to_dict(ad):
     """
     converts ad object into dictionary of strings:

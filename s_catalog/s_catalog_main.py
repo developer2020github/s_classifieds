@@ -255,7 +255,19 @@ def new_ad():
     if request.method == "POST":
         return redirect(url_for("my_ads"))
 
-    return render_template("new_ad.html")
+    user = database.get_user_by_unicode_id(flask_login.current_user.id)
+    new_ad_template = database.get_ad_template(user)
+    categories_with_sub_categories = database.get_categories_with_subcategories()
+    cities = database.get_cities()
+    categories_json = json.dumps(categories_with_sub_categories)
+
+    selected_sub_categories = categories_with_sub_categories["Electronics"]["value"]
+    return render_template("new_ad.html", ad=new_ad_template,
+                           categories_json=categories_json,
+                           categories=categories_with_sub_categories,
+                           selected_sub_categories = selected_sub_categories,
+                           cities=cities)
+
 
 
 
