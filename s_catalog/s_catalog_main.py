@@ -245,6 +245,23 @@ def update_ad_from_form_info(ad, form):
     database.update_ad(ad)
 
 
+@app.route("/ads/<int:ad_id>/delete_ad",  methods=["GET", "POST"])
+def delete_ad(ad_id):
+    """
+    :param ad_id: ad to be deleted
+    :return: on get add page; on post deletes ad and redirects to my ads page
+    """
+    selected_ad = database.get_ad_by_id(int(ad_id))
+
+    if request.method == "POST":
+        database.delete_ad(selected_ad)
+        return redirect(url_for("my_ads"))
+
+    ad_dict = database.ad_to_dict(selected_ad)
+
+    return render_template("delete_ad.html", ad=ad_dict)
+
+
 @app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
 def edit_ad(ad_id):
     print "calling edit_ad"
@@ -265,12 +282,6 @@ def edit_ad(ad_id):
                            categories=categories_with_sub_categories,
                            selected_sub_categories = selected_sub_categories,
                            cities=cities)
-
-'''
-@app.route("/myads")
-def my_ads_page():
-    return render_template("myads.html")
-'''
 
 
 @app.route("/login")

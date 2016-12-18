@@ -30,6 +30,11 @@ def get_user_ads(user):
     return None
 
 
+def delete_ad(ad):
+    session.delete(ad)
+    session.commit()
+
+
 def update_ad(ad):
     session.add(ad)
     session.commit()
