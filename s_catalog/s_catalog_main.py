@@ -245,6 +245,21 @@ def update_ad_from_form_info(ad, form):
     database.update_ad(ad)
 
 
+@app.route("/new_ad",  methods=["GET", "POST"])
+def new_ad():
+    """
+    Creates new ad from user inputs
+    :return: on get add page; on post add  and redirects to my ads page ; on get  returns partly filled in template
+    """
+
+    if request.method == "POST":
+        return redirect(url_for("my_ads"))
+
+    return render_template("new_ad.html")
+
+
+
+
 @app.route("/ads/<int:ad_id>/delete_ad",  methods=["GET", "POST"])
 def delete_ad(ad_id):
     """
