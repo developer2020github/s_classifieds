@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask import session as login_session
 from forms import LoginForm
 import database
+import create_database
 import json
 import s_catalog_lib
 from pprint import pprint
@@ -253,6 +254,8 @@ def new_ad():
     """
 
     if request.method == "POST":
+        #new_ad = create_database.Ad(user_id=flask_login.current_user.id)
+        #STOPPED HERE
         return redirect(url_for("my_ads"))
 
     user = database.get_user_by_unicode_id(flask_login.current_user.id)
