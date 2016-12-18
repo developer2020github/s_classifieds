@@ -238,6 +238,7 @@ def update_ad_from_form_info(ad, form):
     ad.text = form["ad_text"]
     ad.price_cents = int((float(form["ad_price"]) * 100))
     ad.contact_email = form["contact_email"]
+    ad.primary_contact  = ad.contact_email
     ad.contact_name = str(form["contact_name"])
     ad.contact_phone = str(form["contact_phone"])
     ad.city_id = int(form["select_city"])
@@ -254,8 +255,9 @@ def new_ad():
     """
 
     if request.method == "POST":
-        #new_ad = create_database.Ad(user_id=flask_login.current_user.id)
-        #STOPPED HERE
+        ad_new = create_database.Ad(user_id=flask_login.current_user.id)
+        update_ad_from_form_info(ad_new, request.form)
+        database.update_ad(ad_new)
         return redirect(url_for("my_ads"))
 
     user = database.get_user_by_unicode_id(flask_login.current_user.id)
