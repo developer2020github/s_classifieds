@@ -61,7 +61,7 @@ def login_simple():
                 database.set_user_authenticated_status(user, True)
                 flask_login.login_user(user, remember=True)
                 print "user " + user.email + " successfully logged in "
-                return redirect("/")
+                return redirect(url_for("index"))
 
     return render_template("login_simple.html", form=form)
 
@@ -81,7 +81,8 @@ def my_ads():
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    return redirect("/login_simple")
+    return redirect(url_for("login_simple"))
+
 
 @app.route("/logout_simple", methods=["GET", "POST"])
 @flask_login.login_required
@@ -99,11 +100,11 @@ def logout():
     #if user was connected via google - we need to disconnect
 
 
-    return redirect("/")
+    return redirect(url_for("index"))
 
 
 @app.route('/')
-def main_browse_page():
+def index():
     categories_with_sub_categories = database.get_categories_with_subcategories()
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
@@ -116,11 +117,11 @@ def main_browse_page():
 @app.route("/user_profile")
 def user_profile_page():
     if "email" not in login_session:
-        return redirect("/login")
+        return redirect(url_for("login"))
 
     user = database.get_user_from_email(login_session["email"])
     if not user:
-        return redirect("/login")
+        return redirect(url_for("login"))
 
     return render_template("user_profile.html", message_text="Your profile: ", user_name=user.name,
                            user_email=user.email, user_phone = user.phone )
@@ -317,8 +318,8 @@ def edit_ad(ad_id):
 def sign_in_page():
     state = s_catalog_lib.get_random_string()
     login_session["state"] = state
-    print "current_email :"
-    print current_email
+    #print "current_email :"
+    #print current_email
     return render_template("login.html", session_state = login_session["state"], user_email=current_email)
 
 
