@@ -1,0 +1,37 @@
+<div class="panel panel-default search-panel">
+    <div class="panel panel-default">
+        <div class="panel-heading">SEARCH</div>
+    </div>
+    <select id="search-city-select" class="form-control">
+        <option value="-1" selected="selected">Location: all</option>
+        {% for city in cities %}
+        <option value="{{ city.id }}">{{ city.name }}</option>
+        {% endfor %}
+    </select>
+    <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
+        <option value="-1" selected="selected">Select category</option>
+        {% for category in categories.keys() %}
+        <option value="{{ categories[category].id }}">{{ category }}</option>
+        {% endfor %}
+    </select>
+    <select id="sub-category-selected" class="form-control">
+        <option value="-1" selected="selected">Sub-Category: select category first</option>
+    </select>
+    <select id="select-ads-within-days" class="form-control">
+        <option value="-1" selected="selected">Ads posted: any time</option>
+        <option value="3">Within 3 days</option>
+        <option value="7">Within 1 week</option>
+        <option value="14">Within 2 weeks</option>
+        <option value="21">Within 3 weeks</option>
+        <option value="30">Within 1 months</option>
+        <option value="90">Within 3 months</option>
+        <option value="180">Within 6 months</option>
+    </select>
+    <select id="arrange-results-by" class="form-control">
+        <option value="-1" selected="selected">Arrange result by:</option>
+        <option value="price_desc">Price: high to low</option>
+        <option value="price_asc">Price: low to high</option>
+        <option value="date_asc">Oldest first</option>
+        <option value="date_desc">Newest first</option>
+    </select>
+    <button id="search-button" class="btn btn-block">SEARCH</button>
