@@ -205,15 +205,11 @@ def show_more_ads():
 
     return jsonify(ads_data)
 
+
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):
     selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
-    print selected_ad
-    categories_with_sub_categories = database.get_categories_with_subcategories()
-    categories_json = json.dumps(categories_with_sub_categories)
-    cities = database.get_cities()
-    return render_template("ad.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, selected_ad=selected_ad)
+    return render_template("ad.html", ad=selected_ad)
 
 
 def print_request_form(input_request):
@@ -462,6 +458,7 @@ def gconnect():
 
 
 if __name__ == '__main__':
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.debug = True
     app.secret_key = "secret key" #used to sign sessions, need to change it to a properly generated key
     app.run(port=5000)
