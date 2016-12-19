@@ -8,24 +8,17 @@
 </head>
 
 <body>
-
-<div class='latest-ads panel panel-default panel-main panel-text'>
-        <h4>{{ ad["ad_title"] }}</a></h4>
-        <h4>Price : {{ ad["price"] }} Posted on : {{ ad["formatted_date"] }}</h4>
-        <h4>User email: {{ ad["user"].email }}</h4>
-        <h4>contact email: {{ ad["contact_email"] }}</h4>
-        <h4>Category: {{ ad["category"] }}</h4>
-        <h4>Sub Category: {{ ad["sub_category"] }}</h4>
-        <h4>Location: {{ ad["city"] }}</h4>
-        <div>
-          {{ ad["text"] }}
+    <div class="container-fluid">
+        {% include 'ad_row.html' %}
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form action="{{ url_for('delete_ad', ad_id = ad['id'] ) }}" method="post">
+                    <button type="submit" class="btn btn-block black-text">Confirm delete</button>
+                </form>
+            </div>
+            <div class="col-md-3"></div>
         </div>
-</div>
+    </div>
 
-<div>
- <form action = "{{ url_for('delete_ad', ad_id = ad['id'] ) }}" method="post">
-  <button type="submit" class="btn btn-block black-text">Confirm delete</button>
- </form>
-</div>
-
-<body>
+    <body>

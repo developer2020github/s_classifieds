@@ -1,0 +1,65 @@
+        <div class="row white-text">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="text-center">
+                           {{ ad["category"] }} :  {{ ad["sub_category"] }} 
+                        </h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="title-info1">City</div>
+                        <div class="panel panel-default panel-text1">
+                            {{ ad["city"] }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="title-info1">Price</div>
+                        <div class="panel panel-default panel-text1">
+                            {{ ad["price"] }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="title-info1">Date</div>
+                        <div class="panel panel-default panel-text1">
+                            {{ ad["formatted_date"] }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel-group">
+                            <div class="panel panel-default panel-text1">
+                                {{ ad["ad_title"] }}
+                            </div>
+                            <div class="panel panel-default panel-text1">
+                                {{ ad["text"] }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="title-info1">Contact name</div>
+                        <div class="panel panel-default panel-text1">
+                            {{ ad["contact_name"] }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="title-info1">Contact phone</div>
+                        <div class="panel panel-default panel-text1">
+                            {{ ad["contact_phone"] }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="title-info1">Contact email</div>
+                        <div class="panel panel-default panel-text1">
+                            {{ ad["contact_email"] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
