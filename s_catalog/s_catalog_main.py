@@ -76,7 +76,7 @@ def my_ads():
     # print categories_json
     # print cities
     return render_template("myads.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, user=user)
+                           cities=cities, page_info = get_page_info())
 
 
 @login_manager.unauthorized_handler
@@ -103,6 +103,13 @@ def logout():
     return redirect(url_for("index"))
 
 
+def get_page_info():
+    print "get page info"
+    print flask_login.current_user
+    if flask_login.current_user.is_authenticated:
+        return "S-classifieds " + ": " + flask_login.current_user.email
+    return "S-classifieds"
+
 @app.route('/')
 def index():
     categories_with_sub_categories = database.get_categories_with_subcategories()
@@ -111,7 +118,7 @@ def index():
     #print categories_json
     #print cities
     return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, page_info = "S-classifieds")
+                           cities=cities, page_info = get_page_info())
 
 
 @app.route("/user_profile")
@@ -292,7 +299,8 @@ def new_ad():
                            categories_json=categories_json,
                            categories=categories_with_sub_categories,
                            selected_sub_categories = selected_sub_categories,
-                           cities=cities)
+                           cities=cities,
+                           page_info = get_page_info())
 
 
 
@@ -312,12 +320,11 @@ def delete_ad(ad_id):
 
     ad_dict = database.ad_to_dict(selected_ad)
 
-    return render_template("delete_ad.html", ad=ad_dict)
+    return render_template("delete_ad.html", ad=ad_dict, page_info=get_page_info())
 
 
 @app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
 def edit_ad(ad_id):
-    print "calling edit_ad"
 
     selected_ad = database.get_ad_by_id(int(ad_id))
 
@@ -334,7 +341,8 @@ def edit_ad(ad_id):
                            categories_json=categories_json,
                            categories=categories_with_sub_categories,
                            selected_sub_categories = selected_sub_categories,
-                           cities=cities)
+                           cities=cities,
+                           page_info=get_page_info())
 
 
 @app.route("/login")

@@ -51,6 +51,17 @@ body {
     background-color: #505050;;
 }
 
+.panel-text2 {
+    min-height: 50px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 50px;
+    font-size: 18px;
+    color: white;
+    background-color: #505050;;
+}
+
+
 .panel-text {
 	background-color: #F3F1F1;
 }
