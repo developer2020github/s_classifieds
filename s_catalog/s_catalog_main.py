@@ -111,11 +111,11 @@ def index():
     #print categories_json
     #print cities
     return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities)
+                           cities=cities, page_info = "S-classifieds")
 
 
 @app.route("/user_profile")
-def user_profile_page():
+def user_profile():
     if "email" not in login_session:
         return redirect(url_for("login"))
 
@@ -338,7 +338,7 @@ def edit_ad(ad_id):
 
 
 @app.route("/login")
-def sign_in_page():
+def login():
     state = s_catalog_lib.get_random_string()
     login_session["state"] = state
     #print "current_email :"
