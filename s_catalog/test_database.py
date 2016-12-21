@@ -1,7 +1,16 @@
 import create_database
 import database
 import json
+from flask import jsonify
 
+
+def test_jsonify_ads():
+    city_id = 2
+    ads = database.get_ads_by_city(city_id)
+    print ads
+    list_of_ads = [database.ad_to_dict(ad) for ad in ads]
+    print list_of_ads
+    print jsonify(list_of_ads)
 
 def test_get_ads_to_display():
     ads = database.get_ads_to_display(min_idx=5, number_of_records_to_include=2,
@@ -83,7 +92,7 @@ def test_filtering_by_user():
     print "tested get_user_specific_sub_categories and get_user_specific_categories:"
     print test_outcome
 
-test_filtering_by_user()
+#test_jsonify_ads()
 
 
 

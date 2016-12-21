@@ -107,6 +107,13 @@ def get_user_specific_cities(user):
     return cities_to_include
 
 
+def get_ads_by_city(city_id):
+    """
+    :param city_id: integer id of the city
+    :return: list of all ads in this city
+    """
+    ads = session.query(create_database.Ad).filter_by(city_id=city_id).all()
+    return ads
 
 def get_user_specific_sub_categories(user):
     """
@@ -176,6 +183,16 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 
         return selected_ads, total_number_of_ads, min_idx, max_displayed_idx
 
+
+def city_to_dict(city):
+    """
+    :param city: city object
+    :return: city objects converted to dictionary
+    """
+    d_city = dict()
+    d_city["id"] = str(city.id)
+    d_city["name"] = city.name
+    return d_city
 
 def get_cities():
     query_cities = session.query(create_database.City)
@@ -283,7 +300,8 @@ def get_ad_template(user):
 
     return dict_ad
 
-def ad_to_dict(ad):
+
+def ad_to_dict(ad, serialize=False):
     """
     converts ad object into dictionary of strings:
     some of the fields (such as category) do not need to be stored in
@@ -291,12 +309,15 @@ def ad_to_dict(ad):
     which is not convenient for displaying them. Since number of
     ads displayed at any time is small, and all data is already attached
     to ad object via backref it makes no sense to run SQL joins.
+    Also can be used to serialize ads.
     :param ad: Ad object
-    :return: dictionary of string fileds
+    :param  serialize:  if set to True will include only serialized fields
+    :return: dictionary of string fields
     """
 
     dict_ad = dict()
-    dict_ad["user"] = session.query(create_database.User).filter(create_database.User.id == int(ad.user_id)).one()
+    if not serialize:
+        dict_ad["user"] = session.query(create_database.User).filter(create_database.User.id == int(ad.user_id)).one()
 
     dict_ad["city"] = ad.city.name
     dict_ad["city_id"] = str(ad.city_id)

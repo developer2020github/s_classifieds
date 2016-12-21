@@ -127,6 +127,29 @@ def user_profile_page():
                            user_email=user.email, user_phone = user.phone )
 
 
+@app.route("/cities/<int:city_id>/ads/JSON")
+def get_city_ads_json(city_id):
+    """
+    Returns JSON for all ads in a city (as per city_id)
+    :param city_id:
+    :return: JSON for all ads in a city
+    """
+    ads = database.get_ads_by_city(city_id)
+    list_of_ads_dictionaries = [database.ad_to_dict(ad, serialize=True) for ad in ads]
+    return jsonify(list_of_ads_dictionaries)
+
+
+@app.route("/list_of_cities/JSON")
+def get_list_of_cities():
+    """
+    Returns JSON for list of cities with ids
+    :return: JSON for all cities
+    """
+    cities = database.get_cities()
+    list_of_city_dictionaries= [database.city_to_dict(city) for city in cities]
+    return jsonify(list_of_city_dictionaries)
+
+
 @app.route('/update_my_ads_list')
 def show_more_of_my_ads():
     user_id = flask_login.current_user.id
