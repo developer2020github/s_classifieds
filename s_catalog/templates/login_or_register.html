@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<!--https://developers.google.com/identity/sign-in/web/-->
+<!--https://developers.google.com/identity/sign-in/web/server-side-flow -->
+<!-- END Pre-requisites -->
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- BEGIN Pre-requisites -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    </head>
+<body>
+
+<div class="container-fluid">
+    {% include 'nav_bar_row.html' %}
+    <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-3">
+            <h4>Login</h4>
+            <form method="POST" action="/login_or_register">
+                {{ simple_login_form.csrf_token }}
+                <div>
+                    <span class="login-form-label">{{ simple_login_form.email.label }}</span> {{ simple_login_form.email(size=20) }}
+                </div>
+
+                <div>
+                    <span class="login-form-label">{{ simple_login_form.password.label }}</span> {{ simple_login_form.password(size=20) }}
+                </div>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+
+
+        <div class="col-md-3">
+            <h4>Login</h4>
+            <form method="POST" action="/login_or_register">
+                {{ simple_register_form.csrf_token }}
+                <div>
+                    <span class="login-form-label">{{ simple_register_form.name.label }}</span> {{ simple_register_form.name(size=20) }}
+                </div>
+                
+
+                <div>
+                    <span class="login-form-label">{{ simple_register_form.email.label }}</span> {{ simple_register_form.email(size=20) }}
+                </div>
+
+                <div>
+                    <span class="login-form-label">{{ simple_register_form.password.label }}</span> {{ simple_register_form.password(size=20) }}
+                </div>
+
+                <div>
+                    <span class="login-form-label">{{ simple_register_form.confirm_password.label }}</span> {{ simple_register_form.confirm_password(size=20) }}
+                </div>
+
+                <input type="submit" value="Login">
+            </form>
+        </div>
+       
+        <div class="col-md-3"></div>
+    </div>
+</div>
+<div>
+LOGIN OR REGISTER
+</div>
+</body>
+
+</html>

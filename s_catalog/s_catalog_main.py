@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask import session as login_session
-from forms import LoginForm
+from forms import LoginForm, RegisterForm
 import database
 import create_database
 import json
@@ -41,6 +41,27 @@ def user_loader(user_id):
     return database.get_user_by_unicode_id(user_id)
 
 
+@app.route("/login_or_register", methods=["GET", "POST"])
+def login_or_register():
+    """shoulld combine all  regitration methods"""
+    simple_login_form = LoginForm()
+    simple_register_form = RegisterForm()
+    if simple_login_form.validate_on_submit():
+        print "processing post request"
+        #return redirect("/")
+        #pass
+
+        user = database.get_user_from_email(simple_login_form.email.data)
+        if user:
+            print  simple_login_form.password.data
+            print user.password
+            if bcrypt.check_password_hash(user.password, simple_login_form.password.data):
+                database.set_user_authenticated_status(user, True)
+                flask_login.login_user(user, remember=True)
+                print "user " + user.email + " successfully logged in "
+                return redirect(url_for("index"))
+
+    return render_template("login_or_register.html", simple_login_form=simple_login_form, simple_register_form=simple_register_form)
 
 @app.route("/login_simple", methods=["GET", "POST"])
 def login_simple():

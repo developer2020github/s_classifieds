@@ -121,3 +121,11 @@ body {
 .black-text{
     color: black;
 }
+
+.login-form-label{
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    min-width: 9em;
+    text-align: right;
+}
