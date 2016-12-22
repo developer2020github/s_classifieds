@@ -1,0 +1,82 @@
+    
+
+        <div class = row>
+        <div class = "col-md-4">
+            <div class="form-group">
+                <div class="title-info4"><label for="select_city">City</label></div>
+                <select class="form-control" name="select_city" id="select_city">
+                        <option value = "{{ad["city_id"]}}" selected="selected">{{ ad["city"] }}</option>
+                        {% for city in cities if not city.name == ad["city"]  %}
+                            <option value="{{ city.id }}">{{ city.name }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class = "col-md-4">
+            <div class="form-group">
+                <div class="title-info4"><label for="category-selected">Category</label></div>
+                <select id="category-selected" class="form-control" name = "category-selected" onchange="populate_sub_categories_in_search_bar()">
+                            <option value ="{{ad["category_id"]}}" selected="selected">{{ ad["category"] }}</option>
+                            {% for category in categories.keys() if not category == ad["category"]%}
+                                <option value="{{ categories[category].id }}">{{ category }}</option>
+                            {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class = "col-md-4">
+            <div class="form-group">
+                <div class="title-info4"><label for="sub-category-selected">Sub-category</label></div>
+                <select id="sub-category-selected" class="form-control" name="sub-category-selected">
+                            <option value ="{{ad["sub_category_id"]}}" selected="selected">{{ ad["sub_category"] }}</option>
+                            
+                             {% for sub_category in selected_sub_categories if not sub_category["name"] == ad["sub_category"]%}
+                                <option value="{{ sub_category["id"] }}">{{ sub_category["name"] }}</option>
+                            {% endfor %}
+                 </select>
+            </div>
+        </div>
+
+        </div>
+
+        <div class = row>
+        <div class = "col-md-6">
+            <div class="form-group">
+                <div class="title-info4"><label for="contact_name">Contact name</label></div>
+                <input type="text" class="form-control" id="contact_name" name="contact_name" value='{{ ad["contact_name"] }}'>
+            </div>
+        </div>
+        <div class = "col-md-6">
+            <div class="form-group">
+                <div class="title-info4"><label for="contact_email">Contact email</label></div>
+                <input type="email" class="form-control" id="contact_email" name="contact_email" value='{{ ad["contact_email"] }}'>
+            </div>
+        </div>
+        </div>
+
+
+        <div class = row>
+        <div class = "col-md-6">
+            <div class="form-group">
+                <div class="title-info4"><label for="contact_phone">Contact phone</label></div>
+                <input type="phone" class="form-control" id="contact_phone" name="contact_phone" value='{{ ad["contact_phone"] }}'>
+            </div>
+        </div>
+        <div class = "col-md-6">
+            <div class="form-group">
+            <div class="title-info4"><label for="ad_price">Price</label></div>
+            <input type="text" class="form-control" id="ad_price" name="ad_price" value='{{ ad["price"] }}'>
+        </div>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <div class="title-info4"><label for="ad_title">Title</label></div>
+            <input type="text" class="form-control" id="ad_title" name="ad_title" value='{{ ad["ad_title"] }}'>
+        </div>
+        
+        <div class="form-group">
+            <div class="title-info4"><label for="ad_text">Description</label></div>
+            <textarea class="form-control" id="ad_text" name="ad_text" rows="8">{{ ad["text"] }}</textarea>
+        </div>
+     
