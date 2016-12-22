@@ -43,6 +43,15 @@ body {
     line-height: 50px;
     font-size: 16px;
 }
+
+.search-title {
+
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
 .panel-text1 {
     min-height: 33px;
     text-align: center;
