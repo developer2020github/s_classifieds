@@ -44,10 +44,11 @@ def user_loader(user_id):
 @app.route("/login_or_register", methods=["GET", "POST"])
 def login_or_register():
     """shoulld combine all  regitration methods"""
+    print "login or register"
     simple_login_form = LoginForm()
     simple_register_form = RegisterForm()
     if simple_login_form.validate_on_submit():
-        print "processing post request"
+        print "processing post request login form"
         #return redirect("/")
         #pass
 
@@ -60,8 +61,15 @@ def login_or_register():
                 flask_login.login_user(user, remember=True)
                 print "user " + user.email + " successfully logged in "
                 return redirect(url_for("index"))
+    if simple_register_form.validate_on_submit():
+        print "processing post request simple_register_form "
 
-    return render_template("login_or_register.html", simple_login_form=simple_login_form, simple_register_form=simple_register_form)
+    state = s_catalog_lib.get_random_string()
+    login_session["state"] = state;
+
+    return render_template("login_or_register.html", simple_login_form=simple_login_form,
+                           simple_register_form=simple_register_form,
+                           google_session_state = login_session["state"])
 
 @app.route("/login_simple", methods=["GET", "POST"])
 def login_simple():
@@ -417,6 +425,7 @@ def add_user_from_login_session(session):
 @app.route('/google_sign_in', methods=['POST'])
 def gconnect():
     # Validate state token
+
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -499,11 +508,9 @@ def gconnect():
         gdisconnect()
 
         output = ''
-        output += '<h1>Welcome, '
-        output += user.name
+        output += 'Welcome, '
         output += user.email
-        output += '!</h1>'
-        flash("you are now logged in as %s" % user.email)
+        output += '!'
 
     print "done!"
     return output

@@ -35,6 +35,13 @@ body {
     font-weight: bold;
 }
 
+.login-bordered-panel{
+    border-style: solid;
+     border-color: white;
+     border-radius: 10px;
+     min-height: 180px;
+
+}
 .title-info4{
     text-align: center;
     font-weight: bold;
@@ -48,6 +55,13 @@ body {
     vertical-align: middle; 
     line-height: 50px;
     font-size: 16px;
+}
+
+.title-info3{
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
 }
 
 .search-title {
@@ -122,10 +136,20 @@ body {
     color: black;
 }
 
+.third-party-login-message{
+  color: white;
+  font-weight: bold;
+}
+
 .login-form-label{
     color: white;
     font-weight: bold;
     display: inline-block;
     min-width: 9em;
-    text-align: right;
+    text-align: left;
+}
+
+.btn-login{
+    min-width: 174px;
+    margin-left: 130px;
 }

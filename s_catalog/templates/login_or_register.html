@@ -10,61 +10,97 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- BEGIN Pre-requisites -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
     </head>
 <body>
 
 <div class="container-fluid">
     {% include 'nav_bar_row.html' %}
     <div class="row">
-        <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
 
-        <div class="col-md-3">
-            <h4>Login</h4>
-            <form method="POST" action="/login_or_register">
-                {{ simple_login_form.csrf_token }}
-                <div>
-                    <span class="login-form-label">{{ simple_login_form.email.label }}</span> {{ simple_login_form.email(size=20) }}
+            <div class="col-md-3">
+             <div class="login-bordered-panel">
+                <div class="title-info3">Login</div>
+                <form method="POST" action="/login_or_register">
+                    {{ simple_login_form.csrf_token }}
+                    <div>
+                        <span class="login-form-label">{{ simple_login_form.email.label }}</span> {{ simple_login_form.email(size=20) }}
+                    </div>
+
+                    <div>
+                        <span class="login-form-label">{{ simple_login_form.password.label }}</span> {{ simple_login_form.password(size=20) }}
+                    </div>
+                    <div class="text-left">
+                        <input class="btn btn-default btn-login" type="submit" value="Login">
+                    </div>
+                </form>
                 </div>
-
-                <div>
-                    <span class="login-form-label">{{ simple_login_form.password.label }}</span> {{ simple_login_form.password(size=20) }}
-                </div>
-                <input type="submit" value="Login">
-            </form>
-        </div>
+            </div>
 
 
-        <div class="col-md-3">
-            <h4>Login</h4>
-            <form method="POST" action="/login_or_register">
+            <div class="col-md-3">
+                <h4>Register</h4>
+                <form method="POST" action="/login_or_register">
                 {{ simple_register_form.csrf_token }}
-                <div>
-                    <span class="login-form-label">{{ simple_register_form.name.label }}</span> {{ simple_register_form.name(size=20) }}
-                </div>
-                
+                    <div>
+                        <span class="login-form-label">{{ simple_register_form.name.label }}</span> {{ simple_register_form.name(size=20) }}
+                    </div>
+                    
 
-                <div>
-                    <span class="login-form-label">{{ simple_register_form.email.label }}</span> {{ simple_register_form.email(size=20) }}
-                </div>
+                    <div>
+                        <span class="login-form-label">{{ simple_register_form.email.label }}</span> {{ simple_register_form.email(size=20) }}
+                    </div>
 
-                <div>
-                    <span class="login-form-label">{{ simple_register_form.password.label }}</span> {{ simple_register_form.password(size=20) }}
-                </div>
+                    <div>
+                        <span class="login-form-label">{{ simple_register_form.password.label }}</span> {{ simple_register_form.password(size=20) }}
+                    </div>
 
-                <div>
-                    <span class="login-form-label">{{ simple_register_form.confirm_password.label }}</span> {{ simple_register_form.confirm_password(size=20) }}
-                </div>
+                    <div>
+                        <span class="login-form-label">{{ simple_register_form.confirm_password.label }}</span> {{ simple_register_form.confirm_password(size=20) }}
+                    </div>
 
-                <input type="submit" value="Login">
-            </form>
+                    <input type="submit" value="Register">
+                </form>
+            </div>
+           
+            <div class="col-md-3"></div>
         </div>
-       
+
+        <div class="row">
+            <div class="col-md-3"></div>
+
+            <div class="col-md-3">Sign in with your google account
+                <div id="signInButton">
+                        <span class="g-signin" data-scope="openid email" data-clientid="175017086009-rlcgvef5g9e76859q2u4vb6n1258hcpd.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback" data-approvalprompt="force">
+                        </span>
+                </div>
+            </div>
+
+            <div class="col-md-3"></div>
+
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row">
         <div class="col-md-3"></div>
-    </div>
+        <div class="col-md-6">
+            <div class="third-party-login-message" id="third-party-login-result"></div>
+        </div>
+        <div class="col-md-3"></div>
+         
+        </div>
+    
 </div>
-<div>
-LOGIN OR REGISTER
-</div>
+    <script>
+    window.config = {};
+
+    window.config.google_sign_in_post_url = "/google_sign_in?state={{google_session_state}}";
+    console.log("config data");
+    console.log(window.config.google_sign_in_post_url);
+    
+
+    </script>
+     <script type="text/javascript" src="{{ url_for('static', filename='js/signin_or_register.js') }}"></script>
 </body>
 
 </html>
