@@ -160,3 +160,12 @@ body {
     margin-top: 5px;
     margin-bottom: 15px;
 }
+
+.login-error{
+    font-size: 18px;
+    font-weight: bold;
+    color: #F9FC07;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}

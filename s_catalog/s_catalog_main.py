@@ -41,31 +41,54 @@ def user_loader(user_id):
     return database.get_user_by_unicode_id(user_id)
 
 
+def get_errors_in_login_data(email, password):
+    """
+
+    :param email: user email
+    :param password: user password
+    :return: error message and user object. If error message is emtpy, user can be logged in
+    """
+    error_message = ""
+
+    user = database.get_user_from_email(email)
+    if not user:
+        error_message = "Error: user " + email + " does not exist"
+        return error_message, None
+
+    if not bcrypt.check_password_hash(user.password, password):
+        error_message = "Error: incorrect password for user " + email
+        return error_message, None
+
+    return error_message, user
+
+
 @app.route("/login_or_register", methods=["GET", "POST"])
 def login_or_register():
     """shoulld combine all  regitration methods"""
-    print "login or register"
+
     simple_login_form = LoginForm()
     simple_register_form = RegisterForm()
-    if simple_login_form.validate_on_submit():
-        print "processing post request login form"
-        #return redirect("/")
-        #pass
+    state = s_catalog_lib.get_random_string()
+    login_session["state"] = state
 
-        user = database.get_user_from_email(simple_login_form.email.data)
-        if user:
-            print  simple_login_form.password.data
-            print user.password
-            if bcrypt.check_password_hash(user.password, simple_login_form.password.data):
+    if simple_login_form.validate_on_submit():
+
+        login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
+                                                             password=simple_login_form.password.data)
+        if login_error_message == "":
                 database.set_user_authenticated_status(user, True)
                 flask_login.login_user(user, remember=True)
-                print "user " + user.email + " successfully logged in "
+                #flash('Successfully logged in as ' + simple_login_form.email.data)
+                # no need to flash as user will be shown "logged in as" message any way
                 return redirect(url_for("index"))
+        else:
+            return render_template("login_or_register.html", simple_login_form=simple_login_form,
+                                   simple_register_form=simple_register_form,
+                                   google_session_state=login_session["state"],
+                                   simple_login_error_message=login_error_message)
+
     if simple_register_form.validate_on_submit():
         print "processing post request simple_register_form "
-
-    state = s_catalog_lib.get_random_string()
-    login_session["state"] = state;
 
     return render_template("login_or_register.html", simple_login_form=simple_login_form,
                            simple_register_form=simple_register_form,
@@ -136,7 +159,7 @@ def get_page_info():
     print "get page info"
     print flask_login.current_user
     if flask_login.current_user.is_authenticated:
-        return "S-classifieds " + ": " + flask_login.current_user.email
+        return "S-classifieds " + "<br/> Logged in as "  + flask_login.current_user.email
     return "S-classifieds"
 
 @app.route('/')
