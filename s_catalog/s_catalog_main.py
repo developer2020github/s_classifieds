@@ -84,7 +84,7 @@ def get_errors_in_login_data(email, password):
 
 @app.route("/login_or_register", methods=["GET", "POST"])
 def login_or_register():
-    """shoulld combines all  login and registration methods"""
+    """combines all  login and registration methods"""
 
     simple_login_form = LoginForm()
     simple_register_form = RegisterForm()
@@ -123,7 +123,8 @@ def login_or_register():
                            simple_register_form=simple_register_form,
                            google_session_state = login_session["state"],
                            simple_login_error_message=login_error_message,
-                           simple_register_error_message=registration_error_message)
+                           simple_register_error_message=registration_error_message,
+                           page_info=get_page_info())
 
 
 @app.route("/myads", methods=["GET"])
@@ -295,7 +296,7 @@ def show_more_ads():
 @app.route("/ads/<int:ad_id>/current_ad")
 def ad_page(ad_id):
     selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
-    return render_template("ad.html", ad=selected_ad)
+    return render_template("ad.html", ad=selected_ad, page_info=get_page_info())
 
 
 def print_request_form(input_request):
