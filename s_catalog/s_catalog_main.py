@@ -41,9 +41,30 @@ def user_loader(user_id):
     return database.get_user_by_unicode_id(user_id)
 
 
+def get_errors_in_registration_data(email, password, confirmed_password):
+    """
+    :param email: email of new user trying to register
+    :param password:  his new password
+    :param confirmed_password: confirmed value of password
+    :return: empty string if everyting is all right and user can eb added. Error message to
+            be displayed to user otherwise.
+    """
+    error_message = ""
+
+    user = database.get_user_from_email(email)
+    if user:
+        error_message = "Error: user " + email + " already exists"
+        return error_message
+
+    if password != confirmed_password:
+        error_message = "Error: please ensure passwords match"
+        return error_message
+
+    return error_message
+
+
 def get_errors_in_login_data(email, password):
     """
-
     :param email: user email
     :param password: user password
     :return: error message and user object. If error message is emtpy, user can be logged in
@@ -64,35 +85,46 @@ def get_errors_in_login_data(email, password):
 
 @app.route("/login_or_register", methods=["GET", "POST"])
 def login_or_register():
-    """shoulld combine all  regitration methods"""
+    """shoulld combines all  login and registration methods"""
 
     simple_login_form = LoginForm()
     simple_register_form = RegisterForm()
     state = s_catalog_lib.get_random_string()
     login_session["state"] = state
+    login_error_message = ""
+    registration_error_message = ""
+    #print_request_form(request)
+    if request.method == 'POST':
+        if request.form["action"] == "simple_login" and simple_login_form.validate_on_submit():
+            print "processing login"
+            login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
+                                                                 password=simple_login_form.password.data)
+            if login_error_message == "":
+                    database.set_user_authenticated_status(user, True)
+                    flask_login.login_user(user, remember=True)
+                    #flash('Successfully logged in as ' + simple_login_form.email.data)
+                    # no need to flash as user will be shown "logged in as" message any way
+                    return redirect(url_for("index"))
 
-    if simple_login_form.validate_on_submit():
+        elif request.form["action"] == "simple_register" and simple_register_form.validate_on_submit():
+            print "processing register"
+            registration_error_message = get_errors_in_registration_data(email=simple_register_form.email.data,
+                                                                 password=simple_register_form.password.data,
+                                                                 confirmed_password=simple_register_form.confirm_password.data)
 
-        login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
-                                                             password=simple_login_form.password.data)
-        if login_error_message == "":
-                database.set_user_authenticated_status(user, True)
-                flask_login.login_user(user, remember=True)
-                #flash('Successfully logged in as ' + simple_login_form.email.data)
-                # no need to flash as user will be shown "logged in as" message any way
-                return redirect(url_for("index"))
-        else:
-            return render_template("login_or_register.html", simple_login_form=simple_login_form,
-                                   simple_register_form=simple_register_form,
-                                   google_session_state=login_session["state"],
-                                   simple_login_error_message=login_error_message)
+            if registration_error_message == "":
+                database.add_new_user(name=simple_register_form.name.data,
+                                      email=simple_register_form.email.data,
+                                      phone_number=simple_register_form.phone.data,
+                                      password=simple_register_form.password.data)
 
-    if simple_register_form.validate_on_submit():
-        print "processing post request simple_register_form "
+                flash('Successfully created new user ' + simple_register_form.email.data + ". Please log in.")
 
     return render_template("login_or_register.html", simple_login_form=simple_login_form,
                            simple_register_form=simple_register_form,
-                           google_session_state = login_session["state"])
+                           google_session_state = login_session["state"],
+                           simple_login_error_message=login_error_message,
+                           simple_register_error_message=registration_error_message)
 
 @app.route("/login_simple", methods=["GET", "POST"])
 def login_simple():

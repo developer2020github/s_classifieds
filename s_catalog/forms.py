@@ -12,7 +12,8 @@ class LoginForm(Form):
 
 class RegisterForm(Form):
         """Form class for user registration."""
-        name =  StringField('name', validators=[DataRequired()])
+        name = StringField('name')
+        phone = StringField("phone")
         email = StringField('email', validators=[DataRequired()])
         password = PasswordField('password', validators=[DataRequired()])
         confirm_password = PasswordField('confirm password', validators=[DataRequired()])

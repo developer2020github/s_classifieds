@@ -6,6 +6,9 @@ from sqlalchemy.orm import sessionmaker
 import create_database
 import datetime
 
+import flask_bcrypt
+
+
 
 engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
 create_database.Base.metadata.bind = engine
@@ -56,10 +59,19 @@ def get_user_from_email(email):
     return user
 
 
-def add_new_user(email, name, phone_number):
+def get_hashed_password(password):
+    if password =="":
+        return password
+
+    bcrypt = flask_bcrypt.Bcrypt()
+    return bcrypt.generate_password_hash(password)
+
+
+def add_new_user(email, name, phone_number, password=""):
     new_user = create_database.User(name=validate_user_data_string(name),
                                     email=email,
-                                    phone=validate_user_data_string(phone_number))
+                                    phone=validate_user_data_string(phone_number),
+                                    password=get_hashed_password(password))
     session.add(new_user)
     session.commit()
 
