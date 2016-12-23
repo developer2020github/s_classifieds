@@ -137,7 +137,7 @@ def my_ads():
     # print categories_json
     # print cities
     return render_template("myads.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, page_info = get_page_info())
+                           cities=cities, page_info=get_page_info())
 
 
 @login_manager.unauthorized_handler
@@ -182,12 +182,11 @@ def index():
                            cities=cities, page_info = get_page_info())
 
 
-@app.route("/user_profile")
+@app.route("/user_profile", methods=["GET", "POST"])
 @flask_login.login_required
 def user_profile():
     user = flask_login.current_user
-    return render_template("user_profile.html", message_text="Your profile: ", user_name=user.name,
-                           user_email=user.email, user_phone = user.phone )
+    return render_template("user_profile.html", message_text="Your profile: ", user=user, page_info=get_page_info())
 
 
 @app.route("/cities/<int:city_id>/ads/JSON")

@@ -8,12 +8,44 @@
 </head>
 
 <body>
-<div class="white-text">
-     <h2> {{ message_text }}</h2>
-     <h2> User name: {{ user_name }}</h2>
-     <h2> email : {{ user_email }}</h2>
-     <h2> phone : {{ user_phone }}</h2>
+ <div class="container-fluid">
+ {% include 'nav_bar_row.html' %}
+ <div class="row">
+	 <div class="col-md-3"></div>
+
+	 <div class="col-md-6">
+		 <div class="white-text">
+		     <h2> {{ message_text }}</h2>
+		     <h2> User name: {{ user.name }}</h2>
+		     <h2> email : {{ user.email }}</h2>
+		     <h2> phone : {{ user.phone }}</h2>
+		</div>
+
+		<form action = "{{ url_for('new_ad') }}" method="post">
+		 <div class = row>
+        <div class = "col-md-6">
+            <div class="form-group">
+                <div class="title-info4"><label for="user_name">Name:</label></div>
+                <input type="text" class="form-control" id="user_name" name="user_name" value='{{user.name}}'>
+            </div>
+        </div>
+        <div class = "col-md-6">
+            <div class="form-group">
+                <div class="title-info4"><label for="user_phone">Contact phone</label></div>
+                <input type="text" class="form-control" id="user_phone" name="contact_email" value='{{  user.phone }}'>
+            </div>
+        </div>
+        </div>
+        <button type="submit" class="btn btn-block black-text">Update</button>
+     	</form>
+
+
+	</div>
+
+	<div class="col-md-3"></div>
 </div>
+
 </body>
 
 </html>
+  
