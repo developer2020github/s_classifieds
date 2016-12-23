@@ -9,22 +9,7 @@
 
 <body>
     <div class="container-fluid">
-        <div class="row top-buffer-sm ">
-            <div class="col-md-3 panel panel-default panel-main">
-                S-classifieds
-            </div>
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-3">
-                <div class="btn-group" role="group" aria-label="...">
-                    <a href="signin" class="btn btn-default">Sign in</a>
-                    <a href="myads" class="btn btn-default">My ads</a>
-                    <button type="button" class="btn btn-default">New ad</button>
-                </div>
-            </div>
-        </div>
+            {% include 'nav_bar_row.html' %}
             {% include 'ad_row.html' %}
     </div>
 </body>
