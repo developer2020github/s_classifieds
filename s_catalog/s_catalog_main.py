@@ -25,7 +25,6 @@ app = Flask(__name__)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-current_email = ""
 # path to the Web application client_secret_*.json file downloaded from the
 # Google API Console: https://console.developers.google.com/apis/credentials
 GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = "client_secret.json"
@@ -126,29 +125,6 @@ def login_or_register():
                            simple_login_error_message=login_error_message,
                            simple_register_error_message=registration_error_message)
 
-@app.route("/login_simple", methods=["GET", "POST"])
-def login_simple():
-    """For GET requests, display the login form. For POSTS, login the current user
-    by processing the form."""
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        print "processing post request"
-        #return redirect("/")
-        #pass
-
-        user = database.get_user_from_email(form.email.data)
-        if user:
-            print  form.password.data
-            print user.password
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                database.set_user_authenticated_status(user, True)
-                flask_login.login_user(user, remember=True)
-                print "user " + user.email + " successfully logged in "
-                return redirect(url_for("index"))
-
-    return render_template("login_simple.html", form=form)
-
 
 @app.route("/myads", methods=["GET"])
 @flask_login.login_required
@@ -165,7 +141,7 @@ def my_ads():
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    return redirect(url_for("login_simple"))
+    return redirect(url_for("login_or_register"))
 
 
 @app.route("/logout_simple", methods=["GET", "POST"])
@@ -206,14 +182,9 @@ def index():
 
 
 @app.route("/user_profile")
+@flask_login.login_required
 def user_profile():
-    if "email" not in login_session:
-        return redirect(url_for("login"))
-
-    user = database.get_user_from_email(login_session["email"])
-    if not user:
-        return redirect(url_for("login"))
-
+    user = flask_login.current_user
     return render_template("user_profile.html", message_text="Your profile: ", user_name=user.name,
                            user_email=user.email, user_phone = user.phone )
 
@@ -360,6 +331,7 @@ def update_ad_from_form_info(ad, form):
 
 
 @app.route("/new_ad",  methods=["GET", "POST"])
+@flask_login.login_required
 def new_ad():
     """
     Creates new ad from user inputs
@@ -387,10 +359,8 @@ def new_ad():
                            page_info = get_page_info())
 
 
-
-
-
 @app.route("/ads/<int:ad_id>/delete_ad",  methods=["GET", "POST"])
+@flask_login.login_required
 def delete_ad(ad_id):
     """
     :param ad_id: ad to be deleted
@@ -429,16 +399,7 @@ def edit_ad(ad_id):
                            page_info=get_page_info())
 
 
-@app.route("/login")
-def login():
-    state = s_catalog_lib.get_random_string()
-    login_session["state"] = state
-    #print "current_email :"
-    #print current_email
-    return render_template("login.html", session_state = login_session["state"], user_email=current_email)
-
-
-#Initially, this was used as an URL as
+#Initially, this was used as an URL , but do not need to be URL anymore
 @app.route('/google_sign_out')
 def gdisconnect():
     access_token = login_session['access_token']
