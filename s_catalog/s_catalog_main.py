@@ -223,7 +223,7 @@ def delete_user_profile():
     """
     On get returns "delete profile" page to confirm if user really wants to delete their profile.
     On post deletes user profile. Note all user's ads will be automatically deleted as well because this
-    is how database is setup (there is an automatic delete cascade for user->ad objects). 
+    is how database is setup (there is an automatic delete cascade for user->ad objects).
     :return:
     """
     user = flask_login.current_user
