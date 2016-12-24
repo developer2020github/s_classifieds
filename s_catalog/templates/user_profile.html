@@ -10,15 +10,12 @@
 <body>
  <div class="container-fluid">
  {% include 'nav_bar_row.html' %}
- <div class="row">
+ <div class="row white-text">
 	 <div class="col-md-3"></div>
 
 	 <div class="col-md-6">
-		 <div class="white-text">
-		     <h2> {{ message_text }}</h2>
-		     <h2> User name: {{ user.name }}</h2>
-		     <h2> email : {{ user.email }}</h2>
-		     <h2> phone : {{ user.phone }}</h2>
+		 <div class="text-center">
+		     <h3> {{ message_text }}</h3>
 		</div>
 
 		<form action = "{{ url_for('new_ad') }}" method="post">
