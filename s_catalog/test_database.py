@@ -12,6 +12,7 @@ def test_jsonify_ads():
     print list_of_ads
     print jsonify(list_of_ads)
 
+
 def test_get_ads_to_display():
     ads = database.get_ads_to_display(min_idx=5, number_of_records_to_include=2,
                                       sort_by_price="asc", created_within_days=10)
@@ -92,9 +93,12 @@ def test_filtering_by_user():
     print "tested get_user_specific_sub_categories and get_user_specific_categories:"
     print test_outcome
 
-#test_jsonify_ads()
+
+def print_all_ads():
+    ads = database.session.query(create_database.Ad).all()
+    for ad in ads:
+        database.print_ad(ad)
 
 
-
-
+print_all_ads()
 

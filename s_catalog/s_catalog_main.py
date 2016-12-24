@@ -220,7 +220,24 @@ def user_profile():
 @app.route("/delete_user_profile", methods=["GET", "POST"])
 @flask_login.login_required
 def delete_user_profile():
+    """
+    On get returns "delete profile" page to confirm if user really wants to delete their profile.
+    On post deletes user profile. Note all user's ads will be automatically deleted as well because this
+    is how database is setup (there is an automatic delete cascade for user->ad objects). 
+    :return:
+    """
     user = flask_login.current_user
+
+    if request.method == 'POST':
+        user_email = user.email
+        user_id = user.id
+        database.set_user_authenticated_status(user, False)
+        flask_login.logout_user()
+        database.delete_user(database.get_user_by_unicode_id(user_id))
+
+        flash("User account for " + user_email + " was deleted.")
+        return redirect(url_for("index"))
+
     return render_template("delete_user_profile.html",
                            user=user,
                            page_info=get_page_info())

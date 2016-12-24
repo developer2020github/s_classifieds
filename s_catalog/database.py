@@ -66,6 +66,14 @@ def update_ads_with_new_user_info(user):
     session.commit()
 
 
+def delete_user(user):
+    print "delete user"
+    print user.id
+    session.delete(user)
+    print "user deleted from session"
+    session.commit()
+
+
 def get_user_by_unicode_id(user_id):
     user = session.query(create_database.User).filter(create_database.User.id == int(user_id)).first()
     return user

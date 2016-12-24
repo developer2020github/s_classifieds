@@ -63,7 +63,7 @@ class User(Base):
     phone = Column(String(50))
     password = Column(String)
     authenticated = Column(Boolean, default=False)
-    ads = relationship("Ad", back_populates="user")
+    ads = relationship("Ad", back_populates="user", cascade="delete")
 
 # extra fields to support flask-login
     def is_active(self):
