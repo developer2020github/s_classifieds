@@ -165,11 +165,14 @@ def logout():
 
 
 def get_page_info():
-    print "get page info"
-    print flask_login.current_user
+    page_info = dict()
+    page_info["user_logged_in"] = False
+    page_info["left_text"] = "S-classifieds"
+    page_info["right_text"] = ""
     if flask_login.current_user.is_authenticated:
-        return "S-classifieds " + "<br/> Logged in as "  + flask_login.current_user.email
-    return "S-classifieds"
+        page_info["user_logged_in"] = True
+        page_info["right_text"] = "Logged in as " + flask_login.current_user.email
+    return page_info
 
 @app.route('/')
 def index():
