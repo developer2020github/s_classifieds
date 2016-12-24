@@ -38,8 +38,31 @@ def delete_ad(ad):
     session.commit()
 
 
+def update_user(user):
+    session.add(user)
+    session.commit()
+
+
 def update_ad(ad):
     session.add(ad)
+    session.commit()
+
+
+def update_ads_with_new_user_info(user):
+    """
+    Updates all ads by current user with new contact information.
+    This scenario is possible if a user updated their profile with
+    new contact phone or name and now want to apply this information to all of their ads.
+    :param user: user object
+    :return: none
+    """
+    ads = get_user_ads(user)
+    if ads:
+        for ad in ads:
+            ad.contact_name = user.name
+            ad.contact_phone = user.phone
+            session.add(ad)
+
     session.commit()
 
 

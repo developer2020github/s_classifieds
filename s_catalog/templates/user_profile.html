@@ -11,35 +11,78 @@
  <div class="container-fluid">
  {% include 'nav_bar_row.html' %}
  <div class="row white-text">
-	 <div class="col-md-3"></div>
+	 	<div class="col-md-3"></div>
 
-	 <div class="col-md-6">
-		 <div class="text-center">
-		     <h3> {{ message_text }}</h3>
+		 <div class="col-md-6">
+			 <div class="text-center">
+			     <h3> User profile ( id {{ user.id }})</h3>
+			</div>
+
+			 <form action = "{{ url_for('user_profile') }}" method="post">
+			 <div class = row>
+
+	         <div class ="col-md-12">
+			 <div class="title-info1">Primary email (cannot change but you can specify a different contact email for each ad):</div>
+	                        <div class="panel panel-default panel-text1">
+	                            {{ user.email }}
+	                        </div>
+
+			 </div>
+			 </div>
+
+
+
+			<div class = "row">
+	        <div class = "col-md-6">
+	            <div class="form-group">
+	                <div class="title-info4"><label for="user_name">Name:</label></div>
+	                <input type="text" class="form-control" id="user_name" name="user_name" value='{{user.name}}'>
+	            </div>
+	        </div>
+	        <div class = "col-md-6">
+	            <div class="form-group">
+	                <div class="title-info4"><label for="user_phone">Contact phone:</label></div>
+	                <input type="text" class="form-control" id="user_phone" name="user_phone" value='{{  user.phone }} '>
+	            </div>
+	        </div>
+	        </div>
+	        <input type="hidden" name="action" value="update_profile">
+	        <button type="submit" class="btn btn-block black-text">Update profile</button>
+	     	</form>
+
+
 		</div>
 
-		<form action = "{{ url_for('new_ad') }}" method="post">
-		 <div class = row>
-        <div class = "col-md-6">
-            <div class="form-group">
-                <div class="title-info4"><label for="user_name">Name:</label></div>
-                <input type="text" class="form-control" id="user_name" name="user_name" value='{{user.name}}'>
-            </div>
-        </div>
-        <div class = "col-md-6">
-            <div class="form-group">
-                <div class="title-info4"><label for="user_phone">Contact phone</label></div>
-                <input type="text" class="form-control" id="user_phone" name="contact_email" value='{{  user.phone }}'>
-            </div>
-        </div>
-        </div>
-        <button type="submit" class="btn btn-block black-text">Update</button>
-     	</form>
-
+		<div class="col-md-3"></div>
 
 	</div>
 
-	<div class="col-md-3"></div>
+	<div class="row white-text">
+		<div class="col-md-3"></div>
+		<div class="col-md-6" style="margin-top: 15px;">
+			<div class="form-group">
+				<form action="{{ url_for('delete_user_profile') }}" method="get">
+		    		<input type="submit" class="btn btn-block black-text" value="Delete profile">
+				</form>
+			</div>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+
+
+	<div class="row white-text" {{apply_new_profile_settings_class|safe}}>
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<form action="{{ url_for('user_profile') }}" method="post">
+				 	<input type="hidden" name="action" value="apply_new_profile_settings_to_user_ads">
+		    		<input type="submit" class="btn btn-block black-text" value="Apply new profile setting to all my ads">
+				</form>
+			</div>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+
 </div>
 
 </body>

@@ -186,7 +186,38 @@ def index():
 @flask_login.login_required
 def user_profile():
     user = flask_login.current_user
-    return render_template("user_profile.html", message_text="Your profile: ", user=user, page_info=get_page_info())
+    apply_new_profile_settings_class = "style='display: none';"
+    if request.method == 'POST':
+        if request.form["action"]=="update_profile":
+            user.name = request.form["user_name"]
+            user.phone = request.form["user_phone"]
+            database.update_user(user)
+            flask_login.current_user.name = user.name
+            flask_login.current_user.phone = user.phone
+            apply_new_profile_settings_class = ""
+            flash("Your profile info has been updated. If you wish to apply your name and/"
+                  " or phone number to be applied"
+                  " to all your ads as contact info please click Apply new profile settings to all my ads button")
+        elif request.form["action"]=="apply_new_profile_settings_to_user_ads":
+            database.update_ads_with_new_user_info(user)
+            apply_new_profile_settings_class = "style='display: none';"
+            flash("All ads have been updated with new user data.")
+
+    return render_template("user_profile.html",
+                           user=user,
+                           page_info=get_page_info(),
+                           apply_new_profile_settings_class=apply_new_profile_settings_class)
+
+
+@app.route("/delete_user_profile", methods=["GET", "POST"])
+@flask_login.login_required
+def delete_user_profile():
+    user = flask_login.current_user
+    return render_template("delete_user_profile.html",
+                           user=user,
+                           page_info=get_page_info())
+
+
 
 
 @app.route("/cities/<int:city_id>/ads/JSON")

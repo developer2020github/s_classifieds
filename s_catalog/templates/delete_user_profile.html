@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+</head>
+
+<body>
+ <div class="container-fluid">
+ {% include 'nav_bar_row.html' %}
+ <div class="row white-text">
+	 	<div class="col-md-3"></div>
+
+		 <div class="col-md-6">
+			 <div class="text-center">
+			     <h3> Please confirm deletion of user profile ( id {{ user.id }})</h3>
+			</div>
+
+			<form action = "{{ url_for('user_profile') }}" method="post">
+			 <div class = row>
+
+	         <div class ="col-md-4">
+			 <div class="title-info1">Email:</div>
+	                        <div class="panel panel-default panel-text1">
+	                            {{ user.email }}
+	                        </div>
+
+			 </div>
+
+			<div class ="col-md-4">
+			 <div class="title-info1">Name:</div>
+	                        <div class="panel panel-default panel-text1">
+	                            {{ user.name }}
+	                        </div>
+
+			 </div>
+
+			 <div class ="col-md-4">
+			 <div class="title-info1">Phone:</div>
+	                        <div class="panel panel-default panel-text1">
+	                            {{ user.phone }}
+	                        </div>
+
+			 </div>
+
+			 </div>
+
+	        <button type="submit" class="btn btn-block black-text">Confirm delete (will delete your profile and all ads)</button>
+	     	</form>
+
+
+		</div>
+
+		<div class="col-md-3"></div>
+
+	</div>
+
+</div>
+
+</body>
+
+</html>
+  
