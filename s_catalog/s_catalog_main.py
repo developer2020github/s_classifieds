@@ -185,6 +185,14 @@ def index():
 @app.route("/user_profile", methods=["GET", "POST"])
 @flask_login.login_required
 def user_profile():
+    """
+    Displays user profile data and handles two kinds of POST requests:
+     1) update to user profile itself (i.e. if user wishes to change their name or phone number)
+     2) application of these new settings to all user ads: user has a choice for specifying ad-
+     specific contact phone and name. So they have to explicitly indicate if they want for their new defaults
+     to be automatically applied to all of their ads.
+    :return:
+    """
     user = flask_login.current_user
     apply_new_profile_settings_class = "style='display: none';"
     if request.method == 'POST':
