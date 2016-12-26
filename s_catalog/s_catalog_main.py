@@ -246,13 +246,24 @@ def delete_user_profile():
                            page_info=get_page_info())
 
 
+@app.route("/ads/<int:ad_id>/JSON")
+def get_ad_json(ad_id):
+    """
+    Returns JSON for a single ad
+    :param ad_id: itn id of the ad
+    :return: JSON for the requested ad
+    """
+    ad  = database.get_ad_by_id(ad_id)
+    if ad:
+        return jsonify(database.ad_to_dict(ad, serialize=True))
+    return jsonify({})
 
 
 @app.route("/cities/<int:city_id>/ads/JSON")
 def get_city_ads_json(city_id):
     """
     Returns JSON for all ads in a city (as per city_id)
-    :param city_id:
+    :param city_id: int id of the city
     :return: JSON for all ads in a city
     """
     ads = database.get_ads_by_city(city_id)
