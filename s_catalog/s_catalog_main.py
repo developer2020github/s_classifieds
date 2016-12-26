@@ -278,7 +278,7 @@ def get_list_of_cities():
     :return: JSON for all cities
     """
     cities = database.get_cities()
-    list_of_city_dictionaries= [database.city_to_dict(city) for city in cities]
+    list_of_city_dictionaries = [database.city_to_dict(city) for city in cities]
     return jsonify(list_of_city_dictionaries)
 
 
