@@ -171,7 +171,7 @@ def get_user_specific_sub_categories(user):
     return sub_categories
 
 
-def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
+def get_ads_to_display(city_id=-1, category_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
                        min_idx=0, number_of_records_to_include=10, debug_print = False, user_id = -1):
 
         if debug_print:
@@ -187,6 +187,9 @@ def get_ads_to_display(city_id=-1, sub_category_id=-1, created_within_days=0, so
 
         if sub_category_id > -1:
             filters["sub_category_id"] = sub_category_id
+        elif category_id > -1:
+            filters["category_id"] = category_id
+            #STOPPED HERE - implementing filtering by category 
 
         if user_id > -1:
             filters["user_id"] = user_id

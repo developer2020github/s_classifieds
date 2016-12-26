@@ -343,6 +343,7 @@ def show_more_ads():
         database.get_ads_to_display(city_id=city_id,
                                     min_idx=min_idx,
                                     number_of_records_to_include=10,
+                                    category_id = selected_category_id,
                                     sub_category_id=selected_sub_category_id,
                                     created_within_days = select_ads_within_days,
                                     sort_by=sort_by, debug_print=True)
