@@ -405,7 +405,7 @@ def ad_to_dict(ad, serialize=False):
     dict_ad["date"] = ad.time_created
     dict_ad["price"] = str(ad.price_cents/100.0)
     dict_ad["id"] = str(ad.id)
-    dict_ad["formatted_date"] = ad.time_created.strftime("%d-%B-%Y at %H:%M")
+    dict_ad["formatted_date"] = ad.time_created.strftime("%d-%b-%Y at %H:%M")
 
     return dict_ad
 
