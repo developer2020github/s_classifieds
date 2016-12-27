@@ -282,39 +282,41 @@ def get_list_of_cities():
     return jsonify(list_of_city_dictionaries)
 
 
+def get_search_filtering_parameters_from_request(input_request):
+    """
+    Helper function - will take request arguments coming from Search panel
+    and convert them into a dictionary of arguments for
+    database.get_ads_to_display function. The advantage is this can be used in more than one place
+    :param input_request: request
+    :return: dictionary of arguments for database.get_ads_to_display function
+    """
+    filtering_parameters = dict()
+
+    filtering_parameters["city_id"] = input_request.args.get('selected_city_id', -1, type=int)
+    filtering_parameters["category_id"] = input_request.args.get('selected_category_id', -1, type=int)
+    filtering_parameters["number_of_records_to_include"] = 10
+    filtering_parameters["sub_category_id"] = input_request.args.get('selected_sub_category_id', -1, type=int)
+    filtering_parameters["created_within_days"] = input_request.args.get('select_ads_within_days', -1, type=int)
+    filtering_parameters["min_idx"] = input_request.args.get('min_idx', -1, type=int)
+    filtering_parameters["sort_by"] = input_request.args.get('sort_by', "", type=str)
+    filtering_parameters["debug_print"] = True
+    return filtering_parameters
+
+
 @app.route('/update_my_ads_list')
 def show_more_of_my_ads():
     user_id = flask_login.current_user.id
-    #current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
-    r= request.args.get('show_next', False, type=bool)
-    #query.(Model).filter(something).limit(5).all()
-
-    min_idx = request.args.get('min_idx', 0, type=int)
 
     ads_html = list()
-    city_id = request.args.get('selected_city_id', -1, type=int)
-    selected_category_id = request.args.get('selected_category_id', -1, type=int)
-    selected_sub_category_id = request.args.get('selected_sub_category_id', -1, type=int)
-    select_ads_within_days = request.args.get('select_ads_within_days', -1, type=int)
-    min_idx = request.args.get('min_idx', -1, type=int)
-    sort_by = request.args.get('sort_by', "", type=str)
+    search_filtering_parameters = get_search_filtering_parameters_from_request(request)
+    search_filtering_parameters["user_id"] = user_id
 
     ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed =\
-        database.get_ads_to_display(city_id=city_id,
-                                    min_idx=min_idx,
-                                    number_of_records_to_include=10,
-                                    category_id=selected_category_id,
-                                    sub_category_id=selected_sub_category_id,
-                                    created_within_days=select_ads_within_days,
-                                    sort_by=sort_by,
-                                    user_id = user_id,
-                                    debug_print=True)
+        database.get_ads_to_display(**search_filtering_parameters)
 
-    if total_number_of_ads>0:
+    if total_number_of_ads > 0:
         for ad in ads:
             ads_html.append(render_template("displayed_my_ad.html", ad=database.ad_to_dict(ad)))
-
-    print total_number_of_ads
 
     ads_data = dict()
     ads_data["ads_html"] = ads_html
@@ -324,32 +326,17 @@ def show_more_of_my_ads():
 
     return jsonify(ads_data)
 
+
 @app.route('/update_ads_list')
 def show_more_ads():
-    #current_max_ad_idx = request.args.get('current_max_ad_idx', 0, type=int)
-    r= request.args.get('show_next', False, type=bool)
-    #query.(Model).filter(something).limit(5).all()
-
-    min_idx = request.args.get('min_idx', 0, type=int)
 
     ads_html = list()
-    city_id = request.args.get('selected_city_id', -1, type=int)
-    selected_category_id = request.args.get('selected_category_id', -1, type=int)
-    selected_sub_category_id = request.args.get('selected_sub_category_id', -1, type=int)
-    select_ads_within_days = request.args.get('select_ads_within_days', -1, type=int)
-    min_idx = request.args.get('min_idx', -1, type=int)
-    sort_by = request.args.get('sort_by', "", type=str)
+    search_filtering_parameters = get_search_filtering_parameters_from_request(request)
 
     ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed =\
-        database.get_ads_to_display(city_id=city_id,
-                                    min_idx=min_idx,
-                                    number_of_records_to_include=10,
-                                    category_id=selected_category_id,
-                                    sub_category_id=selected_sub_category_id,
-                                    created_within_days=select_ads_within_days,
-                                    sort_by=sort_by, debug_print=True)
+        database.get_ads_to_display(**search_filtering_parameters)
 
-    if total_number_of_ads>0:
+    if total_number_of_ads > 0:
         for ad in ads:
             ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
 

@@ -177,10 +177,13 @@ def get_ads_to_display(city_id=-1, category_id=-1, sub_category_id=-1, created_w
         if debug_print:
             print "get_ads_to_display inputs : city_id: {0}, sub_category_id: {1}," \
                   "created_within_days :{2},"\
-                  " sort_by :{3}, min_idx: {4}, number_of_records_to_include {5}".format(city_id, sub_category_id,
-                                                                                         created_within_days, sort_by,
-                                                                                         min_idx,
-                                                                                         number_of_records_to_include)
+                  " sort_by :{3}, min_idx: {4}, number_of_records_to_include {5}"\
+                  "category_id: {6}, user_id :{7} ".format(city_id, sub_category_id,
+                                            created_within_days, sort_by,
+                                            min_idx,
+                                            number_of_records_to_include,
+                                            category_id,
+                                            user_id)
         filters = dict()
         subcategories_ids_to_filter_by_category=[]
         # there are two possible scenarios for filtering by category/sub-category:
