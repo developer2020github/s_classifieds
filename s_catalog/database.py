@@ -182,14 +182,28 @@ def get_ads_to_display(city_id=-1, category_id=-1, sub_category_id=-1, created_w
                                                                                          min_idx,
                                                                                          number_of_records_to_include)
         filters = dict()
+        subcategories_ids_to_filter_by_category=[]
+        # there are two possible scenarios for filtering by category/sub-category:
+        # a) user selects subcategory. In this case we do not need to check category
+        # because all ads in requested sub-category will belong to correct category:
+        # it is impossible to have incorrect subcategory->category linkage.
+        # b) user selects category without going into subcategories.
+        #    Database schema uses sub-categories as foreign keys in ads table. Thus,
+        #    we'll need to create a list of applicable sub-categories and filter by that list.
+
         if city_id > -1:
             filters["city_id"] = city_id
 
         if sub_category_id > -1:
             filters["sub_category_id"] = sub_category_id
         elif category_id > -1:
-            filters["category_id"] = category_id
-            #STOPPED HERE - implementing filtering by category 
+            list_of_subcategories_to_filter_by_category = \
+                session.query(create_database.SubCategory).filter_by(category_id=category_id).all()
+            subcategories_ids_to_filter_by_category = \
+                [sub_cat.id for sub_cat in list_of_subcategories_to_filter_by_category]
+            print "category: " + str(category_id)
+            print "sub-categpries:"
+            print subcategories_ids_to_filter_by_category
 
         if user_id > -1:
             filters["user_id"] = user_id
@@ -203,16 +217,20 @@ def get_ads_to_display(city_id=-1, category_id=-1, sub_category_id=-1, created_w
 
         ads_within_date = ads_within_date.filter_by(**filters)
 
-        if sort_by=="price_desc":
-            all_ads = ads_within_date.order_by(create_database.Ad.price_cents.desc())
-        elif sort_by == "price_asc":
-            all_ads = ads_within_date.order_by(create_database.Ad.price_cents.asc())
-        elif sort_by == "date_asc":
-            all_ads = ads_within_date.order_by(create_database.Ad.time_created.asc())
-        elif sort_by == "date_desc":
-            all_ads = ads_within_date.order_by(create_database.Ad.time_created.desc())
+        if subcategories_ids_to_filter_by_category:
+            all_ads = \
+                ads_within_date.filter(create_database.Ad.sub_category_id.in_(subcategories_ids_to_filter_by_category))
         else:
             all_ads = ads_within_date
+
+        if sort_by == "price_desc":
+            all_ads = all_ads.order_by(create_database.Ad.price_cents.desc())
+        elif sort_by == "price_asc":
+            all_ads = all_ads.order_by(create_database.Ad.price_cents.asc())
+        elif sort_by == "date_asc":
+            all_ads = all_ads.order_by(create_database.Ad.time_created.asc())
+        elif sort_by == "date_desc":
+            all_ads = all_ads.order_by(create_database.Ad.time_created.desc())
 
         total_number_of_ads = all_ads.count()
         min_idx = max(min_idx, 0)
