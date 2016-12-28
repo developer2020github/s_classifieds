@@ -16,7 +16,7 @@ function populate_sub_categories_in_search_bar() {
     //reset menu if there was some category selected before and show user that 
     //they can now select a sub-category
     selected_sub_category_id.find("option").remove().end();
-    selected_sub_category_id.append($("<option selected disabled/>").val("Select Sub - Category").text("Select Sub - Category"));
+    selected_sub_category_id.append($("<option selected disabled/>").val("All").text("All"));
     $.each(list_of_selected_sub_categories, function(index, value) {
         selected_sub_category_id.append($("<option />").val(value.id).text(value.name));
     });

@@ -2,23 +2,37 @@
     <div class="search-title">
         SEARCH
     </div>
+    <div class="search-panel-selection-item">
+    <div class="title-info4"><label>Location:</label></div>
     <select id="search-city-select" class="form-control">
-        <option value="-1" selected="selected">Location: all</option>
+        <option value="-1" selected="selected">All</option>
         {% for city in cities %}
         <option value="{{ city.id }}">{{ city.name }}</option>
         {% endfor %}
     </select>
+    </div>
+
+    <div class="search-panel-selection-item">
+    <div class="title-info4"><label>Category:</label></div>
     <select id="category-selected" class="form-control" onchange="populate_sub_categories_in_search_bar()">
-        <option value="-1" selected="selected">Select category</option>
+        <option value="-1" selected="selected">All</option>
         {% for category in categories.keys() %}
         <option value="{{ categories[category].id }}">{{ category }}</option>
         {% endfor %}
     </select>
+    </div>
+
+    <div class="search-panel-selection-item">
+    <div class="title-info4"><label>Sub-category (select category first):</label></div>
     <select id="sub-category-selected" class="form-control">
-        <option value="-1" selected="selected">Sub-Category: select category first</option>
+        <option value="-1" selected="selected">All</option>
     </select>
+    </div>
+
+    <div class="search-panel-selection-item">
+    <div class="title-info4"><label>Ads posted:</label></div>
     <select id="select-ads-within-days" class="form-control">
-        <option value="-1" selected="selected">Ads posted: any time</option>
+        <option value="-1" selected="selected">Any time</option>
         <option value="3">Within 3 days</option>
         <option value="7">Within 1 week</option>
         <option value="14">Within 2 weeks</option>
@@ -26,13 +40,19 @@
         <option value="30">Within 1 months</option>
         <option value="90">Within 3 months</option>
         <option value="180">Within 6 months</option>
-    </select>
+    </select> 
+    </div>
+
+    <div class="search-panel-selection-item">
+    <div class="title-info4"><label>Arranged by:</label></div>
     <select id="arrange-results-by" class="form-control">
-        <option value="-1" selected="selected">Arrange result by:</option>
+        <option value="-1" selected="selected">No sorting</option>
         <option value="price_desc">Price: high to low</option>
         <option value="price_asc">Price: low to high</option>
         <option value="date_asc">Oldest first</option>
         <option value="date_desc">Newest first</option>
     </select>
-    <button id="search-button" class="btn btn-block">SEARCH</button>
+    </div>
+
+    <button id="search-button" class="btn btn-block">Apply</button>
 </div>
