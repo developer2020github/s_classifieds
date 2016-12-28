@@ -2,21 +2,43 @@ var requested_ads_min_idx = 0;
 var ADS_UPDATE_STEP = 10;
 var total_number_of_ads_in_database = -1;
 
+function set_search_panel_item_active(item_id){
+ var id = $(item_id);
+ id.removeClass("search-panel-item-inactive");
+}
+
+function set_search_panel_item_inactive(item_id){
+ var id = $(item_id);
+ id.empty(); 
+ id.addClass("search-panel-item-inactive");
+}
+
+
 function populate_sub_categories_in_search_bar() {
     //populate sub-categories in search bar according to category selected by user 
     //called on change in category
+
+    //if selected category is "All" (-1) -  disable sub-categories and  return 
+     if ($("#category-selected option:selected").val()==="-1"){
+        set_search_panel_item_inactive("#sub-category-selected");
+        $("#category-select-message").removeClass("hidden");
+        return;
+     }
     var selected_category = $("#category-selected option:selected").text();
-    console.log(selected_category);
+
+    //console.log(selected_category);
 
     var selected_sub_category_id = $("#sub-category-selected");
 
     var list_of_selected_sub_categories = all_categories[selected_category].value;
-    console.log(list_of_selected_sub_categories);
+    set_search_panel_item_active("#sub-category-selected");
+    $("#category-select-message").addClass("hidden");
+    //console.log(list_of_selected_sub_categories);
 
     //reset menu if there was some category selected before and show user that 
     //they can now select a sub-category
     selected_sub_category_id.find("option").remove().end();
-    selected_sub_category_id.append($("<option selected disabled/>").val("All").text("All"));
+    selected_sub_category_id.append($("<option />").val(-1).text("All"));
     $.each(list_of_selected_sub_categories, function(index, value) {
         selected_sub_category_id.append($("<option />").val(value.id).text(value.name));
     });

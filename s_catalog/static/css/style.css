@@ -113,6 +113,11 @@ body {
     padding-right: 10px;
 }
 
+.search-panel-item-inactive{
+    background-color: #A3A0A0;
+    border: transparent;
+}
+
 .label-info-one, .label-info-two {
         font-size: 16px;
        
@@ -196,3 +201,4 @@ body {
     border-style: solid;
     border-width: 1px;
 }
+
