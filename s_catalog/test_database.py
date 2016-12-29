@@ -100,5 +100,12 @@ def print_all_ads():
         database.print_ad(ad)
 
 
-print_all_ads()
+def test_random_category_and_subcategory():
+    sub_category = database.session.query(create_database.SubCategory).first()
+    print sub_category.name
+    category = database.session.query(create_database.Category).filter_by(id=sub_category.category_id).first()
+    print category.name
+
+
+test_random_category_and_subcategory()
 

@@ -334,11 +334,15 @@ def get_categories_with_subcategories(categories_to_include = None, sub_categori
     return cats_with_sub_cats
 
 
-def get_ad_template(user):
+def get_ad_template(user, initialize_city=False, initialize_category_and_subcategory = False):
     """
     To be  used for new ads: wherever possible, populates ad dictionary fields from user object.
     The idea is to make same similar templates work for edit and new ad pages.
-    :param user:
+    :param user: user object to be used in ad initialization
+    :param initialize_city: if this parameter is True, ad city will be initialized
+    to a random city from the list of cities
+    :param initialize_category_and_subcategory: if this parameter is True, ad category and subcategory will
+    be initialized to some random values
     :return: ad template as a dictionary (similar to ad_to_dict)
     """
     dict_ad = dict()
@@ -347,11 +351,25 @@ def get_ad_template(user):
     dict_ad["city"] = ""
     dict_ad["city_id"] = ""
 
+    if initialize_city:
+        city = session.query(create_database.City).first()
+        dict_ad["city"] = city.name
+        dict_ad["city_id"] = str(city.id)
+
     dict_ad["category"] = ""
     dict_ad["category_id"] = ""
 
     dict_ad["sub_category"] = ""
     dict_ad["sub_category_id"] = ""
+
+    if initialize_category_and_subcategory:
+        sub_category = session.query(create_database.SubCategory).first()
+        dict_ad["category"] = sub_category.category.name
+        dict_ad["category_id"] = str(sub_category.category_id)
+
+        dict_ad["sub_category"] = sub_category.name
+        dict_ad["sub_category_id"] = str(sub_category.id)
+
 
     dict_ad["ad_title"] = "Enter ad title"
     dict_ad["text"] = "Enter description"
