@@ -202,3 +202,7 @@ body {
     border-width: 1px;
 }
 
+
+.ad-text{
+    white-space: pre-wrap;
+}
