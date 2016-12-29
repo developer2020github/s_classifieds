@@ -135,7 +135,7 @@ function render_ads_list(ads) {
 
 
 function update_ads(request) {
-    var request_url = "/update_ads_list";
+    var request_url = ADS_REQUEST_URL;
 
     $.ajax({
         dataType: "json",

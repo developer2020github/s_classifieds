@@ -43,10 +43,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script>
   $(function() {
+     ADS_REQUEST_URL= "/update_my_ads_list";
      all_categories = {{ categories_json | safe }};
   });
     </script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/myads_page.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/search_and_sort_ads.js') }}"></script>
 </body>
 
 </html>
