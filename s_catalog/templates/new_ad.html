@@ -31,6 +31,6 @@
      all_categories = {{ categories_json | safe }};
   });
   </script>
-    <script type="text/javascript" src="../../static/js/new_ad_page.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/new_or_edit_ad.js') }}"></script>
 
 <body>

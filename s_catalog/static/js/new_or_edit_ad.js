@@ -1,5 +1,5 @@
 
-function populate_sub_categories_in_search_bar() {
+function populate_sub_categories_in_search_bar_ad_edit_or_new() {
     //populate sub-categories in search bar according to category selected by user 
     //called on change in category
     var selected_category = $("#category-selected option:selected").text();

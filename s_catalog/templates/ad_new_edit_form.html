@@ -15,7 +15,7 @@
         <div class = "col-md-4">
             <div class="form-group">
                 <div class="title-info4"><label for="category-selected">Category</label></div>
-                <select id="category-selected" class="form-control" name = "category-selected" onchange="populate_sub_categories_in_search_bar()">
+                <select id="category-selected" class="form-control" name = "category-selected" onchange="populate_sub_categories_in_search_bar_ad_edit_or_new()">
                             <option value ="{{ad["category_id"]}}" selected="selected">{{ ad["category"] }}</option>
                             {% for category in categories.keys() if not category == ad["category"]%}
                                 <option value="{{ categories[category].id }}">{{ category }}</option>
