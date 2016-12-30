@@ -305,20 +305,24 @@ def get_search_filtering_parameters_from_request(input_request):
     return filtering_parameters
 
 
-@app.route('/update_my_ads_list')
-def show_more_of_my_ads():
-    user_id = flask_login.current_user.id
-
+def show_ads(template_name, user_id=None):
+    """
+    get ads_data data structure to be displayed in the list of ads
+    :param user_id:
+    :param template_name
+    :return:
+    """
     ads_html = list()
     search_filtering_parameters = get_search_filtering_parameters_from_request(request)
-    search_filtering_parameters["user_id"] = user_id
+    if user_id:
+        search_filtering_parameters["user_id"] = user_id
 
-    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed =\
+    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed = \
         database.get_ads_to_display(**search_filtering_parameters)
 
     if total_number_of_ads > 0:
         for ad in ads:
-            ads_html.append(render_template("displayed_my_ad.html", ad=database.ad_to_dict(ad)))
+            ads_html.append(render_template(template_name, ad=database.ad_to_dict(ad)))
 
     ads_data = dict()
     ads_data["ads_html"] = ads_html
@@ -327,30 +331,17 @@ def show_more_of_my_ads():
     ads_data["max_ad_idx_displayed"] = str(max_ad_idx_displayed)
 
     return jsonify(ads_data)
+
+
+@app.route('/update_my_ads_list')
+def show_more_of_my_ads():
+    user_id = flask_login.current_user.id
+    return show_ads(template_name="displayed_my_ad.html", user_id=user_id)
 
 
 @app.route('/update_ads_list')
 def show_more_ads():
-
-    ads_html = list()
-    search_filtering_parameters = get_search_filtering_parameters_from_request(request)
-
-    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed =\
-        database.get_ads_to_display(**search_filtering_parameters)
-
-    if total_number_of_ads > 0:
-        for ad in ads:
-            ads_html.append(render_template("displayed_ad.html", ad=database.ad_to_dict(ad)))
-
-    print total_number_of_ads
-
-    ads_data = dict()
-    ads_data["ads_html"] = ads_html
-    ads_data["total_number_of_ads"] = str(total_number_of_ads)
-    ads_data["min_ad_idx_displayed"] = str(min_ad_idx_displayed)
-    ads_data["max_ad_idx_displayed"] = str(max_ad_idx_displayed)
-
-    return jsonify(ads_data)
+    return show_ads(template_name="displayed_ad.html")
 
 
 @app.route("/ads/<int:ad_id>/current_ad")
