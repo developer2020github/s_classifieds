@@ -7,16 +7,12 @@ import json
 import s_catalog_lib
 from pprint import pprint
 
-# references for login management
-#https://flask-bcrypt.readthedocs.io/en/latest/
-#https://flask-login.readthedocs.io/en/latest/
-
-from apiclient import discovery
 import httplib2
 from oauth2client import client
 import requests
 import flask_login
 import flask_bcrypt
+import s_catalog_options
 
 bcrypt = flask_bcrypt.Bcrypt()
 
@@ -31,10 +27,12 @@ GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = "client_secret.json"
 CLIENT_ID = json.loads(
     open(GOOGLE_SIGN_IN_CLIENT_SECRET_FILE, 'r').read())['web']['client_id']
 
+
 @login_manager.user_loader
 def user_loader(user_id):
-    """Given *user_id*, return the associated User object.
-
+    """
+    requred for flask-login
+    Given *user_id*, return the associated User object.
     :param unicode user_id: user_id (email) user to retrieve
     """
     return database.get_user_by_unicode_id(user_id)
@@ -124,7 +122,11 @@ def login_or_register():
                            google_session_state = login_session["state"],
                            simple_login_error_message=login_error_message,
                            simple_register_error_message=registration_error_message,
-                           page_info=get_page_info())
+                           page_info=get_page_info(),
+                           ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION=
+                           s_catalog_options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION)
+
+# sub-module: ads
 
 
 @app.route("/myads", methods=["GET"])
@@ -199,7 +201,7 @@ def user_profile():
     user = flask_login.current_user
     apply_new_profile_settings_class = "style='display: none';"
     if request.method == 'POST':
-        if request.form["action"]=="update_profile":
+        if request.form["action"] == "update_profile":
             user.name = request.form["user_name"]
             user.phone = request.form["user_phone"]
             database.update_user(user)
