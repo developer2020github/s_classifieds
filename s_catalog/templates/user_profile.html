@@ -19,33 +19,37 @@
 			</div>
 
 			 <form action = "{{ url_for('user_profile') }}" method="post">
+			 {{ update_user_info_form.csrf_token }}
+
 			 <div class = row>
 
-	         <div class ="col-md-12">
-			 <div class="title-info1">Primary email (cannot change but you can specify a different contact email for each ad):</div>
-	                        <div class="panel panel-default panel-text1">
-	                            {{ user.email }}
-	                        </div>
-
-			 </div>
+		         <div class ="col-md-12">
+					 <div class="title-info1">Primary email (cannot change but you can specify a different contact email for each ad):</div>
+			                        <div class="panel panel-default panel-text1">
+			                            {{ user.email }}
+			                        </div>
+				 </div>
 			 </div>
 
 
 
 			<div class = "row">
-	        <div class = "col-md-6">
-	            <div class="form-group">
-	                <div class="title-info4"><label for="user_name">Name:</label></div>
-	                <input type="text" class="form-control" id="user_name" name="user_name" value='{{user.name}}'>
-	            </div>
+		        <div class = "col-md-6">
+		            <div class="form-group">
+		                <div class="title-info4">{{ update_user_info_form.name.label }}</div>
+		                 {{ update_user_info_form.name(class_="form-control") }}
+		            </div>
+		        </div>
+
+		        <div class = "col-md-6">
+		            <div class="form-group">
+		                <div class="title-info4">{{ update_user_info_form.phone.label }}</div>
+		                 {{ update_user_info_form.phone(class_="form-control") }}
+
+		            </div>
+		        </div>
 	        </div>
-	        <div class = "col-md-6">
-	            <div class="form-group">
-	                <div class="title-info4"><label for="user_phone">Contact phone:</label></div>
-	                <input type="text" class="form-control" id="user_phone" name="user_phone" value='{{  user.phone }} '>
-	            </div>
-	        </div>
-	        </div>
+
 	        <input type="hidden" name="action" value="update_profile">
 	        <button type="submit" class="btn btn-block black-text">Update profile</button>
 	     	</form>

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask import session as login_session
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, UpdateUserInfoForm
 import database
 import create_database
 import json
@@ -200,24 +200,32 @@ def user_profile():
     """
     user = flask_login.current_user
     apply_new_profile_settings_class = "style='display: none';"
+    update_user_info_form = UpdateUserInfoForm(obj=user)
     if request.method == 'POST':
         if request.form["action"] == "update_profile":
-            user.name = request.form["user_name"]
-            user.phone = request.form["user_phone"]
-            database.update_user(user)
-            flask_login.current_user.name = user.name
-            flask_login.current_user.phone = user.phone
-            apply_new_profile_settings_class = ""
-            flash("Your profile info has been updated. If you wish to apply your name and/"
-                  " or phone number to be applied"
-                  " to all your ads as contact info please click Apply new profile settings to all my ads button")
+            if update_user_info_form.validate_on_submit():
+                user.name = update_user_info_form.name.data
+                user.phone = update_user_info_form.phone.data
+                database.update_user(user)
+                flask_login.current_user.name = user.name
+                flask_login.current_user.phone = user.phone
+                apply_new_profile_settings_class = ""
+
+                flash("Your profile info has been updated. If you wish to apply your name and/"
+                      " or phone number to be applied"
+                      " to all your ads as contact info please click Apply new profile settings to all my ads button")
         elif request.form["action"]=="apply_new_profile_settings_to_user_ads":
             database.update_ads_with_new_user_info(user)
             apply_new_profile_settings_class = "style='display: none';"
+            # this post request is empty, so we need to force main form to show user name and phone
+            update_user_info_form.name.data = user.name
+            update_user_info_form.phone.data = user.phone
+
             flash("All ads have been updated with new user data.")
 
     return render_template("user_profile.html",
                            user=user,
+                           update_user_info_form=update_user_info_form,
                            page_info=get_page_info(),
                            apply_new_profile_settings_class=apply_new_profile_settings_class)
 
@@ -422,7 +430,9 @@ def delete_ad(ad_id):
     selected_ad = database.get_ad_by_id(int(ad_id))
 
     if request.method == "POST":
+        ad_deleted_msg = "Your ad #" + str(selected_ad.id) + " was deleted"
         database.delete_ad(selected_ad)
+        flash(ad_deleted_msg)
         return redirect(url_for("my_ads"))
 
     ad_dict = database.ad_to_dict(selected_ad)

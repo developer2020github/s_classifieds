@@ -5,3 +5,7 @@ There are three JSON endpoints:
 Example: /cities/2/ads/JSON
 3)/ads/ad_id/JSON - returns JSON for a particular ad (identified by ad_id)
 Example: ads/9/JSON
+
+####CSRF Protection
+All forms in the approcation inherit from FlaskForm of flask-wtf. Thus, CSRF protection is handled automatically:
+https://flask-wtf.readthedocs.io/en/stable/form.html
