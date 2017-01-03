@@ -154,6 +154,7 @@ body {
 .third-party-login-message{
   color: white;
   font-weight: bold;
+  text-align: center;
 }
 
 .login-form-label{

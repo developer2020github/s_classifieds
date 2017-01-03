@@ -148,22 +148,24 @@ def unauthorized_callback():
     return redirect(url_for("login_or_register"))
 
 
-@app.route("/logout_simple", methods=["GET", "POST"])
+@app.route("/logout_simple")
 @flask_login.login_required
 def logout():
     """Logout the current user."""
-    user = flask_login.current_user
-    print "logout"
-    print user
-    print "user " + user.email + " successfully logged out "
 
-    pprint(vars(user))
+    user = flask_login.current_user
+
+    logout_msg = "user " + user.email + " successfully logged out "
+
+    #pprint(vars(user))
     database.set_user_authenticated_status(user, False)
     flask_login.logout_user()
 
-    #if user was connected via google - we need to disconnect
+    # if user was connected via google - we need to disconnect
+    if 'access_token' in login_session:
+        gdisconnect()
 
-
+    flash(logout_msg)
     return redirect(url_for("index"))
 
 
@@ -177,13 +179,12 @@ def get_page_info():
         page_info["right_text"] = "Logged in as " + flask_login.current_user.email
     return page_info
 
+
 @app.route('/')
 def index():
     categories_with_sub_categories = database.get_categories_with_subcategories()
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
-    #print categories_json
-    #print cities
     return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
                            cities=cities, page_info = get_page_info())
 
@@ -424,7 +425,7 @@ def new_ad():
                            categories_json=categories_json,
                            categories=categories_with_sub_categories,
                            new_ad_form=new_ad_form,
-                           selected_sub_categories = selected_sub_categories,
+                           selected_sub_categories=selected_sub_categories,
                            cities=cities,
                            page_info = get_page_info())
 
@@ -596,7 +597,7 @@ def gconnect():
         print user.email
         database.set_user_authenticated_status(user, True)
         flask_login.login_user(user, remember=True)
-        gdisconnect()
+        #gdisconnect()
 
         output = ''
         output += 'Welcome, '
