@@ -18,7 +18,7 @@
 			     <h3> Please confirm deletion of user profile ( id {{ user.id }})</h3>
 			</div>
 
-			<form action = "{{ url_for('delete_user_profile') }}" method="post">
+			
 			 <div class = row>
 
 	         <div class ="col-md-4">
@@ -46,8 +46,9 @@
 			 </div>
 
 			 </div>
-
-	        <button type="submit" class="btn btn-block black-text">Confirm delete (will delete your profile and all ads)</button>
+			 <form action = "{{ url_for('delete_user_profile') }}" method="post">
+			 	{{ delete_user_profile_form.csrf_token }}
+	        	<button type="submit" class="btn btn-block black-text">Confirm delete (will delete your profile and all ads)</button>
 	     	</form>
 
 

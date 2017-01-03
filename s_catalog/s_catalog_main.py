@@ -244,19 +244,20 @@ def delete_user_profile():
     :return:
     """
     user = flask_login.current_user
-
-    if request.method == 'POST':
+    delete_user_profile_form = FlaskForm()
+    if request.method == 'POST' and delete_user_profile_form.validate_on_submit():
         user_email = user.email
         user_id = user.id
         database.set_user_authenticated_status(user, False)
         flask_login.logout_user()
         database.delete_user(database.get_user_by_unicode_id(user_id))
 
-        flash("User account for " + user_email + " was deleted.")
+        flash("User account for " + user_email + "and all ads for this account were deleted.")
         return redirect(url_for("index"))
 
     return render_template("delete_user_profile.html",
                            user=user,
+                           delete_user_profile_form=delete_user_profile_form,
                            page_info=get_page_info())
 
 
