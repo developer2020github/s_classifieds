@@ -402,10 +402,13 @@ def new_ad():
     :return: on get add page; on post add  and redirects to my ads page ; on get  returns partly filled in template
     """
 
-    if request.method == "POST":
+    # using FlaskForm for csrf protection, rest is custom - built
+    new_ad_form = FlaskForm()
+    if request.method == "POST" and new_ad_form.validate_on_submit():
         ad_new = create_database.Ad(user_id=flask_login.current_user.id)
         update_ad_from_form_info(ad_new, request.form)
         database.update_ad(ad_new)
+        flash("New ad was successfully added")
         return redirect(url_for("my_ads"))
 
     user = database.get_user_by_unicode_id(flask_login.current_user.id)
@@ -419,6 +422,7 @@ def new_ad():
     return render_template("new_ad.html", ad=new_ad_template,
                            categories_json=categories_json,
                            categories=categories_with_sub_categories,
+                           new_ad_form=new_ad_form,
                            selected_sub_categories = selected_sub_categories,
                            cities=cities,
                            page_info = get_page_info())
@@ -432,8 +436,9 @@ def delete_ad(ad_id):
     :return: on get add page; on post deletes ad and redirects to my ads page
     """
     selected_ad = database.get_ad_by_id(int(ad_id))
-
-    if request.method == "POST":
+    # Use FlaskForm for csrf protection
+    delete_ad_form = FlaskForm()
+    if request.method == "POST" and delete_ad_form.validate_on_submit():
         ad_deleted_msg = "Your ad #" + str(selected_ad.id) + " was deleted"
         database.delete_ad(selected_ad)
         flash(ad_deleted_msg)
@@ -441,7 +446,7 @@ def delete_ad(ad_id):
 
     ad_dict = database.ad_to_dict(selected_ad)
 
-    return render_template("delete_ad.html", ad=ad_dict, page_info=get_page_info())
+    return render_template("delete_ad.html", ad=ad_dict, page_info=get_page_info(), delete_ad_form=delete_ad_form)
 
 
 @app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
@@ -449,11 +454,8 @@ def edit_ad(ad_id):
 
     selected_ad = database.get_ad_by_id(int(ad_id))
     edit_ad_form = FlaskForm()
-    #print "edit_ad_form.validate_on_submit()"
-    #print edit_ad_form.validate_on_submit()
     if request.method == "POST" and edit_ad_form.validate_on_submit():
         # using FlaskForm only for csrf protection in this case, rest is custom-built
-        #print_request_form(request)
         update_ad_from_form_info(selected_ad, request.form)
 
     categories_with_sub_categories = database.get_categories_with_subcategories()

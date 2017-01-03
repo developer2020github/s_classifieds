@@ -21,6 +21,7 @@
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <form action="{{ url_for('delete_ad', ad_id = ad['id'] ) }}" method="post">
+                    {{ delete_ad_form.csrf_token }}
                     <button type="submit" class="btn btn-block black-text">Confirm delete</button>
                 </form>
             </div>
