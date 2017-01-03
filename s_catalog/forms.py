@@ -28,3 +28,4 @@ class UpdateUserInfoForm(FlaskForm):
     name = StringField("Name:")
 
 
+

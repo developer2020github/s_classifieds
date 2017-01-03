@@ -79,6 +79,7 @@
 		<div class="col-md-6">
 			<div class="form-group">
 				<form action="{{ url_for('user_profile') }}" method="post">
+				    {{ apply_new_profile_settings_to_user_ads_form.csrf_token }}
 				 	<input type="hidden" name="action" value="apply_new_profile_settings_to_user_ads">
 		    		<input type="submit" class="btn btn-block black-text" value="Apply new profile setting to all my ads">
 				</form>

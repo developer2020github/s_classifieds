@@ -13,6 +13,7 @@ import requests
 import flask_login
 import flask_bcrypt
 import s_catalog_options
+from flask_wtf import FlaskForm
 
 bcrypt = flask_bcrypt.Bcrypt()
 
@@ -201,6 +202,7 @@ def user_profile():
     user = flask_login.current_user
     apply_new_profile_settings_class = "style='display: none';"
     update_user_info_form = UpdateUserInfoForm(obj=user)
+    apply_new_profile_settings_to_user_ads_form = FlaskForm()
     if request.method == 'POST':
         if request.form["action"] == "update_profile":
             if update_user_info_form.validate_on_submit():
@@ -214,18 +216,20 @@ def user_profile():
                 flash("Your profile info has been updated. If you wish to apply your name and/"
                       " or phone number to be applied"
                       " to all your ads as contact info please click Apply new profile settings to all my ads button")
-        elif request.form["action"]=="apply_new_profile_settings_to_user_ads":
-            database.update_ads_with_new_user_info(user)
-            apply_new_profile_settings_class = "style='display: none';"
-            # this post request is empty, so we need to force main form to show user name and phone
-            update_user_info_form.name.data = user.name
-            update_user_info_form.phone.data = user.phone
+        elif request.form["action"] == "apply_new_profile_settings_to_user_ads":
+            if apply_new_profile_settings_to_user_ads_form.validate_on_submit():
+                database.update_ads_with_new_user_info(user)
+                apply_new_profile_settings_class = "style='display: none';"
+                # this post request is empty, so we need to force main form to show user name and phone
+                update_user_info_form.name.data = user.name
+                update_user_info_form.phone.data = user.phone
 
-            flash("All ads have been updated with new user data.")
+                flash("All ads have been updated with new user data.")
 
     return render_template("user_profile.html",
                            user=user,
                            update_user_info_form=update_user_info_form,
+                           apply_new_profile_settings_to_user_ads_form=apply_new_profile_settings_to_user_ads_form,
                            page_info=get_page_info(),
                            apply_new_profile_settings_class=apply_new_profile_settings_class)
 
