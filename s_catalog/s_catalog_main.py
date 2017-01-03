@@ -83,7 +83,9 @@ def get_errors_in_login_data(email, password):
 
 @app.route("/login_or_register", methods=["GET", "POST"])
 def login_or_register():
-    """combines all  login and registration methods"""
+    """
+    combines all  login and registration methods.
+    """
 
     simple_login_form = LoginForm()
     simple_register_form = RegisterForm()
@@ -133,6 +135,9 @@ def login_or_register():
 @app.route("/myads", methods=["GET"])
 @flask_login.login_required
 def my_ads():
+    """
+    :return: rendered list of ods for current user
+    """
     user = flask_login.current_user
     categories_with_sub_categories = database.get_categories_with_subcategories_for_user(user)
     categories_json = json.dumps(categories_with_sub_categories)
@@ -151,10 +156,11 @@ def unauthorized_callback():
 @app.route("/logout_simple")
 @flask_login.login_required
 def logout():
-    """Logout the current user."""
+    """
+    Logout the current user.
+    """
 
     user = flask_login.current_user
-
     logout_msg = "user " + user.email + " successfully logged out "
 
     #pprint(vars(user))
@@ -170,6 +176,9 @@ def logout():
 
 
 def get_page_info():
+    """
+    :return: dictionary of standard page info items for page nav bar
+    """
     page_info = dict()
     page_info["user_logged_in"] = False
     page_info["left_text"] = "S-classifieds"
@@ -182,6 +191,10 @@ def get_page_info():
 
 @app.route('/')
 def index():
+    """
+    
+    :return: main page of the application
+    """
     categories_with_sub_categories = database.get_categories_with_subcategories()
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
