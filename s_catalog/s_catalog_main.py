@@ -192,7 +192,7 @@ def get_page_info():
 @app.route('/')
 def index():
     """
-    
+
     :return: main page of the application
     """
     categories_with_sub_categories = database.get_categories_with_subcategories()
