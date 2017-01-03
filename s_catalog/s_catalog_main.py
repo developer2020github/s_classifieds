@@ -448,8 +448,12 @@ def delete_ad(ad_id):
 def edit_ad(ad_id):
 
     selected_ad = database.get_ad_by_id(int(ad_id))
-
-    if request.method == "POST":
+    edit_ad_form = FlaskForm()
+    #print "edit_ad_form.validate_on_submit()"
+    #print edit_ad_form.validate_on_submit()
+    if request.method == "POST" and edit_ad_form.validate_on_submit():
+        # using FlaskForm only for csrf protection in this case, rest is custom-built
+        #print_request_form(request)
         update_ad_from_form_info(selected_ad, request.form)
 
     categories_with_sub_categories = database.get_categories_with_subcategories()
@@ -463,6 +467,7 @@ def edit_ad(ad_id):
                            categories=categories_with_sub_categories,
                            selected_sub_categories = selected_sub_categories,
                            cities=cities,
+                           edit_ad_form=edit_ad_form,
                            page_info=get_page_info())
 
 

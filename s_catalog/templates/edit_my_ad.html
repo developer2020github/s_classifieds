@@ -19,6 +19,7 @@
      <div class="col-md-6">
      <div class="panel panel-default panel-text2">Edit ad # {{ ad["id"] }}</div>
     <form action = "{{ url_for('edit_ad', ad_id = ad['id'] ) }}" method="post">
+        {{ edit_ad_form.csrf_token }}
         {% include 'ad_new_edit_form.html' %}
         <button type="submit" class="btn btn-block black-text">Submit</button>
     </form>
