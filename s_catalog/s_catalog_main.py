@@ -1,3 +1,43 @@
+"""
+Main module of s-classifieds application.
+S-classifieds is a demo/personal project of a simple classifieds board.
+
+This module handles:
+#User management: login/logout/registration/settings for flask-login
+     Supports following options:
+     1) google - based OAuth2 authentication and authorization
+     2) as an option (can be enabled/disabled with ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION flag)
+        - email/password based registration and authentication and authorization. Uses bcrypt
+
+     Once user is authenticated by any method, authorization for views and other relevant logic is
+     handled by flask-login.
+
+#main  view - main page of the application
+    Supports filtering of ads by location, category, sub-category and date posted
+    and sorting by date and price
+
+#User profile view:
+     user can update name and contact phone
+     If desired, user can apply their updated profile settings to all their ads.
+     User can also delete their profile. This action will delete all  their ads as well.
+
+#User's  ads views and handling (CRUD)
+    Users can view, update, and delete their ads.
+    Filtering by location, category, sub-category and date posted is supported as well as sorting
+    by date posted and price.
+
+#JSON end points
+    3 JSON end points are supported:
+     1) individual ad by id
+     2) list of ciies (locations) with their ids
+     3) list of ads in a particular location (by location id)
+
+
+CSRF protection handling
+    Implemented via using flask_wtf which chave it enabled by default.
+    Some forms are custom-built but still utilize flask_wtf csrf token field.
+"""
+
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask import session as login_session
 from forms import LoginForm, RegisterForm, UpdateUserInfoForm
@@ -5,7 +45,7 @@ import database
 import create_database
 import json
 import s_catalog_lib
-from pprint import pprint
+
 
 import httplib2
 from oauth2client import client
@@ -15,8 +55,8 @@ import flask_bcrypt
 import s_catalog_options
 from flask_wtf import FlaskForm
 
+# required for optional email-based login and registration.
 bcrypt = flask_bcrypt.Bcrypt()
-
 app = Flask(__name__)
 
 login_manager = flask_login.LoginManager()
@@ -27,6 +67,10 @@ login_manager.init_app(app)
 GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = "client_secret.json"
 CLIENT_ID = json.loads(
     open(GOOGLE_SIGN_IN_CLIENT_SECRET_FILE, 'r').read())['web']['client_id']
+
+# -------------------------------------------------------------------------
+# #####User management: login/logout/registration/settings for flask-login
+# -------------------------------------------------------------------------
 
 
 @login_manager.user_loader
@@ -39,12 +83,21 @@ def user_loader(user_id):
     return database.get_user_by_unicode_id(user_id)
 
 
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    """
+
+    :return: redirects to login page if user is trying to access a page they are not authorized to see.
+    """
+    return redirect(url_for("login_or_register"))
+
+
 def get_errors_in_registration_data(email, password, confirmed_password):
     """
     :param email: email of new user trying to register
     :param password:  his new password
     :param confirmed_password: confirmed value of password
-    :return: empty string if everyting is all right and user can eb added. Error message to
+    :return: empty string if everything is all right and user can be added. Error message to
             be displayed to user otherwise.
     """
     error_message = ""
@@ -84,7 +137,10 @@ def get_errors_in_login_data(email, password):
 @app.route("/login_or_register", methods=["GET", "POST"])
 def login_or_register():
     """
-    combines all  login and registration methods.
+    combines all  login and registration methods:
+    1) google (third-party)
+    2) (optional) email - password combination: available when  ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION
+    option is set to True
     """
 
     simple_login_form = LoginForm()
@@ -93,32 +149,31 @@ def login_or_register():
     login_session["state"] = state
     login_error_message = ""
     registration_error_message = ""
-    #print_request_form(request)
-    if request.method == 'POST':
-        if request.form["action"] == "simple_login" and simple_login_form.validate_on_submit():
-            print "processing login"
-            login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
-                                                                 password=simple_login_form.password.data)
-            if login_error_message == "":
-                    database.set_user_authenticated_status(user, True)
-                    flask_login.login_user(user, remember=True)
-                    #flash('Successfully logged in as ' + simple_login_form.email.data)
-                    # no need to flash as user will be shown "logged in as" message any way
-                    return redirect(url_for("index"))
+    if s_catalog_options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION:
+        if request.method == 'POST':
+            if request.form["action"] == "simple_login" and simple_login_form.validate_on_submit():
+                #print "processing login"
+                login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
+                                                                     password=simple_login_form.password.data)
+                if login_error_message == "":
+                        database.set_user_authenticated_status(user, True)
+                        flask_login.login_user(user, remember=True)
+                        # no need to flash as user will be shown "logged in as" message any way
+                        return redirect(url_for("index"))
 
-        elif request.form["action"] == "simple_register" and simple_register_form.validate_on_submit():
-            print "processing register"
-            registration_error_message = get_errors_in_registration_data(email=simple_register_form.email.data,
-                                                                 password=simple_register_form.password.data,
-                                                                 confirmed_password=simple_register_form.confirm_password.data)
+            elif request.form["action"] == "simple_register" and simple_register_form.validate_on_submit():
+                print "processing register"
+                registration_error_message = get_errors_in_registration_data(email=simple_register_form.email.data,
+                                                                     password=simple_register_form.password.data,
+                                                                     confirmed_password=simple_register_form.confirm_password.data)
 
-            if registration_error_message == "":
-                database.add_new_user(name=simple_register_form.name.data,
-                                      email=simple_register_form.email.data,
-                                      phone_number=simple_register_form.phone.data,
-                                      password=simple_register_form.password.data)
+                if registration_error_message == "":
+                    database.add_new_user(name=simple_register_form.name.data,
+                                          email=simple_register_form.email.data,
+                                          phone_number=simple_register_form.phone.data,
+                                          password=simple_register_form.password.data)
 
-                flash('Successfully created new user ' + simple_register_form.email.data + ". Please log in.")
+                    flash('Successfully created new user ' + simple_register_form.email.data + ". Please log in.")
 
     return render_template("login_or_register.html", simple_login_form=simple_login_form,
                            simple_register_form=simple_register_form,
@@ -129,41 +184,18 @@ def login_or_register():
                            ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION=
                            s_catalog_options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION)
 
-# sub-module: ads
-
-
-@app.route("/myads", methods=["GET"])
-@flask_login.login_required
-def my_ads():
-    """
-    :return: rendered list of ods for current user
-    """
-    user = flask_login.current_user
-    categories_with_sub_categories = database.get_categories_with_subcategories_for_user(user)
-    categories_json = json.dumps(categories_with_sub_categories)
-    cities = database.get_user_specific_cities(user)
-    # print categories_json
-    # print cities
-    return render_template("myads.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, page_info=get_page_info())
-
-
-@login_manager.unauthorized_handler
-def unauthorized_callback():
-    return redirect(url_for("login_or_register"))
-
 
 @app.route("/logout_simple")
 @flask_login.login_required
 def logout():
     """
-    Logout the current user.
+    Logs out the current user.
     """
 
     user = flask_login.current_user
     logout_msg = "user " + user.email + " successfully logged out "
 
-    #pprint(vars(user))
+    # pprint(vars(user))
     database.set_user_authenticated_status(user, False)
     flask_login.logout_user()
 
@@ -175,322 +207,12 @@ def logout():
     return redirect(url_for("index"))
 
 
-def get_page_info():
-    """
-    :return: dictionary of standard page info items for page nav bar
-    """
-    page_info = dict()
-    page_info["user_logged_in"] = False
-    page_info["left_text"] = "S-classifieds"
-    page_info["right_text"] = ""
-    if flask_login.current_user.is_authenticated:
-        page_info["user_logged_in"] = True
-        page_info["right_text"] = "Logged in as " + flask_login.current_user.email
-    return page_info
-
-
-@app.route('/')
-def index():
-    """
-
-    :return: main page of the application
-    """
-    categories_with_sub_categories = database.get_categories_with_subcategories()
-    categories_json = json.dumps(categories_with_sub_categories)
-    cities = database.get_cities()
-    return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
-                           cities=cities, page_info = get_page_info())
-
-
-@app.route("/user_profile", methods=["GET", "POST"])
-@flask_login.login_required
-def user_profile():
-    """
-    Displays user profile data and handles two kinds of POST requests:
-     1) update to user profile itself (i.e. if user wishes to change their name or phone number)
-     2) application of these new settings to all user ads: user has a choice for specifying ad-
-     specific contact phone and name. So they have to explicitly indicate if they want for their new defaults
-     to be automatically applied to all of their ads.
-    :return:
-    """
-    user = flask_login.current_user
-    apply_new_profile_settings_class = "style='display: none';"
-    update_user_info_form = UpdateUserInfoForm(obj=user)
-    apply_new_profile_settings_to_user_ads_form = FlaskForm()
-    if request.method == 'POST':
-        if request.form["action"] == "update_profile":
-            if update_user_info_form.validate_on_submit():
-                user.name = update_user_info_form.name.data
-                user.phone = update_user_info_form.phone.data
-                database.update_user(user)
-                flask_login.current_user.name = user.name
-                flask_login.current_user.phone = user.phone
-                apply_new_profile_settings_class = ""
-
-                flash("Your profile info has been updated. If you wish to apply your name and/"
-                      " or phone number to be applied"
-                      " to all your ads as contact info please click Apply new profile settings to all my ads button")
-        elif request.form["action"] == "apply_new_profile_settings_to_user_ads":
-            if apply_new_profile_settings_to_user_ads_form.validate_on_submit():
-                database.update_ads_with_new_user_info(user)
-                apply_new_profile_settings_class = "style='display: none';"
-                # this post request is empty, so we need to force main form to show user name and phone
-                update_user_info_form.name.data = user.name
-                update_user_info_form.phone.data = user.phone
-
-                flash("All ads have been updated with new user data.")
-
-    return render_template("user_profile.html",
-                           user=user,
-                           update_user_info_form=update_user_info_form,
-                           apply_new_profile_settings_to_user_ads_form=apply_new_profile_settings_to_user_ads_form,
-                           page_info=get_page_info(),
-                           apply_new_profile_settings_class=apply_new_profile_settings_class)
-
-
-@app.route("/delete_user_profile", methods=["GET", "POST"])
-@flask_login.login_required
-def delete_user_profile():
-    """
-    On get returns "delete profile" page to confirm if user really wants to delete their profile.
-    On post deletes user profile. Note all user's ads will be automatically deleted as well because this
-    is how database is setup (there is an automatic delete cascade for user->ad objects).
-    :return:
-    """
-    user = flask_login.current_user
-    delete_user_profile_form = FlaskForm()
-    if request.method == 'POST' and delete_user_profile_form.validate_on_submit():
-        user_email = user.email
-        user_id = user.id
-        database.set_user_authenticated_status(user, False)
-        flask_login.logout_user()
-        database.delete_user(database.get_user_by_unicode_id(user_id))
-
-        flash("User account for " + user_email + "and all ads for this account were deleted.")
-        return redirect(url_for("index"))
-
-    return render_template("delete_user_profile.html",
-                           user=user,
-                           delete_user_profile_form=delete_user_profile_form,
-                           page_info=get_page_info())
-
-
-@app.route("/ads/<int:ad_id>/JSON")
-def get_ad_json(ad_id):
-    """
-    Returns JSON for a single ad
-    :param ad_id: itn id of the ad
-    :return: JSON for the requested ad
-    """
-    ad  = database.get_ad_by_id(ad_id)
-    if ad:
-        return jsonify(database.ad_to_dict(ad, serialize=True))
-    return jsonify({})
-
-
-@app.route("/cities/<int:city_id>/ads/JSON")
-def get_city_ads_json(city_id):
-    """
-    Returns JSON for all ads in a city (as per city_id)
-    :param city_id: int id of the city
-    :return: JSON for all ads in a city
-    """
-    ads = database.get_ads_by_city(city_id)
-    list_of_ads_dictionaries = [database.ad_to_dict(ad, serialize=True) for ad in ads]
-    return jsonify(list_of_ads_dictionaries)
-
-
-@app.route("/list_of_cities/JSON")
-def get_list_of_cities():
-    """
-    Returns JSON for list of cities with ids
-    :return: JSON for all cities
-    """
-    cities = database.get_cities()
-    list_of_city_dictionaries = [database.city_to_dict(city) for city in cities]
-    return jsonify(list_of_city_dictionaries)
-
-
-def get_search_filtering_parameters_from_request(input_request):
-    """
-    Helper function - will take request arguments coming from Search panel
-    and convert them into a dictionary of arguments for
-    database.get_ads_to_display function. The advantage is this can be used in more than one place
-    :param input_request: request
-    :return: dictionary of arguments for database.get_ads_to_display function
-    """
-    filtering_parameters = dict()
-
-    filtering_parameters["city_id"] = input_request.args.get('selected_city_id', -1, type=int)
-    filtering_parameters["category_id"] = input_request.args.get('selected_category_id', -1, type=int)
-    filtering_parameters["number_of_records_to_include"] = 10
-    filtering_parameters["sub_category_id"] = input_request.args.get('selected_sub_category_id', -1, type=int)
-    filtering_parameters["created_within_days"] = input_request.args.get('select_ads_within_days', -1, type=int)
-    filtering_parameters["min_idx"] = input_request.args.get('min_idx', -1, type=int)
-    filtering_parameters["sort_by"] = input_request.args.get('sort_by', "", type=str)
-    filtering_parameters["debug_print"] = True
-    return filtering_parameters
-
-
-def show_ads(template_name, user_id=None):
-    """
-    get ads_data data structure to be displayed in the list of ads
-    :param user_id:
-    :param template_name
-    :return:
-    """
-    ads_html = list()
-    search_filtering_parameters = get_search_filtering_parameters_from_request(request)
-    if user_id:
-        search_filtering_parameters["user_id"] = user_id
-
-    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed = \
-        database.get_ads_to_display(**search_filtering_parameters)
-
-    if total_number_of_ads > 0:
-        for ad in ads:
-            ads_html.append(render_template(template_name, ad=database.ad_to_dict(ad)))
-
-    ads_data = dict()
-    ads_data["ads_html"] = ads_html
-    ads_data["total_number_of_ads"] = str(total_number_of_ads)
-    ads_data["min_ad_idx_displayed"] = str(min_ad_idx_displayed)
-    ads_data["max_ad_idx_displayed"] = str(max_ad_idx_displayed)
-
-    return jsonify(ads_data)
-
-
-@app.route('/update_my_ads_list')
-def show_more_of_my_ads():
-    user_id = flask_login.current_user.id
-    return show_ads(template_name="displayed_my_ad.html", user_id=user_id)
-
-
-@app.route('/update_ads_list')
-def show_more_ads():
-    return show_ads(template_name="displayed_ad.html")
-
-
-@app.route("/ads/<int:ad_id>/current_ad")
-def ad_page(ad_id):
-    selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
-    return render_template("ad.html", ad=selected_ad, page_info=get_page_info())
-
-
-def print_request_form(input_request):
-    """"
-    Debug  helper function  - prints fields and values of request form
-    :param input_request: request to print form from
-    :return: none
-    """
-    f = input_request.form
-    for key in f.keys():
-        for value in f.getlist(key):
-            print key, ":", value
-
-
-def update_ad_from_form_info(ad, form):
-    """
-    Updates ad object from passed form and saves it to the database
-    :param ad: ad to be updated
-    :param form: forms to use as a source
-    :return: none
-    """
-    ad.text = form["ad_text"]
-    ad.price_cents = int((float(form["ad_price"]) * 100))
-    ad.contact_email = form["contact_email"]
-    # default to email for now
-    ad.primary_contact  = ad.contact_email
-    ad.contact_name = str(form["contact_name"])
-    ad.contact_phone = str(form["contact_phone"])
-    ad.city_id = int(form["select_city"])
-    ad.sub_category_id = int(form["sub-category-selected"])
-    ad.title = form["ad_title"]
-    database.update_ad(ad)
-
-
-@app.route("/new_ad",  methods=["GET", "POST"])
-@flask_login.login_required
-def new_ad():
-    """
-    Creates new ad from user inputs
-    :return: on get add page; on post add  and redirects to my ads page ; on get  returns partly filled in template
-    """
-
-    # using FlaskForm for csrf protection, rest is custom - built
-    new_ad_form = FlaskForm()
-    if request.method == "POST" and new_ad_form.validate_on_submit():
-        ad_new = create_database.Ad(user_id=flask_login.current_user.id)
-        update_ad_from_form_info(ad_new, request.form)
-        database.update_ad(ad_new)
-        flash("New ad was successfully added")
-        return redirect(url_for("my_ads"))
-
-    user = database.get_user_by_unicode_id(flask_login.current_user.id)
-    new_ad_template = database.get_ad_template(user, initialize_city=True, initialize_category_and_subcategory=True)
-    categories_with_sub_categories = database.get_categories_with_subcategories()
-    cities = database.get_cities()
-    categories_json = json.dumps(categories_with_sub_categories)
-
-    selected_sub_categories = categories_with_sub_categories[new_ad_template["category"]]["value"]
-
-    return render_template("new_ad.html", ad=new_ad_template,
-                           categories_json=categories_json,
-                           categories=categories_with_sub_categories,
-                           new_ad_form=new_ad_form,
-                           selected_sub_categories=selected_sub_categories,
-                           cities=cities,
-                           page_info = get_page_info())
-
-
-@app.route("/ads/<int:ad_id>/delete_ad",  methods=["GET", "POST"])
-@flask_login.login_required
-def delete_ad(ad_id):
-    """
-    :param ad_id: ad to be deleted
-    :return: on get add page; on post deletes ad and redirects to my ads page
-    """
-    selected_ad = database.get_ad_by_id(int(ad_id))
-    # Use FlaskForm for csrf protection
-    delete_ad_form = FlaskForm()
-    if request.method == "POST" and delete_ad_form.validate_on_submit():
-        ad_deleted_msg = "Your ad #" + str(selected_ad.id) + " was deleted"
-        database.delete_ad(selected_ad)
-        flash(ad_deleted_msg)
-        return redirect(url_for("my_ads"))
-
-    ad_dict = database.ad_to_dict(selected_ad)
-
-    return render_template("delete_ad.html", ad=ad_dict, page_info=get_page_info(), delete_ad_form=delete_ad_form)
-
-
-@app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
-def edit_ad(ad_id):
-
-    selected_ad = database.get_ad_by_id(int(ad_id))
-    edit_ad_form = FlaskForm()
-    if request.method == "POST" and edit_ad_form.validate_on_submit():
-        # using FlaskForm only for csrf protection in this case, rest is custom-built
-        update_ad_from_form_info(selected_ad, request.form)
-
-    categories_with_sub_categories = database.get_categories_with_subcategories()
-
-    cities = database.get_cities()
-    categories_json = json.dumps(categories_with_sub_categories)
-    ad_dict = database.ad_to_dict(selected_ad)
-    selected_sub_categories = categories_with_sub_categories[ad_dict["category"]]["value"]
-    return render_template("edit_my_ad.html", ad=ad_dict,
-                           categories_json=categories_json,
-                           categories=categories_with_sub_categories,
-                           selected_sub_categories = selected_sub_categories,
-                           cities=cities,
-                           edit_ad_form=edit_ad_form,
-                           page_info=get_page_info())
-
-
-#Initially, this was used as an URL , but do not need to be URL anymore
 @app.route('/google_sign_out')
 def gdisconnect():
+    """
+    disconnect current user from Google account
+    :return: status response
+    """
     access_token = login_session['access_token']
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: '
@@ -507,7 +229,6 @@ def gdisconnect():
     print result
     if result['status'] == '200':
 
-        # dels should probably be replaces with "pop" function
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
@@ -621,9 +342,369 @@ def gconnect():
     return output
 
 
+# -------------------------------------------------------------------------
+# #####main  view and ad view
+# -------------------------------------------------------------------------
+def get_page_info():
+    """
+    :return: dictionary of standard page info items for page nav bar
+    """
+    page_info = dict()
+    page_info["user_logged_in"] = False
+    page_info["left_text"] = "S-classifieds"
+    page_info["right_text"] = ""
+    if flask_login.current_user.is_authenticated:
+        page_info["user_logged_in"] = True
+        page_info["right_text"] = "Logged in as " + flask_login.current_user.email
+    return page_info
+
+
+@app.route('/')
+def index():
+    """
+    :return: main page of the application
+    """
+    categories_with_sub_categories = database.get_categories_with_subcategories()
+    categories_json = json.dumps(categories_with_sub_categories)
+    cities = database.get_cities()
+    return render_template("index.html", categories=categories_with_sub_categories, categories_json=categories_json,
+                           cities=cities, page_info=get_page_info())
+
+
+@app.route('/update_ads_list')
+def show_more_ads():
+    """
+    :return: rendered list of ads
+    """
+    return show_ads(template_name="displayed_ad.html")
+
+
+@app.route("/ads/<int:ad_id>/current_ad")
+def ad_page(ad_id):
+    """
+
+    :param ad_id: id of the ad
+    :return: rendered view for an ad
+    """
+    selected_ad = database.ad_to_dict(database.get_ad_by_id(ad_id))
+    return render_template("ad.html", ad=selected_ad, page_info=get_page_info())
+
+# -------------------------------------------------------------------------
+# #####User profile view
+# -------------------------------------------------------------------------
+
+
+@app.route("/user_profile", methods=["GET", "POST"])
+@flask_login.login_required
+def user_profile():
+    """
+    Displays user profile data and handles two kinds of POST requests:
+     1) update to user profile itself (i.e. if user wishes to change their name or phone number)
+     2) application of these new settings to all user ads: user has a choice for specifying ad-
+     specific contact phone and name. So they have to explicitly indicate if they want for their new defaults
+     to be automatically applied to all of their ads.
+    :return:
+    """
+    user = flask_login.current_user
+    apply_new_profile_settings_class = "style='display: none';"
+    update_user_info_form = UpdateUserInfoForm(obj=user)
+    apply_new_profile_settings_to_user_ads_form = FlaskForm()
+    if request.method == 'POST':
+        if request.form["action"] == "update_profile":
+            if update_user_info_form.validate_on_submit():
+                user.name = update_user_info_form.name.data
+                user.phone = update_user_info_form.phone.data
+                database.update_user(user)
+                flask_login.current_user.name = user.name
+                flask_login.current_user.phone = user.phone
+                apply_new_profile_settings_class = ""
+
+                flash("Your profile info has been updated. If you wish to apply your name and/"
+                      " or phone number to be applied"
+                      " to all your ads as contact info please click Apply new profile settings to all my ads button")
+        elif request.form["action"] == "apply_new_profile_settings_to_user_ads":
+            if apply_new_profile_settings_to_user_ads_form.validate_on_submit():
+                database.update_ads_with_new_user_info(user)
+                apply_new_profile_settings_class = "style='display: none';"
+                # this post request is empty, so we need to force main form to show user name and phone
+                update_user_info_form.name.data = user.name
+                update_user_info_form.phone.data = user.phone
+
+                flash("All ads have been updated with new user data.")
+
+    return render_template("user_profile.html",
+                           user=user,
+                           update_user_info_form=update_user_info_form,
+                           apply_new_profile_settings_to_user_ads_form=apply_new_profile_settings_to_user_ads_form,
+                           page_info=get_page_info(),
+                           apply_new_profile_settings_class=apply_new_profile_settings_class)
+
+
+@app.route("/delete_user_profile", methods=["GET", "POST"])
+@flask_login.login_required
+def delete_user_profile():
+    """
+    On get returns "delete profile" page to confirm if user really wants to delete their profile.
+    On post deletes user profile. Note all user's ads will be automatically deleted as well because this
+    is how database is setup (there is an automatic delete cascade for user->ad objects).
+    :return:
+    """
+    user = flask_login.current_user
+    delete_user_profile_form = FlaskForm()
+    if request.method == 'POST' and delete_user_profile_form.validate_on_submit():
+        user_email = user.email
+        user_id = user.id
+        database.set_user_authenticated_status(user, False)
+        flask_login.logout_user()
+        database.delete_user(database.get_user_by_unicode_id(user_id))
+
+        flash("User account for " + user_email + "and all ads for this account were deleted.")
+        return redirect(url_for("index"))
+
+    return render_template("delete_user_profile.html",
+                           user=user,
+                           delete_user_profile_form=delete_user_profile_form,
+                           page_info=get_page_info())
+
+
+# -------------------------------------------------------------------------
+# #####User's  ads views and handling (CRUD)
+# -------------------------------------------------------------------------
+
+
+@app.route("/myads", methods=["GET"])
+@flask_login.login_required
+def my_ads():
+    """
+    :return: user's ads page
+    """
+    user = flask_login.current_user
+    categories_with_sub_categories = database.get_categories_with_subcategories_for_user(user)
+    categories_json = json.dumps(categories_with_sub_categories)
+    cities = database.get_user_specific_cities(user)
+    return render_template("myads.html", categories=categories_with_sub_categories, categories_json=categories_json,
+                           cities=cities, page_info=get_page_info())
+
+
+@app.route('/update_my_ads_list')
+def show_more_of_my_ads():
+    """
+    :return: rendered list of user-specific ads
+    """
+    user_id = flask_login.current_user.id
+    return show_ads(template_name="displayed_my_ad.html", user_id=user_id)
+
+
+@app.route("/new_ad",  methods=["GET", "POST"])
+@flask_login.login_required
+def new_ad():
+    """
+    Creates new ad from user inputs
+    :return: on get add page; on post add  and redirects to my ads page ; on get  returns partly filled in template
+    """
+
+    # using FlaskForm for csrf protection, rest is custom - built
+    new_ad_form = FlaskForm()
+    if request.method == "POST" and new_ad_form.validate_on_submit():
+        ad_new = create_database.Ad(user_id=flask_login.current_user.id)
+        update_ad_from_form_info(ad_new, request.form)
+        database.update_ad(ad_new)
+        flash("New ad was successfully added")
+        return redirect(url_for("my_ads"))
+
+    user = database.get_user_by_unicode_id(flask_login.current_user.id)
+    new_ad_template = database.get_ad_template(user, initialize_city=True, initialize_category_and_subcategory=True)
+    categories_with_sub_categories = database.get_categories_with_subcategories()
+    cities = database.get_cities()
+    categories_json = json.dumps(categories_with_sub_categories)
+
+    selected_sub_categories = categories_with_sub_categories[new_ad_template["category"]]["value"]
+
+    return render_template("new_ad.html", ad=new_ad_template,
+                           categories_json=categories_json,
+                           categories=categories_with_sub_categories,
+                           new_ad_form=new_ad_form,
+                           selected_sub_categories=selected_sub_categories,
+                           cities=cities,
+                           page_info = get_page_info())
+
+
+@app.route("/ads/<int:ad_id>/delete_ad",  methods=["GET", "POST"])
+@flask_login.login_required
+def delete_ad(ad_id):
+    """
+    :param ad_id: ad to be deleted
+    :return: on get add page; on post deletes ad and redirects to my ads page
+    """
+    selected_ad = database.get_ad_by_id(int(ad_id))
+    # Use FlaskForm for csrf protection
+    delete_ad_form = FlaskForm()
+    if request.method == "POST" and delete_ad_form.validate_on_submit():
+        ad_deleted_msg = "Your ad #" + str(selected_ad.id) + " was deleted"
+        database.delete_ad(selected_ad)
+        flash(ad_deleted_msg)
+        return redirect(url_for("my_ads"))
+
+    ad_dict = database.ad_to_dict(selected_ad)
+
+    return render_template("delete_ad.html", ad=ad_dict, page_info=get_page_info(), delete_ad_form=delete_ad_form)
+
+
+@app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
+def edit_ad(ad_id):
+    """
+    Updates specific ad with user edited information.
+    :param ad_id: id of the ad
+    :return: either current ad info (on GET) or updated ad (on POST)
+    """
+    selected_ad = database.get_ad_by_id(int(ad_id))
+    edit_ad_form = FlaskForm()
+    if request.method == "POST" and edit_ad_form.validate_on_submit():
+        # using FlaskForm only for csrf protection in this case, rest is custom-built
+        update_ad_from_form_info(selected_ad, request.form)
+
+    categories_with_sub_categories = database.get_categories_with_subcategories()
+
+    cities = database.get_cities()
+    categories_json = json.dumps(categories_with_sub_categories)
+    ad_dict = database.ad_to_dict(selected_ad)
+    selected_sub_categories = categories_with_sub_categories[ad_dict["category"]]["value"]
+    return render_template("edit_my_ad.html", ad=ad_dict,
+                           categories_json=categories_json,
+                           categories=categories_with_sub_categories,
+                           selected_sub_categories = selected_sub_categories,
+                           cities=cities,
+                           edit_ad_form=edit_ad_form,
+                           page_info=get_page_info())
+
+
+# -------------------------------------------------------------------------
+# #####JSON end points
+# -------------------------------------------------------------------------
+@app.route("/ads/<int:ad_id>/JSON")
+def get_ad_json(ad_id):
+    """
+    Returns JSON for a single ad
+    :param ad_id: itn id of the ad
+    :return: JSON for the requested ad
+    """
+    ad = database.get_ad_by_id(ad_id)
+    if ad:
+        return jsonify(database.ad_to_dict(ad, serialize=True))
+    return jsonify({})
+
+
+@app.route("/cities/<int:city_id>/ads/JSON")
+def get_city_ads_json(city_id):
+    """
+    Returns JSON for all ads in a city (as per city_id)
+    :param city_id: int id of the city
+    :return: JSON for all ads in a city
+    """
+    ads = database.get_ads_by_city(city_id)
+    list_of_ads_dictionaries = [database.ad_to_dict(ad, serialize=True) for ad in ads]
+    return jsonify(list_of_ads_dictionaries)
+
+
+@app.route("/list_of_cities/JSON")
+def get_list_of_cities():
+    """
+    Returns JSON for list of cities with ids
+    :return: JSON for all cities
+    """
+    cities = database.get_cities()
+    list_of_city_dictionaries = [database.city_to_dict(city) for city in cities]
+    return jsonify(list_of_city_dictionaries)
+
+# -------------------------------------------------------------------------
+# #####common helper functions
+# -------------------------------------------------------------------------
+
+
+def get_search_filtering_parameters_from_request(input_request):
+    """
+    Helper function - will take request arguments coming from Search panel
+    and convert them into a dictionary of arguments for
+    database.get_ads_to_display function. The advantage is this can be used in more than one place
+    :param input_request: request
+    :return: dictionary of arguments for database.get_ads_to_display function
+    """
+    filtering_parameters = dict()
+
+    filtering_parameters["city_id"] = input_request.args.get('selected_city_id', -1, type=int)
+    filtering_parameters["category_id"] = input_request.args.get('selected_category_id', -1, type=int)
+    filtering_parameters["number_of_records_to_include"] = 10
+    filtering_parameters["sub_category_id"] = input_request.args.get('selected_sub_category_id', -1, type=int)
+    filtering_parameters["created_within_days"] = input_request.args.get('select_ads_within_days', -1, type=int)
+    filtering_parameters["min_idx"] = input_request.args.get('min_idx', -1, type=int)
+    filtering_parameters["sort_by"] = input_request.args.get('sort_by', "", type=str)
+    filtering_parameters["debug_print"] = False
+    return filtering_parameters
+
+
+def show_ads(template_name, user_id=None):
+    """
+    get ads_data data structure to be displayed in the list of ads.
+    Filtering parameters are extracted from request.
+    :param user_id: if None - ignored. Otherwise, user id will be used to filter in only user-specific ads
+    :param template_name: template to use to render an ad
+    :return: rendered list of ads
+    """
+    ads_html = list()
+    search_filtering_parameters = get_search_filtering_parameters_from_request(request)
+    if user_id:
+        search_filtering_parameters["user_id"] = user_id
+
+    ads, total_number_of_ads, min_ad_idx_displayed, max_ad_idx_displayed = \
+        database.get_ads_to_display(**search_filtering_parameters)
+
+    if total_number_of_ads > 0:
+        for ad in ads:
+            ads_html.append(render_template(template_name, ad=database.ad_to_dict(ad)))
+
+    ads_data = dict()
+    ads_data["ads_html"] = ads_html
+    ads_data["total_number_of_ads"] = str(total_number_of_ads)
+    ads_data["min_ad_idx_displayed"] = str(min_ad_idx_displayed)
+    ads_data["max_ad_idx_displayed"] = str(max_ad_idx_displayed)
+
+    return jsonify(ads_data)
+
+
+def print_request_form(input_request):
+    """"
+    Debug  helper function  - prints fields and values of request form
+    :param input_request: request to print form from
+    :return: none
+    """
+    f = input_request.form
+    for key in f.keys():
+        for value in f.getlist(key):
+            print key, ":", value
+
+
+def update_ad_from_form_info(ad, form):
+    """
+    Updates ad object from passed form and saves it to the database
+    :param ad: ad to be updated
+    :param form: forms to use as a source
+    :return: none
+    """
+    ad.text = form["ad_text"]
+    ad.price_cents = int((float(form["ad_price"]) * 100))
+    ad.contact_email = form["contact_email"]
+    # default to email for now
+    ad.primary_contact  = ad.contact_email
+    ad.contact_name = str(form["contact_name"])
+    ad.contact_phone = str(form["contact_phone"])
+    ad.city_id = int(form["select_city"])
+    ad.sub_category_id = int(form["sub-category-selected"])
+    ad.title = form["ad_title"]
+    database.update_ad(ad)
+
 
 if __name__ == '__main__':
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 #debug option to be sure updates are applied right away
     app.debug = True
-    app.secret_key = "secret key" #used to sign sessions, need to change it to a properly generated key
+    app.secret_key = "secret key" #used to sign sessions, need to change it to a properly generated key in production
     app.run(port=5000)

@@ -1,5 +1,5 @@
 
-import generate_data
+
 #real imports, to be kept
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -7,8 +7,6 @@ import create_database
 import datetime
 
 import flask_bcrypt
-
-
 
 engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
 create_database.Base.metadata.bind = engine
