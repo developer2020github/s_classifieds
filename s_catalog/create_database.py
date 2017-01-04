@@ -1,36 +1,43 @@
-'''
-This module creates the database
-'''
+"""
+This module defines the database schema for s-classifieds application and, if run, creates database.
+
+Tables:
+ Category: ad categories
+ SubCategory: ad sub-categories
+ City: list of locations where ads can belong to
+ Ad: list of ads
+ User: list of users. Has extra functions to support flask-login
+
+
+Categories and sub categories:
+    even though a sub-category with same name can be present in different category, it is
+    not the same sub-category. I.e., "houses" in "properties for sale" are not
+    same as "houses" in "properties for rent".
+
+    Relation is "one to multiple" - one category can refer to multiple sub-categories.
+    From the sub-category side relationship is multiple to one - i.e. , if we know sub-category id - we should be able to
+    find out category from it. For this reason ad does not need explicitly specified category,
+    only sub-category.
+
+City is just list of unique cities.
+So is User.
+
+Ad.
+    Ad table has multiple - to - one relationship with following tables
+    - cities
+    - users
+    - sub-categories : as mentioned above, extra relation with sub-categories is not needed as category can be determined
+    based on sub-category
+
+Users should be able to provide emails, contact names and phones different from the ones they registered under.
+
+"""
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
 Base = declarative_base()
-'''
-Note on categories and sub categories:
-even though a sub-category with same name can be present in different category, it is
-not the same sub-category. I.e., "houses" in "properties for sale" are not
-same as "houses" in "properties for rent".
-
-Relashion is "one to multiple" - one category can refer to multiple sub-categories.
-From the sub-category side relatiship is multiple to one - i.e. , if we know sub-category id - we should be able to
-find out category from it. For this reason ad does not need explicitly specified category,
-only sub-category.
-
-City is just list of unique cities.
-So is User.
-
-Ad.
-Ad table has multiple - to - one relationship with following tables
-- cities
-- users
-- sub-categories : as mentioned above, extra relation with sub-categories is not needed as category can be determined
-based on sub-category
-
-users should be able to provide emails, contact names and phones different from the ones they registered under.
-'''
-
 
 class Category(Base):
     __tablename__ = 'category'
@@ -75,6 +82,7 @@ class User(Base):
     def is_authenticated(self):
         return self.authenticated
 
+    # no functionality for anonymous users, so always return False.
     def is_anonymous(self):
         return False
 
