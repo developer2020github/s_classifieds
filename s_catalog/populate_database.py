@@ -9,7 +9,7 @@ import create_database
 import generate_data
 from flask import Flask
 import flask_bcrypt
-
+import s_catalog_options
 bcrypt = flask_bcrypt.Bcrypt()
 
 # from flask.ext.sqlalchemy import SQLAlchemy
@@ -17,7 +17,7 @@ from random import randint
 import datetime
 import random
 
-engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
+engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
 
 create_database.Base.metadata.bind = engine
 

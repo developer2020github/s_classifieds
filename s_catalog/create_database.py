@@ -36,8 +36,9 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-
+import s_catalog_options
 Base = declarative_base()
+
 
 class Category(Base):
     __tablename__ = 'category'
@@ -118,7 +119,7 @@ class Ad(Base):
 
 
 def create():
-    engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
+    engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
     Base.metadata.create_all(engine)
 
 

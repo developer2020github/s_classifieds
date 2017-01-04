@@ -1,14 +1,13 @@
 
 
-#real imports, to be kept
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import create_database
 import datetime
-
+import s_catalog_options
 import flask_bcrypt
 
-engine = create_engine("postgresql://postgres:postgres@localhost/s_classifieds")
+engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
 create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()

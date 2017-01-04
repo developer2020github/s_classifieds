@@ -4,4 +4,5 @@ ref/
 s_catalog/static/bower_components
 s_catalog/.idea
 s_catalog/backups
+s_catalog/s_classifieds.db
 issues.txt
