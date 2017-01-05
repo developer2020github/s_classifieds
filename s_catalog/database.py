@@ -1,4 +1,8 @@
-
+"""
+This  module provides an extra layer between database interface and the application; it encapsulates
+database-related operations to improve modularity, keep non-view related code out of the view module
+and to make unit testing easier.
+"""
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -14,13 +18,22 @@ session = DBSession()
 
 
 def set_user_authenticated_status(user, authenticated_status):
+    """
+    :param user: user object
+    :param authenticated_status: boolean indicating if user is  authenticated; will be written into database
+    :return: None
+    """
     user.authenticated = authenticated_status
     session.add(user)
     session.commit()
 
 
 def get_user_ads(user):
-
+    """
+    Wrapper around database query
+    :param user: user object
+    :return: list of user's ads or none
+    """
     if user is None:
         return None
 
@@ -31,16 +44,31 @@ def get_user_ads(user):
 
 
 def delete_ad(ad):
+    """
+    Deletes ad from the database
+    :param ad: ad object
+    :return: None
+    """
     session.delete(ad)
     session.commit()
 
 
 def update_user(user):
+    """
+    Updates user object in the database
+    :param user:user object
+    :return: None
+    """
     session.add(user)
     session.commit()
 
 
 def update_ad(ad):
+    """
+    Updates ad object in the database
+    :param ad: ad object
+    :return: None
+    """
     session.add(ad)
     session.commit()
 
@@ -64,31 +92,53 @@ def update_ads_with_new_user_info(user):
 
 
 def delete_user(user):
-    print "delete user"
-    print user.id
+    """
+    Deletes user from database
+    :param user: user object
+    :return: None
+    """
     session.delete(user)
-    print "user deleted from session"
     session.commit()
 
 
 def get_user_by_unicode_id(user_id):
+    """
+    Helper function for flask-login
+    :param user_id: user id (can be unicode string)
+    :return: user object or none
+    """
     user = session.query(create_database.User).filter(create_database.User.id == int(user_id)).first()
     return user
 
 
 def validate_user_data_string(user_data_string):
-    if user_data_string.strip()=="":
+    """
+    Helper function - checks a data string (example: phone number submitted by user) and
+    sets it to default value if it is empty.
+    :param user_data_string: input string
+    :return: output
+    """
+    if user_data_string.strip() == "":
         return "Not set"
     return user_data_string.strip()
 
 
 def get_user_from_email(email):
+    """
+    Returns user identified by their primary email
+    :param email: email
+    :return: user object
+    """
     user = session.query(create_database.User).filter(create_database.User.email == email).first()
     return user
 
 
 def get_hashed_password(password):
-    if password =="":
+    """
+    :param password: string (password)
+    :return: empty string if password is empty or bcrypt - generated hash of the password
+    """
+    if password == "":
         return password
 
     bcrypt = flask_bcrypt.Bcrypt()
@@ -96,6 +146,14 @@ def get_hashed_password(password):
 
 
 def add_new_user(email, name, phone_number, password=""):
+    """
+    Creates user object from provided data and adds it to the database.
+    :param email: user email
+    :param name: user name
+    :param phone_number: user phone
+    :param password: optional password
+    :return: None
+    """
     new_user = create_database.User(name=validate_user_data_string(name),
                                     email=email,
                                     phone=validate_user_data_string(phone_number),
@@ -105,17 +163,21 @@ def add_new_user(email, name, phone_number, password=""):
 
 
 def add_user_if_does_not_exist(email, name="not set", phone_number="not set"):
-    print "add_user_if_does_not_exist"
-    print name
+    """
+    Checks if user exists (via e-mail) and if not - adds user object to database
+    :param email: user email
+    :param name: optional user name
+    :param phone_number: optional phone number
+    :return:
+    """
     if not get_user_from_email(email):
         add_new_user(email, name, phone_number)
-
 
 
 def get_user_specific_categories(user, sub_categories=None):
     """
     :param user: user - user object
-    :param sub_categories: - optinal list of sub-category ids (in case it is already known)
+    :param sub_categories: - optional list of sub-category ids (in case it is already known)
     :return: list of  categories in which current user has ads
     """
     categories = []
@@ -155,6 +217,7 @@ def get_ads_by_city(city_id):
     ads = session.query(create_database.Ad).filter_by(city_id=city_id).all()
     return ads
 
+
 def get_user_specific_sub_categories(user):
     """
     :param user: user object
@@ -169,7 +232,37 @@ def get_user_specific_sub_categories(user):
 
 
 def get_ads_to_display(city_id=-1, category_id=-1, sub_category_id=-1, created_within_days=0, sort_by="",
-                       min_idx=0, number_of_records_to_include=10, debug_print = False, user_id = -1):
+                       min_idx=0, number_of_records_to_include=10, debug_print=False, user_id=-1):
+        """
+        Main filtering function - will return paged (by number_of_records_to_include) list of ads
+        that meet filtering parameters. Can also be sorted.
+
+        :param city_id: filtering parameter - id of the city. If default (-1) - not taken into account.
+        :param category_id: filtering parameter. If default (-1) - not taken into account.
+        :param sub_category_id: filtering parameter - sub - category id. If default(-1) - not taken into account.
+        :param created_within_days: filtering parameter: number of days within which ad was created.
+                                    If default (0) - not taken into account.
+        :param sort_by: sorting command string. Can be
+                        price_desc
+                        price_asc
+                        date_desc
+                        date_asc
+                        If default ("") - output will not be sorted
+        :param min_idx: Minimum index of the ad to include. I.e., if it is set 10 - ads from 10 to 10+
+                        number_of_records_to_include will be returned
+        :param number_of_records_to_include: number of records to include in returned list
+        :param debug_print: if set to True, filtering and sorting input parameters will be printed
+        :param user_id: filtering parameter - id of the user to include. If default (-1) - will be ignored
+        :return: selected_ads - list of ads to be displayed (i.e. limited by  min_idx and number_of_records_to_include)
+                 total_number_of_ads - total number of ads filtered in (i.e. not length of selected_ads
+                                       but number of all ads that meet filtering criteria)
+                 min_idx - updated min_idx (client does not have to know if min idx they request actually exceeds
+                          total number number of ads)
+                 max_displayed_idx - maximum index of displayed ad in returned list (example: if we are displaying ads by
+                                    10 and total number is 25 - max index connot be 10 since last sub-list will contain
+                                    only 5 ads)
+
+        """
 
         if debug_print:
             print "get_ads_to_display inputs : city_id: {0}, sub_category_id: {1}," \
@@ -201,9 +294,6 @@ def get_ads_to_display(city_id=-1, category_id=-1, sub_category_id=-1, created_w
                 session.query(create_database.SubCategory).filter_by(category_id=category_id).all()
             subcategories_ids_to_filter_by_category = \
                 [sub_cat.id for sub_cat in list_of_subcategories_to_filter_by_category]
-            print "category: " + str(category_id)
-            print "sub-categpries:"
-            print subcategories_ids_to_filter_by_category
 
         if user_id > -1:
             filters["user_id"] = user_id
@@ -258,14 +348,13 @@ def city_to_dict(city):
     d_city["name"] = city.name
     return d_city
 
+
 def get_cities():
+    """
+    :return: list of all cities in the database
+    """
     query_cities = session.query(create_database.City)
     all_cities = query_cities.all()
-    '''
-    for city in all_cities:
-        print city.name
-        print city.id
-    '''
     return all_cities
 
 
@@ -367,7 +456,6 @@ def get_ad_template(user, initialize_city=False, initialize_category_and_subcate
         dict_ad["sub_category"] = sub_category.name
         dict_ad["sub_category_id"] = str(sub_category.id)
 
-
     dict_ad["ad_title"] = "Enter ad title"
     dict_ad["text"] = "Enter description"
 
@@ -426,14 +514,20 @@ def ad_to_dict(ad, serialize=False):
 
 
 def get_ad_by_id(ad_id):
+    """
+
+    :param ad_id: id of the ad
+    :return: ad from id
+    """
     return session.query(create_database.Ad).filter(create_database.Ad.id == ad_id).first()
 
 
-def get_total_number_of_ads():
-    return 500
-
-
 def print_ad(ad):
+    """
+    helper function - to be used for debugging and testing: prints ad object to console.
+    :param ad: ad object
+    :return: none
+    """
     print ""
     print ad.id
     print ad.time_created
@@ -445,28 +539,5 @@ def print_ad(ad):
     print ad.title
     print ad.text
 
-
-def test_get_ad_by_id():
-    for i in range(1, 10):
-        print_ad (get_ad_by_id(i))
-
-
-'''
-'''
-
-
-def test_get_user_id_by_email():
-    existing_user_email = "deanne.pittenger@gmail.com"
-    non_existing_user_email = "does.notexits@nomail.com"
-    print get_user_from_email(existing_user_email)
-    print get_user_from_email(non_existing_user_email)
-
-
-
-
 if __name__ == "__main__":
-    test_filtering_by_user()
-    #d = get_categories_with_subcategories()
-    #print d
-    #test_get_ad_by_id()
-    #test_get_user_id_by_email()
+    pass

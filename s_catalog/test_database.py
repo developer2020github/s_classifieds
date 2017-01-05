@@ -106,6 +106,18 @@ def test_random_category_and_subcategory():
     category = database.session.query(create_database.Category).filter_by(id=sub_category.category_id).first()
     print category.name
 
+def test_get_ad_by_id():
+    for i in range(1, 10):
+        database.print_ad (database.get_ad_by_id(i))
 
-test_random_category_and_subcategory()
+
+'''
+'''
+
+
+def test_get_user_id_by_email():
+    existing_user_email = "deanne.pittenger@gmail.com"
+    non_existing_user_email = "does.notexits@nomail.com"
+    print database.get_user_from_email(existing_user_email)
+    print database.get_user_from_email(non_existing_user_email)
 
