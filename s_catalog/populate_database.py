@@ -40,26 +40,7 @@ def get_id(list_of_objects_with_names, name):
             return o.id
 
 
-def populate_application_initial_data():
-    for category_name in generate_data.get_categories():
-        cat = create_database.Category(name = category_name)
-        print cat
-        session.add(cat)
 
-    session.commit()
-
-    q = session.query(create_database.Category)
-    for cat in q.all():
-        subcategories_names  = generate_data.get_sub_categories(cat.name)
-        for subcategory_name in subcategories_names:
-            sub_cat = create_database.SubCategory(name = subcategory_name, category_id = cat.id)
-            session.add(sub_cat)
-
-    for city_name in s_catalog_options.CITIES_LIST:
-        city = create_database.City(name=city_name)
-        session.add(city)
-
-    session.commit()
 
 
 def populate_user_data():
@@ -116,8 +97,8 @@ def drop_tables(tables):
 
 def repopulate_all_tables():
     drop_application_tables()
-    create_database.create()
-    populate_application_initial_data()
+    create_database.create(engine)
+    create_database.populate_application_initial_data(session)
     populate_application_test_data()
 
 

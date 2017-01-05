@@ -35,8 +35,12 @@ Users should be able to provide emails, contact names and phones different from 
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func, Text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy import exc
+
 import s_catalog_options
+import generate_data
 Base = declarative_base()
 
 
@@ -118,11 +122,50 @@ class Ad(Base):
     title = Column(String(250))
 
 
-def create():
-    engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
-    Base.metadata.create_all(engine)
+def populate_application_initial_data(current_session):
+    for category_name in generate_data.get_categories():
+        cat = Category(name = category_name)
+        print cat
+        current_session.add(cat)
+
+        current_session.commit()
+
+    q = current_session.query(Category)
+    for cat in q.all():
+        subcategories_names  = generate_data.get_sub_categories(cat.name)
+        for subcategory_name in subcategories_names:
+            sub_cat = SubCategory(name = subcategory_name, category_id = cat.id)
+            current_session.add(sub_cat)
+
+    for city_name in s_catalog_options.CITIES_LIST:
+        city = City(name=city_name)
+        current_session.add(city)
+
+        current_session.commit()
+
+
+def create_postgres():
+    #http://stackoverflow.com/questions/6506578/how-to-create-a-new-database-using-sqlalchemy
+    current_engine = create_engine("postgresql://postgres:postgres@localhost/postgres")
+    conn = current_engine.connect()
+    conn.execute("commit")
+    conn.execute("create database s_classifieds")
+    conn.close()
+
+    current_engine=create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
+    Base.metadata.create_all(current_engine)
+
+def create(current_engine):
+    Base.metadata.create_all(current_engine)
 
 
 if __name__ == "__main__":
-    create()
+    engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
+    if s_catalog_options.DATABASE_TO_USE==s_catalog_options.DATABASE_POSTGRES:
+        create_postgres()
+    else:
+        create(engine)
 
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    populate_application_initial_data(session)
