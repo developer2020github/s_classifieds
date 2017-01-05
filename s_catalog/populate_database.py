@@ -55,7 +55,7 @@ def populate_application_initial_data():
             sub_cat = create_database.SubCategory(name = subcategory_name, category_id = cat.id)
             session.add(sub_cat)
 
-    for city_name in generate_data.CITIES_LIST:
+    for city_name in s_catalog_options.CITIES_LIST:
         city = create_database.City(name=city_name)
         session.add(city)
 

@@ -1,6 +1,8 @@
-"""Forms for the application."""
+"""
+Flask-wtf forms for the application.
+"""
 from flask_wtf import FlaskForm
-from wtforms import TextField, PasswordField, SelectField, StringField
+from wtforms import PasswordField, StringField
 from wtforms.validators import DataRequired
 
 

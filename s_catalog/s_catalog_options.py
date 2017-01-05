@@ -18,3 +18,11 @@ if DATABASE_TO_USE == DATABASE_POSTGRES:
 else:
     CREATE_ENGINE_CMD_STRING = "sqlite:///s_classifieds.db"
 
+# application configuration
+CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
+CATEGORIES_WITH_SUB_CATEGORIES = {
+    "Motors": ["Cars", "Boats", "Motorcycles"],
+    "Electronics": ["Computers", "Laptops", "Tablets"],
+    "Rentals": ["Houses", "Apartments", "Rooms"],
+    "Real estate for sale": ["Houses", "Apartments"]
+}

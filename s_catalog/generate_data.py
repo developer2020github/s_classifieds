@@ -4,19 +4,15 @@ import random
 import string
 import datetime
 import os
+import s_catalog_options
 
 EMAIL_DOMAINS = ["yahoo.com", "gmail.com", "hotmail.com", "outlook.com"]
 LIST_OF_NAMES = list()
-CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
+
 LIST_OF_ADS = list()
 LIST_OF_USERS = list()
 
-categories_with_sub_categories = {
-    "Motors": ["cars", "boats", "motorcycles"],
-    "Electronics": ["computers", "laptops", "tablets"],
-    "rentals": ["houses", "apartments", "rooms"],
-    "real estate for sale": ["houses", "apartments"]
-}
+
 
 
 def get_list_of_users():
@@ -41,11 +37,14 @@ def init_list_of_ads():
             user["phone"] = get_random_phone_number()
             LIST_OF_USERS.append(user)
 
+
 def get_sub_categories(category):
-    return categories_with_sub_categories[category]
+    return s_catalog_options.CATEGORIES_WITH_SUB_CATEGORIES[category]
+
 
 def get_categories():
-    return categories_with_sub_categories.keys()
+    return s_catalog_options.CATEGORIES_WITH_SUB_CATEGORIES.keys()
+
 
 def get_random_date(within_days_from_now=365):
 
@@ -148,7 +147,7 @@ def generate_random_ads(number_of_ads):
 
     for i in range(0, number_of_ads):
         ad = dict()
-        ad["city"] = random.choice(CITIES_LIST)
+        ad["city"] = random.choice(s_catalog_options.CITIES_LIST)
         ad["category"] = random.choice(get_categories())
         ad["sub_category"] = random.choice(get_sub_categories(ad["category"]))
         ad["user_name"] = get_random_name()
