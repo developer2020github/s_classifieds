@@ -1,3 +1,16 @@
+"""
+This module contains generic library functions that do not fit into any other module.
+
+Functions list_of_int_to_int and int_to_list_of_int
+were developed for more efficient storage of user-specific
+lists of sub-categories:
+we could have a table of users with integers storing user-specific sub-categories (i.e.
+sub-categories in which user has ads) in their bits.
+However, currently database is small and there are requests to get user-specific ads anyway,
+so will not be proceeding with this option for current version of the program.
+Nevertheless, will keep the functions and corresponding unit test in the library for future enhancements.
+"""
+
 import random
 import string
 import math
@@ -9,35 +22,19 @@ from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy import create_engine
 import s_catalog_options
 
-'''
-Functions list_of_int_to_int and int_to_list_of_int
-were developed for more efficient storage of user-specific
-lists of sub-categories:
-we could have a table of users with integers storing user-specific sub-categories (i.e.
-sub-categories in which user has ads) in their bits.
-However, currently database is small and there are requests to get user-specific ads anyway,
-so will not be proceeding with this option for current version of the program.
-Nevertheless, will keep the functions and corresponding unit test in the library for future enhancements.
-
-'''
-
 
 def get_random_string(length=32):
+    """
+    :param length: lenght of random string
+    :return: a random string
+    """
     random_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(length))
     return random_string
 
 
-def test_int_to_list_of_int():
-    for i in range(1, 25):
-        print ""
-        print i
-        print bin(i)
-        print int_to_list_of_int(25, i)
-
-
 def list_of_int_to_int(list_of_ints):
     """
-    This takes a list of integers and converts it into an integer in such way that
+    This function takes a list of integers and converts it into an integer in such way that
     corresponding bits of output integer are set to 1.
     Indexing starts with 1
     i.e, if input list is [2, 4, 7] output should be
@@ -57,8 +54,40 @@ def list_of_int_to_int(list_of_ints):
         mask >>= 1
     return result
 
+def int_to_list_of_int(max_value, input_int):
+    """
+    This function takes an integer and checks each bit
+    up to the max_value. If bit is set, its index will be included in the output.
+    I.e. if input is 5 (101)- output will be
+     1, 3 (second bit is not set)
+    :param max_value:
+    :param input_int:
+    :return:
+    """
+    mask = 1
+    int_length = int.bit_length(input_int)
+    # always go from left to right
+
+    mask <<= int_length-1
+
+    result = []
+    for i in range(1, max_value+1):
+        if input_int & mask:
+            result.append(i)
+        mask >>= 1
+
+    return result
+
 
 def test_list_of_int_to_int(max_value_to_store=25, print_successful_tests=False):
+    """
+    Unit test function for list_of_int_to_int and int_to_list_of_int function.
+    Will print fail/pass messages to console together with relevant details.
+    :param max_value_to_store: max value to be stored
+    :param print_successful_tests: if true, output will include  all test results. If False, only failed unit tests will
+     be printed
+    :return:
+    """
     print "testing int_to_list_of_int and list_of_int_to_int"
     test_outcome = "all tests passed"
     for i in range(1, 100000):
@@ -84,31 +113,6 @@ def test_list_of_int_to_int(max_value_to_store=25, print_successful_tests=False)
             test_outcome = "test(s) failed"
 
     print test_outcome
-
-
-def int_to_list_of_int(max_value, input_int):
-    """
-    This function takes an integer and checks each bit
-    up to the max_value. If bit is set, its index will be included in the output.
-    I.e. if input is 5 (101)- output will be
-     1, 3 (second bit is not set)
-    :param max_value:
-    :param input_int:
-    :return:
-    """
-    mask = 1
-    int_length = int.bit_length(input_int)
-    # always go from left to right
-
-    mask <<= int_length-1
-
-    result = []
-    for i in range(1, max_value+1):
-        if input_int & mask:
-            result.append(i)
-        mask >>= 1
-
-    return result
 
 
 def database_exists(url):
@@ -178,7 +182,14 @@ def database_exists(url):
 
 
 def create_postgres_database(database_name, default_db_url=s_catalog_options.POSTGRES_DEFAULT_URL):
-    #http://stackoverflow.com/questions/6506578/how-to-create-a-new-database-using-sqlalchemy
+    """
+    This function creates a database in Postgres.
+    Ref. http://stackoverflow.com/questions/6506578/how-to-create-a-new-database-using-sqlalchemy
+    :param database_name: name of the database to create
+    :param default_db_url: URL to  connect to default postgres database.
+    :return:
+    """
+
     current_engine = create_engine(default_db_url)
     conn = current_engine.connect()
     conn.execute("commit")
@@ -188,6 +199,3 @@ def create_postgres_database(database_name, default_db_url=s_catalog_options.POS
 
 if __name__ == "__main__":
     pass
-
-    #print int_to_list_of_int(25, 12)
-    #print bin(12)
