@@ -1,5 +1,13 @@
-import random, string
+import random
+import string
 import math
+import os
+from copy import copy
+import sqlalchemy as sa
+from sqlalchemy.engine.url import make_url
+from sqlalchemy.exc import OperationalError, ProgrammingError
+from sqlalchemy import create_engine
+import s_catalog_options
 
 '''
 Functions list_of_int_to_int and int_to_list_of_int
@@ -102,8 +110,84 @@ def int_to_list_of_int(max_value, input_int):
 
     return result
 
+
+def database_exists(url):
+    """
+    This function was copied from sqlalchemy-utils
+    github: https://github.com/kvesteri/sqlalchemy-utils
+
+    Check if a database exists.
+
+    :param url: A SQLAlchemy engine URL.
+
+    Performs backend-specific testing to quickly determine if a database
+    exists on the server. ::
+
+        database_exists('postgres://postgres@localhost/name')  #=> False
+        create_database('postgres://postgres@localhost/name')
+        database_exists('postgres://postgres@localhost/name')  #=> True
+
+    Supports checking against a constructed URL as well. ::
+
+        engine = create_engine('postgres://postgres@localhost/name')
+        database_exists(engine.url)  #=> False
+        create_database(engine.url)
+        database_exists(engine.url)  #=> True
+
+    """
+
+    url = copy(make_url(url))
+    database = url.database
+    if url.drivername.startswith('postgresql'):
+        url.database = 'template1'
+    else:
+        url.database = None
+
+    engine = sa.create_engine(url)
+
+    if engine.dialect.name == 'postgresql':
+        text = "SELECT 1 FROM pg_database WHERE datname='%s'" % database
+        result =  bool(engine.execute(text).scalar())
+        engine.dispose()
+        return result
+
+    elif engine.dialect.name == 'mysql':
+        text = ("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA "
+                "WHERE SCHEMA_NAME = '%s'" % database)
+        return bool(engine.execute(text).scalar())
+
+    elif engine.dialect.name == 'sqlite':
+        if database:
+            return database == ':memory:' or os.path.exists(database)
+        else:
+            # The default SQLAlchemy database is in memory,
+            # and :memory is not required, thus we should support that use-case
+            return True
+
+    else:
+        text = 'SELECT 1'
+        try:
+            url.database = database
+            engine = sa.create_engine(url)
+            engine.execute(text)
+
+            return True
+
+        except (ProgrammingError, OperationalError):
+            return False
+
+
+def create_postgres_database(database_name, default_db_url=s_catalog_options.POSTGRES_DEFAULT_URL):
+    #http://stackoverflow.com/questions/6506578/how-to-create-a-new-database-using-sqlalchemy
+    current_engine = create_engine(default_db_url)
+    conn = current_engine.connect()
+    conn.execute("commit")
+    cmd_string = "create database " + database_name
+    conn.execute(cmd_string)
+    conn.close()
+
 if __name__ == "__main__":
-    test_list_of_int_to_int()
+    pass
 
     #print int_to_list_of_int(25, 12)
     #print bin(12)

@@ -13,8 +13,6 @@ LIST_OF_ADS = list()
 LIST_OF_USERS = list()
 
 
-
-
 def get_list_of_users():
     return LIST_OF_USERS
 
@@ -23,11 +21,11 @@ def init_list_of_ads():
     global LIST_OF_ADS
     global LIST_OF_USERS
     if not LIST_OF_ADS:
-        print "generating ads"
+
         LIST_OF_ADS = generate_random_ads(54)
-       #print LIST_OF_ADS
+
     if not LIST_OF_USERS:
-        print "generating list of users"
+
         if not LIST_OF_NAMES:
             load_list_of_names_from_file()
         for name in LIST_OF_NAMES:
@@ -36,6 +34,7 @@ def init_list_of_ads():
             user["email"] = get_random_email(name)
             user["phone"] = get_random_phone_number()
             LIST_OF_USERS.append(user)
+
 
 
 def get_sub_categories(category):
@@ -164,17 +163,13 @@ def generate_random_ads(number_of_ads):
 
 
 def get_ad_by_id(ad_id):
-    print("gen_data.get_ad_by_id")
-    print ad_id
+
     ad = filter(lambda ad1: ad1['ad_id'] == int(ad_id), LIST_OF_ADS)[0]
-    print LIST_OF_ADS
-    print ad
+
     return ad
 
 if __name__ == "__main__":
     init_list_of_ads()
-    print_ad(get_ad_by_id(36))
-
 else:
     init_list_of_ads()
 

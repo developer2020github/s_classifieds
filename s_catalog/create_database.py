@@ -37,7 +37,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from sqlalchemy import exc
+import s_catalog_lib
 
 import s_catalog_options
 import generate_data
@@ -124,8 +124,7 @@ class Ad(Base):
 
 def populate_application_initial_data(current_session):
     for category_name in generate_data.get_categories():
-        cat = Category(name = category_name)
-        print cat
+        cat = Category(name=category_name)
         current_session.add(cat)
 
         current_session.commit()
@@ -144,28 +143,17 @@ def populate_application_initial_data(current_session):
         current_session.commit()
 
 
-def create_postgres():
-    #http://stackoverflow.com/questions/6506578/how-to-create-a-new-database-using-sqlalchemy
-    current_engine = create_engine("postgresql://postgres:postgres@localhost/postgres")
-    conn = current_engine.connect()
-    conn.execute("commit")
-    conn.execute("create database s_classifieds")
-    conn.close()
+def create_database_and_populate_initial_data():
+    if not s_catalog_lib.database_exists(s_catalog_options.DATABASE_URL):
+        if s_catalog_options.DATABASE_TO_USE == s_catalog_options.DATABASE_POSTGRES:
+            s_catalog_lib.create_postgres_database(s_catalog_options.DATABASE_NAME)
 
-    current_engine=create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
-    Base.metadata.create_all(current_engine)
-
-def create(current_engine):
-    Base.metadata.create_all(current_engine)
-
-
-if __name__ == "__main__":
-    engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
-    if s_catalog_options.DATABASE_TO_USE==s_catalog_options.DATABASE_POSTGRES:
-        create_postgres()
-    else:
-        create(engine)
-
+    engine = create_engine(s_catalog_options.DATABASE_URL)
+    Base.metadata.create_all(engine)
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     populate_application_initial_data(session)
+
+if __name__ == "__main__":
+    create_database_and_populate_initial_data()
+

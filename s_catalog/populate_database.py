@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import create_database
 '''
 this module populates database
 '''
@@ -17,7 +16,7 @@ from random import randint
 import datetime
 import random
 
-engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
+engine = create_engine(s_catalog_options.DATABASE_URL)
 
 create_database.Base.metadata.bind = engine
 
@@ -97,8 +96,7 @@ def drop_tables(tables):
 
 def repopulate_all_tables():
     drop_application_tables()
-    create_database.create(engine)
-    create_database.populate_application_initial_data(session)
+    create_database.create_database_and_populate_initial_data()
     populate_application_test_data()
 
 

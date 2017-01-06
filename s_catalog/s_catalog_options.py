@@ -11,12 +11,15 @@ DATABASE_SQLITE = 2
 ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION = True
 
 # should be set either to DATABASE_POSTGRES or DATABASE_SQLITE (which is currently a default database as well)
-DATABASE_TO_USE = DATABASE_POSTGRES
+# confgure database urls as required.
+DATABASE_TO_USE = DATABASE_SQLITE
 
+DATABASE_NAME = "s_classifieds"
+POSTGRES_DEFAULT_URL = "postgresql://postgres:postgres@localhost/postgres"
 if DATABASE_TO_USE == DATABASE_POSTGRES:
-    CREATE_ENGINE_CMD_STRING = "postgresql://postgres:postgres@localhost/s_classifieds"
+    DATABASE_URL = "postgresql://postgres:postgres@localhost/" + DATABASE_NAME
 else:
-    CREATE_ENGINE_CMD_STRING = "sqlite:///s_classifieds.db"
+    DATABASE_URL = "sqlite:///" + DATABASE_NAME + ".db"
 
 # application configuration: defines cities (can be any city) and subcategories by category)
 CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]

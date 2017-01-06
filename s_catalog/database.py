@@ -11,7 +11,7 @@ import datetime
 import s_catalog_options
 import flask_bcrypt
 
-engine = create_engine(s_catalog_options.CREATE_ENGINE_CMD_STRING)
+engine = create_engine(s_catalog_options.DATABASE_URL)
 create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
