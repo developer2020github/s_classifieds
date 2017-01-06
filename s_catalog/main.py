@@ -44,7 +44,7 @@ from forms import LoginForm, RegisterForm, UpdateUserInfoForm
 import database
 import create_database
 import json
-import s_catalog_lib
+import lib
 
 
 import httplib2
@@ -52,7 +52,7 @@ from oauth2client import client
 import requests
 import flask_login
 import flask_bcrypt
-import s_catalog_options
+import options
 from flask_wtf import FlaskForm
 
 # required for optional email-based login and registration.
@@ -145,11 +145,11 @@ def login_or_register():
 
     simple_login_form = LoginForm()
     simple_register_form = RegisterForm()
-    state = s_catalog_lib.get_random_string()
+    state = lib.get_random_string()
     login_session["state"] = state
     login_error_message = ""
     registration_error_message = ""
-    if s_catalog_options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION:
+    if options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION:
         if request.method == 'POST':
             if request.form["action"] == "simple_login" and simple_login_form.validate_on_submit():
                 #print "processing login"
@@ -182,7 +182,7 @@ def login_or_register():
                            simple_register_error_message=registration_error_message,
                            page_info=get_page_info(),
                            ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION=
-                           s_catalog_options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION)
+                           options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION)
 
 
 @app.route("/logout_simple")

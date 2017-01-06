@@ -16,12 +16,12 @@ from sqlalchemy.orm import sessionmaker
 import create_database
 import generate_data
 import flask_bcrypt
-import s_catalog_options
+import options
 
 USERS_PASSWORD = "s_classifieds"
 bcrypt = flask_bcrypt.Bcrypt()
 
-engine = create_engine(s_catalog_options.DATABASE_URL)
+engine = create_engine(options.DATABASE_URL)
 
 create_database.Base.metadata.bind = engine
 

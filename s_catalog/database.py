@@ -8,10 +8,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import create_database
 import datetime
-import s_catalog_options
+import options
 import flask_bcrypt
 
-engine = create_engine(s_catalog_options.DATABASE_URL)
+engine = create_engine(options.DATABASE_URL)
 create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()

@@ -10,7 +10,7 @@ import random
 import string
 import datetime
 import os
-import s_catalog_options
+import options
 
 EMAIL_DOMAINS = ["yahoo.com", "gmail.com", "hotmail.com", "outlook.com"]
 LIST_OF_NAMES = list()
@@ -47,7 +47,7 @@ def get_sub_categories(category):
     :param category: category
     :return:  list of cub categories in the category
     """
-    return s_catalog_options.CATEGORIES_WITH_SUB_CATEGORIES[category]
+    return options.CATEGORIES_WITH_SUB_CATEGORIES[category]
 
 
 def get_categories():
@@ -55,7 +55,7 @@ def get_categories():
     Wrapper function
     :return: list of ctagories
     """
-    return s_catalog_options.CATEGORIES_WITH_SUB_CATEGORIES.keys()
+    return options.CATEGORIES_WITH_SUB_CATEGORIES.keys()
 
 
 def get_random_date(within_days_from_now=365):
@@ -221,7 +221,7 @@ def generate_random_ads(number_of_ads):
 
     for i in range(0, number_of_ads):
         ad = dict()
-        ad["city"] = random.choice(s_catalog_options.CITIES_LIST)
+        ad["city"] = random.choice(options.CITIES_LIST)
         ad["category"] = random.choice(get_categories())
         ad["sub_category"] = random.choice(get_sub_categories(ad["category"]))
         ad["user_name"] = get_random_name()

@@ -20,7 +20,7 @@ import sqlalchemy as sa
 from sqlalchemy.engine.url import make_url
 from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy import create_engine
-import s_catalog_options
+import options
 
 
 def get_random_string(length=32):
@@ -181,7 +181,7 @@ def database_exists(url):
             return False
 
 
-def create_postgres_database(database_name, default_db_url=s_catalog_options.POSTGRES_DEFAULT_URL):
+def create_postgres_database(database_name, default_db_url=options.POSTGRES_DEFAULT_URL):
     """
     This function creates a database in Postgres.
     Ref. http://stackoverflow.com/questions/6506578/how-to-create-a-new-database-using-sqlalchemy

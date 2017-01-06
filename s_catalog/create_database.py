@@ -37,9 +37,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-import s_catalog_lib
+import lib
 
-import s_catalog_options
+import options
 import generate_data
 Base = declarative_base()
 
@@ -145,7 +145,7 @@ def populate_application_initial_data(current_session):
             sub_cat = SubCategory(name = subcategory_name, category_id = cat.id)
             current_session.add(sub_cat)
 
-    for city_name in s_catalog_options.CITIES_LIST:
+    for city_name in options.CITIES_LIST:
         city = City(name=city_name)
         current_session.add(city)
 
@@ -158,11 +158,11 @@ def create_database_and_populate_initial_data():
     into tables that need to be populated before application can be used.
     :return: None
     """
-    if not s_catalog_lib.database_exists(s_catalog_options.DATABASE_URL):
-        if s_catalog_options.DATABASE_TO_USE == s_catalog_options.DATABASE_POSTGRES:
-            s_catalog_lib.create_postgres_database(s_catalog_options.DATABASE_NAME)
+    if not lib.database_exists(options.DATABASE_URL):
+        if options.DATABASE_TO_USE == options.DATABASE_POSTGRES:
+            lib.create_postgres_database(options.DATABASE_NAME)
 
-    engine = create_engine(s_catalog_options.DATABASE_URL)
+    engine = create_engine(options.DATABASE_URL)
     Base.metadata.create_all(engine)
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
