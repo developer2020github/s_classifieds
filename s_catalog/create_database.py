@@ -123,6 +123,15 @@ class Ad(Base):
 
 
 def populate_application_initial_data(current_session):
+    """
+    This function populates database tables that are required to
+    start using it (they all are used in filtering ans in creating new ads):
+    categories
+    sub-categories
+    cities
+    :param current_session: current database session
+    :return:
+    """
     for category_name in generate_data.get_categories():
         cat = Category(name=category_name)
         current_session.add(cat)
@@ -144,6 +153,11 @@ def populate_application_initial_data(current_session):
 
 
 def create_database_and_populate_initial_data():
+    """
+    This function creates database and calls populate_application_initial_data to add initial dato
+    into tables that need to be populated before application can be used.
+    :return: None
+    """
     if not s_catalog_lib.database_exists(s_catalog_options.DATABASE_URL):
         if s_catalog_options.DATABASE_TO_USE == s_catalog_options.DATABASE_POSTGRES:
             s_catalog_lib.create_postgres_database(s_catalog_options.DATABASE_NAME)
