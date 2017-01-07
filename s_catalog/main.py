@@ -29,7 +29,7 @@ This module handles:
 #JSON end points
     3 JSON end points are supported:
      1) individual ad by id
-     2) list of ciies (locations) with their ids
+     2) list of cities (locations) with their ids
      3) list of ads in a particular location (by location id)
 
 
@@ -82,6 +82,9 @@ def user_is_authorized_to_update_item(user_id_to_check):
     :return: True if user should be allowed to update the item, False otherwise
     """
     lib.debug_print("user_is_authorized_to_update_item")
+    if not flask_login.current_user.is_authenticated:
+        de_authorize_current_user()
+        return False
     if "authorized_user_id" in login_session:
 
         lib.debug_print(user_id_to_check)
@@ -410,6 +413,7 @@ def gconnect():
         database.set_user_authenticated_status(user, True)
         flask_login.login_user(user, remember=True)
         authorize_user(user.id)
+        print flask_login.current_user.is_authenticated
 
         # theoretically can disconnect here as flask login will take care of the rest
         #gdisconnect()
@@ -433,9 +437,13 @@ def get_page_info():
     page_info["user_logged_in"] = False
     page_info["left_text"] = "S-classifieds"
     page_info["right_text"] = ""
-    if flask_login.current_user.is_authenticated:
-        page_info["user_logged_in"] = True
-        page_info["right_text"] = "Logged in as " + flask_login.current_user.email
+    lib.debug_print("get_page_info")
+
+    # first need to check if user is set to AnonymousUserMixin object
+    if flask_login.current_user.get_id():
+        if flask_login.current_user.is_authenticated():
+            page_info["user_logged_in"] = True
+            page_info["right_text"] = "Logged in as " + flask_login.current_user.email
     return page_info
 
 
@@ -809,7 +817,7 @@ def print_current_session(printing_on = options.DEBUG_PRINT_ON):
     """
     if not printing_on:
         return
-    
+
     print "current login_session: "
     for i in login_session:
         print str(i) + " : " + str(login_session[i])
