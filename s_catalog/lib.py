@@ -197,5 +197,17 @@ def create_postgres_database(database_name, default_db_url=options.POSTGRES_DEFA
     conn.execute(cmd_string)
     conn.close()
 
+
+def debug_print(item_to_print, printing_on=options.DEBUG_PRINT_ON):
+    """
+    helper function to make debug printing configurable
+    :param item_to_print: input to be printed
+    :param printing_on: printing on/off flag
+    :return: none
+    """
+    if printing_on:
+        print item_to_print
+
+
 if __name__ == "__main__":
     pass

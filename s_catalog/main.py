@@ -54,6 +54,7 @@ import flask_login
 import flask_bcrypt
 import options
 from flask_wtf import FlaskForm
+from pprint import pprint
 
 # required for optional email-based login and registration.
 bcrypt = flask_bcrypt.Bcrypt()
@@ -152,7 +153,7 @@ def login_or_register():
     if options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION:
         if request.method == 'POST':
             if request.form["action"] == "simple_login" and simple_login_form.validate_on_submit():
-                #print "processing login"
+                lib.debug_print("processing login")
                 login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
                                                                      password=simple_login_form.password.data)
                 if login_error_message == "":
@@ -162,10 +163,11 @@ def login_or_register():
                         return redirect(url_for("index"))
 
             elif request.form["action"] == "simple_register" and simple_register_form.validate_on_submit():
-                print "processing register"
-                registration_error_message = get_errors_in_registration_data(email=simple_register_form.email.data,
-                                                                     password=simple_register_form.password.data,
-                                                                     confirmed_password=simple_register_form.confirm_password.data)
+                lib.debug_print("processing register")
+                registration_error_message = \
+                    get_errors_in_registration_data(email=simple_register_form.email.data,
+                                                    password=simple_register_form.password.data,
+                                                    confirmed_password=simple_register_form.confirm_password.data)
 
                 if registration_error_message == "":
                     database.add_new_user(name=simple_register_form.name.data,
@@ -177,12 +179,36 @@ def login_or_register():
 
     return render_template("login_or_register.html", simple_login_form=simple_login_form,
                            simple_register_form=simple_register_form,
-                           google_session_state = login_session["state"],
+                           google_session_state=login_session["state"],
                            simple_login_error_message=login_error_message,
                            simple_register_error_message=registration_error_message,
                            page_info=get_page_info(),
                            ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION=
                            options.ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION)
+
+
+def response_to_string(response_input):
+    """
+    Converts http response into string: gdisonnec returns normal response, but application uses it as a flash message,
+    so need to conveert to simple string.
+    :param response_input: response
+    :return: response message string
+    """
+    response_str = ""
+
+    def strip_quotes(input_str):
+        lib.debug_print("strip_quotes")
+        lib.debug_print(input_str)
+        if input_str.startswith('"') and input_str.endswith('"'):
+            input_str = input_str[1:-1]
+
+        return input_str
+
+    for s in response_input.response:
+        response_str += " " + strip_quotes(s)
+
+    lib.debug_print(response_str)
+    return response_str
 
 
 @app.route("/logout_simple")
@@ -201,7 +227,9 @@ def logout():
 
     # if user was connected via google - we need to disconnect
     if 'access_token' in login_session:
-        gdisconnect()
+        gdi_disconnect_response = gdisconnect()
+        lib.debug_print("gdi_disconnect_response")
+        logout_msg=response_to_string(gdi_disconnect_response)
 
     flash(logout_msg)
     return redirect(url_for("index"))
@@ -214,19 +242,19 @@ def gdisconnect():
     :return: status response
     """
     access_token = login_session['access_token']
-    print 'In gdisconnect access token is %s', access_token
-    print 'User name is: '
-    print login_session['username']
+    lib.debug_print('In gdisconnect access token is' + str(access_token))
+    lib.debug_print('User name is: ')
+    lib.debug_print(login_session['username'])
     if access_token is None:
-        print 'Access Token is None'
+        lib.debug_print('Access Token is None')
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
+    lib.debug_print('result is ')
+    lib.debug_print (result)
     if result['status'] == '200':
 
         del login_session['access_token']
@@ -250,11 +278,13 @@ def add_user_from_login_session(session):
 
 @app.route('/google_sign_in', methods=['POST'])
 def gconnect():
+    lib.debug_print("gconnect")
     # Validate state token
 
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
+        lib.debug_print("request.args.get('state') != login_session['state']")
         return response
     # Obtain authorization code
     code = request.data
@@ -268,6 +298,7 @@ def gconnect():
         response = make_response(
             json.dumps('Failed to upgrade the authorization code.'), 401)
         response.headers['Content-Type'] = 'application/json'
+        lib.debug_print("except client.FlowExchangeError")
         return response
 
     # Check that the access token is valid.
@@ -280,6 +311,7 @@ def gconnect():
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
+        lib.debug_print("result.get('error') is not None:")
         return response
 
     # Verify that the access token is used for the intended user.
@@ -288,13 +320,14 @@ def gconnect():
         response = make_response(
             json.dumps("Token's user ID doesn't match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
+        lib.debug_print("result['user_id'] != gplus_id:")
         return response
 
     # Verify that the access token is valid for this app.
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print "Token's client ID does not match app's."
+        lib.debug_print("result['issued_to'] != CLIENT_ID:")
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -305,9 +338,11 @@ def gconnect():
                                  200)
         response.headers['Content-Type'] = 'application/json'
         add_user_from_login_session(login_session)
+        lib.debug_print("stored_credentials is not None and gplus_id == stored_gplus_id:")
         return response
 
     # Store the access token in the session for later use.
+    lib.debug_print(" login_session['access_token'] = credentials.access_token")
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
@@ -317,7 +352,7 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
-
+    lib.debug_print("assign user data")
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -326,19 +361,20 @@ def gconnect():
     # now we can login user and actully disconnect from google, relying on Flask Login from now onwards
 
     user = database.get_user_from_email(data['email'])
+    output = ''
     if user:
-        print "flask login from Google"
-        print user.email
+        lib.debug_print("flask login from Google")
+        lib.debug_print(user.email)
         database.set_user_authenticated_status(user, True)
         flask_login.login_user(user, remember=True)
+        # theoretically can disconnect here as flask login will take care of the rest
         #gdisconnect()
 
-        output = ''
         output += 'Welcome, '
         output += user.email
         output += '!'
 
-    print "done!"
+    lib.debug_print("done!")
     return output
 
 
@@ -694,7 +730,7 @@ def update_ad_from_form_info(ad, form):
     ad.price_cents = int((float(form["ad_price"]) * 100))
     ad.contact_email = form["contact_email"]
     # default to email for now
-    ad.primary_contact  = ad.contact_email
+    ad.primary_contact = ad.contact_email
     ad.contact_name = str(form["contact_name"])
     ad.contact_phone = str(form["contact_phone"])
     ad.city_id = int(form["select_city"])
