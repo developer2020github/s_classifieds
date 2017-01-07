@@ -81,14 +81,8 @@ def user_is_authorized_to_update_item(user_id_to_check):
     :param user_id_to_check: id associated with the item (for example, user_id field of an ad)
     :return: True if user should be allowed to update the item, False otherwise
     """
-    lib.debug_print("user_is_authorized_to_update_item")
-    if not flask_login.current_user.is_authenticated:
-        de_authorize_current_user()
-        return False
-    if "authorized_user_id" in login_session:
 
-        lib.debug_print(user_id_to_check)
-        lib.debug_print(login_session["authorized_user_id"])
+    if "authorized_user_id" in login_session:
         if int(user_id_to_check) == int(login_session["authorized_user_id"]):
             lib.debug_print("authorized")
             return True
@@ -438,7 +432,7 @@ def get_page_info():
     page_info["left_text"] = "S-classifieds"
     page_info["right_text"] = ""
     lib.debug_print("get_page_info")
-
+    lib.debug_print(flask_login.current_user.get_id())
     # first need to check if user is set to AnonymousUserMixin object
     if flask_login.current_user.get_id():
         if flask_login.current_user.is_authenticated():
@@ -670,6 +664,7 @@ def edit_ad(ad_id):
     if request.method == "POST" and edit_ad_form.validate_on_submit():
         # using FlaskForm only for csrf protection in this case, rest is custom-built
         update_ad_from_form_info(selected_ad, request.form)
+        flash("Ad was updated")
 
     categories_with_sub_categories = database.get_categories_with_subcategories()
 
