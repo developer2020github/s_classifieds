@@ -41,9 +41,10 @@ Ads can be filtered by location, category, subcategory and date posted. This fun
 #####Authentication and authorization.
 Application supports oauth2 with Google.
 
-Authorization is implemented with flask-login: all views that are user-specific will be shown only 
-to logged in user. Advantage of using flask-login vs new implementation is that it is a proven
+Login management is implemented with flask-login: all views that are user-specific will be shown only to logged in user. Advantage of using flask-login vs new implementation is that it is a proven
 solution and actually requires less code.
+
+Authorization is implemented for ad and profile update and delete views, so that users can only change database records they own.
 
 Login button is shown to new users, and sign out button - after user has logged in.
 
