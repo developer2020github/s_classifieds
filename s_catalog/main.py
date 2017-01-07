@@ -71,7 +71,46 @@ CLIENT_ID = json.loads(
 
 # -------------------------------------------------------------------------
 # #####User management: login/logout/registration/settings for flask-login
+# #####and user authorization helper functions
 # -------------------------------------------------------------------------
+
+
+def user_is_authorized_to_update_item(user_id_to_check):
+    """
+    Function checks if user in current session is allowed to update an item associated with a user_id_to_check
+    :param user_id_to_check: id associated with the item (for example, user_id field of an ad)
+    :return: True if user should be allowed to update the item, False otherwise
+    """
+    lib.debug_print("user_is_authorized_to_update_item")
+    if "authorized_user_id" in login_session:
+
+        lib.debug_print(user_id_to_check)
+        lib.debug_print(login_session["authorized_user_id"])
+        if int(user_id_to_check) == int(login_session["authorized_user_id"]):
+            lib.debug_print("authorized")
+            return True
+    lib.debug_print("not authorized")
+    return False
+
+
+def authorize_user(user_id):
+    """
+    Adds user_id to login_session to be used by user_is_authorized_to_update_item for authorization checks
+    :param user_id: user id
+    :return: None
+    """
+    lib.debug_print("authorizing user")
+    lib.debug_print(user_id)
+    login_session["authorized_user_id"] = user_id
+
+
+def de_authorize_current_user():
+    """
+    Cleans up login session user_id field
+    :return: None
+    """
+    if "authorized_user_id" in login_session:
+        login_session["authorized_user_id"] = None
 
 
 @login_manager.user_loader
@@ -87,8 +126,7 @@ def user_loader(user_id):
 @login_manager.unauthorized_handler
 def unauthorized_callback():
     """
-
-    :return: redirects to login page if user is trying to access a page they are not authorized to see.
+    :return: redirects to login page if user is trying to access a page that requires log in.
     """
     return redirect(url_for("login_or_register"))
 
@@ -154,11 +192,14 @@ def login_or_register():
         if request.method == 'POST':
             if request.form["action"] == "simple_login" and simple_login_form.validate_on_submit():
                 lib.debug_print("processing login")
+
                 login_error_message, user = get_errors_in_login_data(email=simple_login_form.email.data,
                                                                      password=simple_login_form.password.data)
                 if login_error_message == "":
                         database.set_user_authenticated_status(user, True)
                         flask_login.login_user(user, remember=True)
+                        authorize_user(user.id)
+
                         # no need to flash as user will be shown "logged in as" message any way
                         return redirect(url_for("index"))
 
@@ -224,6 +265,7 @@ def logout():
     # pprint(vars(user))
     database.set_user_authenticated_status(user, False)
     flask_login.logout_user()
+    de_authorize_current_user()
 
     # if user was connected via google - we need to disconnect
     if 'access_token' in login_session:
@@ -367,6 +409,8 @@ def gconnect():
         lib.debug_print(user.email)
         database.set_user_authenticated_status(user, True)
         flask_login.login_user(user, remember=True)
+        authorize_user(user.id)
+
         # theoretically can disconnect here as flask login will take care of the rest
         #gdisconnect()
 
@@ -400,6 +444,7 @@ def index():
     """
     :return: main page of the application
     """
+    print_current_session()
     categories_with_sub_categories = database.get_categories_with_subcategories()
     categories_json = json.dumps(categories_with_sub_categories)
     cities = database.get_cities()
@@ -446,6 +491,9 @@ def user_profile():
     update_user_info_form = UpdateUserInfoForm(obj=user)
     apply_new_profile_settings_to_user_ads_form = FlaskForm()
     if request.method == 'POST':
+        if not user_is_authorized_to_update_item(user.id):
+            flash("You are not authorized to update this page")
+            return redirect(url_for("index"))
         if request.form["action"] == "update_profile":
             if update_user_info_form.validate_on_submit():
                 user.name = update_user_info_form.name.data
@@ -456,8 +504,10 @@ def user_profile():
                 apply_new_profile_settings_class = ""
 
                 flash("Your profile info has been updated. If you wish to apply your name and/"
-                      " or phone number to be applied"
-                      " to all your ads as contact info please click Apply new profile settings to all my ads button")
+                       "or phone number to be applied"
+                       "to all your ads as contact info please click "
+                       "Apply new profile settings to all my ads button")
+
         elif request.form["action"] == "apply_new_profile_settings_to_user_ads":
             if apply_new_profile_settings_to_user_ads_form.validate_on_submit():
                 database.update_ads_with_new_user_info(user)
@@ -488,6 +538,10 @@ def delete_user_profile():
     user = flask_login.current_user
     delete_user_profile_form = FlaskForm()
     if request.method == 'POST' and delete_user_profile_form.validate_on_submit():
+        if not user_is_authorized_to_update_item(user.id):
+            flash("You are not authorized to update this page")
+            return redirect(url_for("index"))
+
         user_email = user.email
         user_id = user.id
         database.set_user_authenticated_status(user, False)
@@ -573,6 +627,11 @@ def delete_ad(ad_id):
     :return: on get add page; on post deletes ad and redirects to my ads page
     """
     selected_ad = database.get_ad_by_id(int(ad_id))
+
+    if not user_is_authorized_to_update_item(selected_ad.user_id):
+        flash("You are not authorized to update this page")
+        return redirect(url_for("login"))
+
     # Use FlaskForm for csrf protection
     delete_ad_form = FlaskForm()
     if request.method == "POST" and delete_ad_form.validate_on_submit():
@@ -587,6 +646,7 @@ def delete_ad(ad_id):
 
 
 @app.route("/ads/<int:ad_id>/edit_ad",  methods=["GET", "POST"])
+@flask_login.login_required
 def edit_ad(ad_id):
     """
     Updates specific ad with user edited information.
@@ -594,6 +654,10 @@ def edit_ad(ad_id):
     :return: either current ad info (on GET) or updated ad (on POST)
     """
     selected_ad = database.get_ad_by_id(int(ad_id))
+    if not user_is_authorized_to_update_item(selected_ad.user_id):
+        flash("You are not authorized to update this page")
+        return redirect(url_for("index"))
+
     edit_ad_form = FlaskForm()
     if request.method == "POST" and edit_ad_form.validate_on_submit():
         # using FlaskForm only for csrf protection in this case, rest is custom-built
@@ -737,6 +801,18 @@ def update_ad_from_form_info(ad, form):
     ad.title = form["ad_title"]
     database.update_ad(ad)
 
+
+def print_current_session(printing_on = options.DEBUG_PRINT_ON):
+    """
+    Debug helper function - prints all fields of current login_session
+    :return: None
+    """
+    if not printing_on:
+        return
+    
+    print "current login_session: "
+    for i in login_session:
+        print str(i) + " : " + str(login_session[i])
 
 if __name__ == '__main__':
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 #debug option to be sure updates are applied right away
