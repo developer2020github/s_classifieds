@@ -9,52 +9,51 @@
 
 <body>
  <div class="container-fluid">
- {% include 'nav_bar_row.html' %}
- <div class="row white-text">
-	 	<div class="col-md-3"></div>
+ 	{% include 'nav_bar_row.html' %}
+	 <div class="row white-text">
+		 	<div class="col-md-3"></div>
 
-		 <div class="col-md-6">
-			 <div class="text-center">
-			     <h3> Please confirm deletion of user profile ( id {{ user.id }})</h3>
+			<div class="col-md-6">
+				<div class="text-center">
+				     <h3> Please confirm deletion of user profile ( id {{ user.id }})</h3>
+				</div>
+
+				
+				<div class = row>
+
+			        <div class ="col-md-4">
+						<div class="title-info1">Email:</div>
+			            <div class="panel panel-default panel-text1">
+			                {{ user.email }}
+			            </div>
+
+					</div>
+
+					<div class ="col-md-4">
+						<div class="title-info1">Name:</div>
+			            <div class="panel panel-default panel-text1">
+			                {{ user.name }}
+			            </div>
+					 </div>
+
+					 <div class ="col-md-4">
+					 	<div class="title-info1">Phone:</div>
+			            <div class="panel panel-default panel-text1">
+			                 {{ user.phone }}
+			            </div>
+					 </div>
+
+				 </div>
+
+				 <form action = "{{ url_for('delete_user_profile') }}" method="post">
+				 	{{ delete_user_profile_form.csrf_token }}
+		        	<button type="submit" class="btn btn-block black-text">Confirm delete (will delete your profile and all ads)</button>
+		     	</form>
+
+
 			</div>
 
-			
-			 <div class = row>
-
-	         <div class ="col-md-4">
-			 <div class="title-info1">Email:</div>
-	                        <div class="panel panel-default panel-text1">
-	                            {{ user.email }}
-	                        </div>
-
-			 </div>
-
-			<div class ="col-md-4">
-			 <div class="title-info1">Name:</div>
-	                        <div class="panel panel-default panel-text1">
-	                            {{ user.name }}
-	                        </div>
-
-			 </div>
-
-			 <div class ="col-md-4">
-			 <div class="title-info1">Phone:</div>
-	                        <div class="panel panel-default panel-text1">
-	                            {{ user.phone }}
-	                        </div>
-
-			 </div>
-
-			 </div>
-			 <form action = "{{ url_for('delete_user_profile') }}" method="post">
-			 	{{ delete_user_profile_form.csrf_token }}
-	        	<button type="submit" class="btn btn-block black-text">Confirm delete (will delete your profile and all ads)</button>
-	     	</form>
-
-
-		</div>
-
-		<div class="col-md-3"></div>
+			<div class="col-md-3"></div>
 
 	</div>
 

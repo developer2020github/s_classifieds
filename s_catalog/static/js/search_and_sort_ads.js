@@ -179,7 +179,7 @@ function show_prev_ads() {
 
 function get_item_info_for_display(item_name, default_text, item_id, default_value) {
 
-    if ($(item_id).val() === default_value) {
+    if (($(item_id).val() === default_value) || ($(item_id).val() === null)){
         return default_text;
     }
 
