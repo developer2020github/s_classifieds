@@ -11,7 +11,7 @@ DEBUG_PRINT_ON = False
 
 # if it is desired to use only third party user authentication (currently Google is supported)
 # this option should be set to FALSE
-ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION = False
+ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION = True
 
 # Should be set either to DATABASE_POSTGRES or DATABASE_SQLITE (which is currently a default database as well)
 # Configure database urls as required.

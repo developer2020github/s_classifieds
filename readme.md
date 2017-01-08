@@ -1,8 +1,8 @@
 ##S-classifieds
 S-classifieds is a personal/demo project: a simple classifieds board.
-It allows to post textual ads, filter them by location, category, subcategory and date posted 
+It allows to post textual ads, filter them by location, category, subcategory and date posted
 and sort by date and price.
-Users can do same kind of filtering and searching on their ads and perform CRUD operations on ads. 
+Users can do same kind of filtering and searching on their ads and perform CRUD operations on ads.
 They can also update and delete their profile information.
 Application also meets requirements of Udacity Full Stack Nano - degree project 5.
 
@@ -20,7 +20,7 @@ populate_database will output list of created user accounts(emails) to console.
 It is not possible to log in to any of these accounts with option
 ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION set to False. However, if desired, enable option (refer to module options.py), restart application and login into any of these accounts with password "s_classifieds" and e-mail that was output to console by populate_database.
 
-####Meeting Udacity project requirements.
+
 #####API endpoints###
 There are three JSON endpoints:
 1) /list_of_cities/JSON - returns JSON for all cities in the database (fields id and name)
@@ -39,23 +39,17 @@ relevant items (i.e. only sub-categories that belong to selected category).
 Ads can be filtered by location, category, subcategory and date posted. This functionality is provided for main page and "My ads" page.
 
 #####Authentication and authorization.
-Application supports oauth2 with Google.
+Application supports oauth2 with Google. For it to work file client_secret.json needs to be populated with proper application credentials from Google.
 
-Login management is implemented with flask-login: all views that are user-specific will be shown only to logged in user. Advantage of using flask-login vs new implementation is that it is a proven
-solution and actually requires less code.
+There is also e-mail/password based registration and log in system, using bcrypt for password management.
 
-Authorization is implemented for ad and profile update and delete functionlity, so that users can only change database records they own.
+Authorization is implemented for ad and profile update and delete functionality, so that users can only change database records they own.
 
-Login button is shown to new users, and sign out button - after user has logged in.
 
-Additionally, there is an optional e-mail/password based registration and log in system, using bcrypt for password management: as I explained in the forum link below, I intend to use this project in my portfolio and I think this is a good option to have. Since project requirements do not state it can be allowed, I made it optional. It is disabled for project submission (options.py, option ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION ). Please refer to https://discussions.udacity.com/t/combining-flask-login-with-oauth2/202877 - added an option flag as discussed.
-
-Since this option is implemented not instead but in addition to third-party option, and is disabled in submitted version of the project I believe project meets the requirements.
 
 #####CSRF Protection
 All forms in the application inherit from FlaskForm of flask-wtf. Thus, CSRF protection is handled automatically:
 https://flask-wtf.readthedocs.io/en/stable/form.html
-The advantage of using flask-wtf is it is a proven solution and requires notably less code and testing.
 
 
 
