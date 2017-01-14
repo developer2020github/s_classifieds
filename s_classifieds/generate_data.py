@@ -15,6 +15,7 @@ import options
 EMAIL_DOMAINS = ["yahoo.com", "gmail.com", "hotmail.com", "outlook.com"]
 LIST_OF_NAMES = list()
 LIST_OF_USERS = list()
+NAMES_FILE = os.path.join(options.APPLICATION_FOLDER, "names.txt")
 
 
 def get_list_of_users():
@@ -71,7 +72,7 @@ def get_random_date(within_days_from_now=365):
     return random_date
 
 
-def load_list_of_names_from_file(file_name="names.txt"):
+def load_list_of_names_from_file(file_name=NAMES_FILE):
     """
     Loads list of names from a file (to be used to generate data to populate database for testing purposes)
     and assigns it to module global LIST_OF_NAMES

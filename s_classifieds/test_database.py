@@ -8,7 +8,8 @@ import create_database
 import database
 import json
 from flask import jsonify
-
+import options
+import os
 
 def test_jsonify_ads():
     city_id = 2
@@ -93,4 +94,3 @@ def test_get_user_id_by_email():
     non_existing_user_email = "does.notexits@nomail.com"
     print database.get_user_from_email(existing_user_email)
     print database.get_user_from_email(non_existing_user_email)
-

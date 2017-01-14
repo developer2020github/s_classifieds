@@ -45,6 +45,7 @@ import database
 import create_database
 import json
 import lib
+import os
 
 
 import httplib2
@@ -65,7 +66,7 @@ login_manager.init_app(app)
 
 # path to the Web application client_secret_*.json file downloaded from the
 # Google API Console: https://console.developers.google.com/apis/credentials
-GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = "client_secret.json"
+GOOGLE_SIGN_IN_CLIENT_SECRET_FILE = os.path.join(options.APPLICATION_FOLDER, "client_secret.json")
 CLIENT_ID = json.loads(
     open(GOOGLE_SIGN_IN_CLIENT_SECRET_FILE, 'r').read())['web']['client_id']
 
@@ -821,4 +822,12 @@ if __name__ == '__main__':
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 #debug option to be sure updates are applied right away
     app.debug = True
     app.secret_key = "secret key" #used to sign sessions, need to change it to a properly generated key in production
-    app.run(port=5000)
+
+    if options.LOCAL_HOST == options.LOCAL_HOST_WINDOWS:
+        app.run(port=5000)
+    elif options.LOCAL_HOST == options.LOCAL_HOST_VM:
+        app.run(host='0.0.0.0', port=5000)
+    else:
+        app.run(port=5000)
+else:
+    app.secret_key="secret key"
