@@ -11,7 +11,7 @@ import datetime
 import options
 import flask_bcrypt
 
-engine = create_engine(options.DATABASE_URL)
+engine = create_engine(options.DATABASE_URL_USER)
 create_database.Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()

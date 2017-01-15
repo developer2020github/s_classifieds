@@ -35,6 +35,7 @@ DATABASE_NAME = "s_classifieds"
 POSTGRES_DEFAULT_URL = "postgresql://postgres:postgres@localhost/postgres"
 if DATABASE_TO_USE == DATABASE_POSTGRES:
     DATABASE_URL = "postgresql://postgres:postgres@localhost/" + DATABASE_NAME
+    DATABASE_URL_USER = "postgresql://catalog:catalog@localhost/" + DATABASE_NAME
 else:
     if "win" in sys.platform.lower():
         DATABASE_URL = "sqlite:///" + DATABASE_NAME + ".db"
@@ -42,6 +43,8 @@ else:
         DATABASE_URL = "sqlite:///" + os.path.join(APPLICATION_FOLDER, DATABASE_NAME)+".db"
     else:
         DATABASE_URL = "sqlite:////" + DATABASE_NAME + ".db"
+    # production database is postgres, so no need to create special user account for sqlite
+    DATABASE_URL_USER=DATABASE_URL
 
 # Application configuration: defines cities (can be any city) and subcategories by category)
 CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]
