@@ -158,6 +158,9 @@ def add_new_user(email, name, phone_number, password=""):
                                     email=email,
                                     phone=validate_user_data_string(phone_number),
                                     password=get_hashed_password(password))
+    print  new_user.phone
+    print new_user.name
+
     session.add(new_user)
     session.commit()
 
