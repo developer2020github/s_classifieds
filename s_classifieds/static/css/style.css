@@ -208,3 +208,19 @@ body {
     white-space: pre-wrap;
     text-align: left;
 }
+
+.about-text{
+    color: white;
+    text-align: center;
+    font-size: 20px;
+}
+
+.about-text a:link {
+    color: #D5FFF8;
+
+}
+
+.about-text a:visited {
+    color: #4B53FF;
+
+}

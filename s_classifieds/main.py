@@ -455,6 +455,14 @@ def index():
                            cities=cities, page_info=get_page_info())
 
 
+@app.route('/about')
+def about():
+    """
+    :return: about page
+    """
+    return render_template("about.html",  page_info=get_page_info())
+
+
 @app.route('/update_ads_list')
 def show_more_ads():
     """
