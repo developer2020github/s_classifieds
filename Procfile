@@ -1,0 +1,1 @@
+web: python s_classifieds\main.py
