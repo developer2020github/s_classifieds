@@ -4,7 +4,11 @@ It allows to post textual ads, filter them by location, category, subcategory an
 and sort by date and price.
 Users can do same kind of filtering and searching on their ads and perform CRUD operations on ads.
 They can also update and delete their profile information.
-Application also meets requirements of Udacity Full Stack Nano - degree project 5.
+
+##Technologies used
+1. JavaScript, HTML, CSS: jQuery, Bootstrap
+2. Python: Flask, SQLAlchemy
+3. Database: PostgreSQL
 
 ##Installing and running project
 ######1. Ensure you have latest version of Python 2.7.* installed. Note application was dveloped with Python 2.7.8 but should work with later versions of Python 2.7.
