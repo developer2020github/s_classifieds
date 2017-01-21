@@ -14,7 +14,17 @@ HEROKU_FOLDER_PATH = os.path.join(os.path.dirname(APPLICATION_FOLDER), HEROKU_FO
 SUBFOLDERS_TO_COPY = ("templates", "static")
 FILE_EXTENSIONS_TO_INCLUDE = (".css", ".html", ".py")
 OTHER_FILES_TO_INCLUDE = ("Procfile", "requirements.txt")
+HEROKU_OPTION_TAG = "DEPLOYED_TO_HEROKU"
+OPTIONS_FILE_NAME = "options.py"
 
+
+def update_heroku_option(option_file_name, heroku_option_tag=HEROKU_OPTION_TAG):
+    input_data = [l for l in open(option_file_name, 'r')]
+    with open(option_file_name, mode='wt') as output_file:
+        for l in input_data:
+            if HEROKU_OPTION_TAG in l:
+                l = l.replace("False", "True")
+            output_file.write(l)
 
 def file_should_be_copied(file_name):
     copy_file = False
@@ -56,3 +66,5 @@ for source_file in all_source_files:
     filename = os.path.basename(source_file)
     if file_should_be_copied(filename):
         shutil.copy(source_file, os.path.join(HEROKU_FOLDER_PATH, filename))
+
+update_heroku_option(os.path.join(HEROKU_FOLDER_PATH, OPTIONS_FILE_NAME))
