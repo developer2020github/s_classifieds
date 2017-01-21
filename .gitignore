@@ -1,8 +1,8 @@
 *.pyc
 ref/
 *test_module*.py
-s_catalog/static/bower_components
-s_catalog/backups
-s_catalog/s_classifieds.db
+s_classifieds/static/bower_components
+s_classifieds/backups
+s_classifieds/s_classifieds.db
 issues.txt
 /not_uploadable_to_github
