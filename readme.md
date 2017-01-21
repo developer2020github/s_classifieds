@@ -1,5 +1,6 @@
 ##S-classifieds
-S-classifieds is a personal/demo project: a simple classifieds board.
+[S-classifieds](http://35.166.234.43/)
+is a personal/demo project: a simple classifieds board.
 It allows to post textual ads, filter them by location, category, subcategory and date posted
 and sort by date and price.
 Users can do same kind of filtering and searching on their ads and perform CRUD operations on ads.
