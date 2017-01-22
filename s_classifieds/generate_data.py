@@ -11,11 +11,9 @@ import string
 import datetime
 import os
 import options
+from test_data import LIST_OF_NAMES, EMAIL_DOMAINS
 
-EMAIL_DOMAINS = ["yahoo.com", "gmail.com", "hotmail.com", "outlook.com"]
-LIST_OF_NAMES = list()
 LIST_OF_USERS = list()
-NAMES_FILE = os.path.join(options.APPLICATION_FOLDER, "names.txt")
 
 
 def get_list_of_users():
@@ -32,8 +30,6 @@ def init_user_data():
 
     if not LIST_OF_USERS:
 
-        if not LIST_OF_NAMES:
-            load_list_of_names_from_file()
         for name in LIST_OF_NAMES:
             user = dict()
             user["name"] = name
@@ -72,24 +68,10 @@ def get_random_date(within_days_from_now=365):
     return random_date
 
 
-def load_list_of_names_from_file(file_name=NAMES_FILE):
-    """
-    Loads list of names from a file (to be used to generate data to populate database for testing purposes)
-    and assigns it to module global LIST_OF_NAMES
-    :param file_name: file name to load data from
-    :return: None
-    """
-    global LIST_OF_NAMES
-    with open(file_name) as f:
-        LIST_OF_NAMES = f.read().splitlines()
-
-
 def get_random_name():
     """
     :return: randomly selected name form list of names
     """
-    if not LIST_OF_NAMES:
-        load_list_of_names_from_file()
 
     return random.choice(LIST_OF_NAMES)
 
