@@ -95,9 +95,3 @@ def test_get_user_id_by_email():
     non_existing_user_email = "does.notexits@nomail.com"
     print database.get_user_from_email(existing_user_email)
     print database.get_user_from_email(non_existing_user_email)
-
-
-input_data = [l.rstrip() for l in open(generate_data.NAMES_FILE, 'r')]
-
-for l in input_data:
-    print '"'+l+'",'
