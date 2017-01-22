@@ -29,25 +29,34 @@ DEPLOYED_TO_HEROKU = False
 # this option should be set to FALSE
 ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION = True
 
-# Should be set either to DATABASE_POSTGRES or DATABASE_SQLITE (which is currently a default database as well)
-# Configure database urls as required.
-DATABASE_TO_USE = DATABASE_POSTGRES
-
-
 DATABASE_NAME = "s_classifieds"
-POSTGRES_DEFAULT_URL = "postgresql://postgres:postgres@localhost/postgres"
-if DATABASE_TO_USE == DATABASE_POSTGRES:
-    DATABASE_URL = "postgresql://postgres:postgres@localhost/" + DATABASE_NAME
-    DATABASE_URL_USER = "postgresql://catalog:catalog@localhost/" + DATABASE_NAME
+
+if DEPLOYED_TO_HEROKU:
+    DATABASE_TO_USE = DATABASE_POSTGRES
+    HEROKU_DATABASE_URL = os.environ.get('DATABASE_URL', "postgresql://postgres:postgres@localhost/" + DATABASE_NAME)
+    POSTGRES_DEFAULT_URL = "postgresql://postgres:postgres@localhost/postgres"  # this will not be used on Heroku,
+                                                                                # but set it for testing
+    DATABASE_URL = HEROKU_DATABASE_URL
+    DATABASE_URL_USER = HEROKU_DATABASE_URL
 else:
-    if "win" in sys.platform.lower():
-        DATABASE_URL = "sqlite:///" + DATABASE_NAME + ".db"
-    elif "linux" in sys.platform.lower():
-        DATABASE_URL = "sqlite:///" + os.path.join(APPLICATION_FOLDER, DATABASE_NAME)+".db"
+    # Should be set either to DATABASE_POSTGRES or DATABASE_SQLITE (which is currently a default database as well)
+    # Configure database urls as required.
+    DATABASE_TO_USE = DATABASE_POSTGRES
+
+    POSTGRES_DEFAULT_URL = "postgresql://postgres:postgres@localhost/postgres"
+
+    if DATABASE_TO_USE == DATABASE_POSTGRES:
+        DATABASE_URL = "postgresql://postgres:postgres@localhost/" + DATABASE_NAME
+        DATABASE_URL_USER = "postgresql://catalog:catalog@localhost/" + DATABASE_NAME
     else:
-        DATABASE_URL = "sqlite:////" + DATABASE_NAME + ".db"
-    # production database is postgres, so no need to create special user account for sqlite
-    DATABASE_URL_USER=DATABASE_URL
+        if "win" in sys.platform.lower():
+            DATABASE_URL = "sqlite:///" + DATABASE_NAME + ".db"
+        elif "linux" in sys.platform.lower():
+            DATABASE_URL = "sqlite:///" + os.path.join(APPLICATION_FOLDER, DATABASE_NAME)+".db"
+        else:
+            DATABASE_URL = "sqlite:////" + DATABASE_NAME + ".db"
+        # production database is postgres, so no need to create special user account for sqlite
+        DATABASE_URL_USER = DATABASE_URL
 
 # Application configuration: defines cities (can be any city) and subcategories by category)
 CITIES_LIST = ["Johannesburg", "Dongguan", "Tokyo", "Surat", "Yokohama", "Beijing"]

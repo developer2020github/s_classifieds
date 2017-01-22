@@ -26,6 +26,7 @@ def update_heroku_option(option_file_name, heroku_option_tag=HEROKU_OPTION_TAG):
                 l = l.replace("False", "True")
             output_file.write(l)
 
+
 def file_should_be_copied(file_name):
     copy_file = False
     for ext in FILE_EXTENSIONS_TO_INCLUDE:

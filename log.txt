@@ -1,0 +1,913 @@
+commit d8bd0a4eda6e94ea5f4fde3483e157932371bcc8
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 21:16:22 2017 +0400
+
+    Added options flag for deployed to heroku and logic to set it to true
+
+commit 6e7f6a07ecf38e4b6ce4e2811fe8dddb708ee437
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 20:38:31 2017 +0400
+
+    Updated readme with current link
+
+commit 22ff3f5bd15569efe12e7fb3e77d45e2712d344a
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 20:34:40 2017 +0400
+
+    Addeded script to create Heroku-compatible folder structure
+
+commit 094bf0d9418fe079a47ffbff819093c3cdfbfc58
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 15:46:52 2017 +0400
+
+    updated gitignore
+
+commit 655289792c1355db09bf52a05cbb36b07efcd273
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 15:27:21 2017 +0400
+
+    moved procfile to meet Heroku requirements
+
+commit b47f748d774fd3b0e17057fb6bda4ca0094c45dd
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 15:14:34 2017 +0400
+
+    Added procile for Heroku deployment
+
+commit bcef86b5263795be3f41e4032fe4af33cb063d4c
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 21 10:16:43 2017 +0400
+
+    updated readme
+
+commit 50ad76aa848b4e7638cebbaba2055e0c6edbd583
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Jan 19 09:30:15 2017 +0400
+
+    Added "about" page
+
+commit e11fddcd442388a6b0fdbccb2441e32b339d9ae0
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Jan 18 06:24:43 2017 +0400
+
+    Removed unnecessary print statements (leftovers from previous commit).
+
+commit 7279ba1916ec58b88167176b30e38a53bdf139b6
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Jan 18 06:22:35 2017 +0400
+
+    Corrected sql script to ensure new users can be added.
+
+commit fe2b50a149502643c9e627b2e36647f58f9dadae
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Jan 15 18:21:40 2017 +0400
+
+    added script to setup user catalog in Postgres
+
+commit 6a5794df52aaa8e1e84574cadcc88ae165e148de
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 14 17:07:45 2017 +0400
+
+    updated application for deployment on Linux (Ubuntu)
+
+commit 00fb579d665e4ea199ef989f793fbb13f40b5420
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Jan 8 07:53:49 2017 +0400
+
+    Renamed folder and some cleanup - preparing for upload to GitHub
+
+commit 88ba545584954da7b6b7a7464fcd97304bd92c65
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 23:49:56 2017 +0400
+
+    Modified readme and cleaned up some debug printing from main.py
+
+commit 8cd9b83355c1f235159d67faecbb2a0ee8acf3af
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 23:29:41 2017 +0400
+
+    updated readme
+
+commit 95ed99344d04aee81431f19babd8bc170448d0c7
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 23:25:47 2017 +0400
+
+    fixed bug with anonimous user
+
+commit 36d28903dc5dcb8269bce5b2919fcbc417824012
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 19:41:17 2017 +0400
+
+    added user authorization for
+    user_profile
+    delete_user_profile
+    delete_ad
+    edit_ad
+
+commit c1c7746c1b891d1a6e9402837b4ca5f2d3b87c49
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 14:13:03 2017 +0400
+
+    small corrections to readme
+
+commit 7dd1b976b54798340d561a50fbf7555b0593fdb4
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 14:09:43 2017 +0400
+
+    cleaned up templates and readme
+
+commit 142557a02d6e5ceb0a6796be7fcb3f3a1381020d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Jan 7 11:17:44 2017 +0400
+
+    1. Ensured google diconnect http message is displayed to user as a flash message
+    2. Made debug printing optional
+
+commit e763974a3e0accc4d4a7b401bb25469715c5f9ef
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Jan 6 22:36:10 2017 +0400
+
+    added requirements file, renamed some modules to shorter names (make mroe sense) and worked on readme
+
+commit c1a916a58e791a6ae1a0ce2da5a1fb246c3f4e70
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Jan 6 21:25:27 2017 +0400
+
+    cleaned up test_database module
+
+commit e2ec3057b58d023044e38eb8184e92bb1e691a20
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Jan 6 21:21:35 2017 +0400
+
+    cleaned up s_catalog_lib.py module
+
+commit 05a84f689d83616b783cbae8d32726af33af6374
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Jan 6 19:12:53 2017 +0400
+
+    cleaned up populate_database
+
+commit 729b1b11eae9d03c5612975dc2fac713c64c09cb
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Jan 6 18:28:52 2017 +0400
+
+    cleaned up generate data module
+
+commit a67abf1b6b7438dc679ebcb5c0d2d9b0907ec786
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Jan 6 16:25:29 2017 +0400
+
+    Made code more modular, added  option to create postgres database
+
+commit ef389130f342bcb59ff79bbf6aced5101f2fa338
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Jan 5 10:10:05 2017 +0400
+
+    added method to create postgres database
+
+commit 42f8e8b94453c39e018e9d1e586cd07480c7e48f
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Jan 5 09:10:51 2017 +0400
+
+    refactored generate_data module so that all hard-coded options are in s_catalog_options
+
+commit dc757623113b54f539ce9a4600b367f4a41d6e3a
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Jan 5 08:59:33 2017 +0400
+
+    cleaned up database module
+
+commit c75e191af4426246f4c0a4880e7c02dc17dff30d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Jan 4 23:30:12 2017 +0400
+
+    added option to use sqllite
+
+commit 584ea531f02e307ffe0836287e57201c487847bf
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Jan 4 09:42:57 2017 +0400
+
+    cleaned up create-database module
+
+commit faa4f313502e1043a0c9c73760dfd454b9ecf44b
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Jan 4 09:33:10 2017 +0400
+
+    clean up of the main module
+
+commit 0c13ae891ed05c7e5c043d94df66482e38fc2fcc
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 08:51:32 2017 +0400
+
+    correction for previous commit
+
+commit 6050a6e3d1aaeeadca1287e72a8174a49c93eedf
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 08:50:19 2017 +0400
+
+    some clean up for comments
+
+commit 4eafba965757f5783b4682c334ed1200801cf2d7
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 08:45:21 2017 +0400
+
+    cleaned up log in and log out with Google
+
+commit 8743b804fbc4dd78becf5a1732d1af9300412883
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 08:20:05 2017 +0400
+
+    added csrf protection to delete_user_profile
+
+commit 4cfcbc82b0781c280f2a6781f8d406d45f6033fa
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 08:12:29 2017 +0400
+
+    added csrf protection to delete ad and new ad
+
+commit 9da5da8f89dfde815c4dd1f1f6be97399d479b6a
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 07:44:08 2017 +0400
+
+    added csrf protection to edit ad request
+
+commit 9deca5ef045434b9c4e025dab022cdec1608b21a
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Jan 3 07:26:43 2017 +0400
+
+    added csrf protection to update all ads with new user data request
+
+commit 449f64af240ac623b643e7666e26dcce728be917
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Jan 2 23:25:09 2017 +0400
+
+    refactored user profile main form to use flask-wtforms for
+
+commit 41d61a9628e32d6663df24b73652f333cf5a2a9b
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 30 15:54:33 2016 +0400
+
+    refactored get ads into one function for index and my ads views
+
+commit c48e6e92169c6bf8bbe4392655fd33174ad8a190
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 30 11:16:08 2016 +0400
+
+    made email and password based regirtation and login optional
+
+commit baea692456a1931a85242b96d317fd5ebf32de81
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 29 09:12:16 2016 +0400
+
+    added fix for displaying new lines in the ads
+
+commit 49ca200a7384575442575ffed85fffe9230554be
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 29 08:57:02 2016 +0400
+
+    added proper initaliztion for city, category and sub-category for a new ad
+
+commit 2249da7c037fe1aa77f85e3391bfba34928ff1d4
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 29 08:13:50 2016 +0400
+
+    Merged js code for new or edit ad into one module.
+
+commit 4861c6b21a6ac1397cda8cc04130db03067520fd
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 29 08:04:42 2016 +0400
+
+    merged js code for search panel intop one module
+
+commit 35a9d2c24c02575f11a0a2f74cecee0b7301e712
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 28 22:58:53 2016 +0400
+
+    Added a feature to auto-disable sub-categories when categories is set to "all"
+
+commit fd22cea4fb3f731434eed173780430bc5bbb2da1
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 28 08:19:13 2016 +0400
+
+    Worked on styling search panel
+
+commit e8367002859e3f94e7635d43ec98a322ea0027bb
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 28 07:51:01 2016 +0400
+
+    added ad number
+
+commit 5cef1d3989303612e13f3c0af7b41bc6dbd3e99c
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 28 07:45:08 2016 +0400
+
+    styled my ads page
+
+commit 0aa7110ae27546ef0da904998ee0b721383fce8d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 27 22:18:47 2016 +0400
+
+    fixed bug in template
+
+commit db493aa7406cf09bb7cbfba73a23c1e4fadf485d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 27 09:06:06 2016 +0400
+
+    re-styled ads list on the main page
+
+commit ca7a1b2cac5d4c42935b3594835088d09c76c241
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 27 08:42:54 2016 +0400
+
+    refactored displaying lists of ads (result of search reauests) to use a common function
+
+commit 0e022c25f924e442bb5f52ca552e701212f33cbe
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 27 07:48:01 2016 +0400
+
+    added proper filtering by category to my ads page
+
+commit 9998d841ce3e3f2e7f17cc3e042e9ea95828d7ae
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 27 07:41:58 2016 +0400
+
+    implemented filtering by category wihtout selected sub-category
+
+commit b290b12956592a1c5228dc730e2fac17f70d4ff1
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 26 22:41:47 2016 +0400
+
+    started working on filtering by category
+
+commit ba487eb76f2d856e71995f8a593ba547773626dd
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 26 22:32:01 2016 +0400
+
+    changed styling of nav buttons
+
+commit 1a9dd2dbd249c7976f1217f3044a6b0e6883e3e9
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 26 22:25:31 2016 +0400
+
+    added JSON endpoint for single selected ad
+
+commit 88ea4d29a48e7b21902180e30c0f0ee822586fcf
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 24 20:14:19 2016 +0400
+
+    modified nav bar so that user is shown only applicable nav links depending on if they are logged in or not
+
+commit 1044c8c4eb28adeb3c211aa0221ed15661897194
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 24 19:48:21 2016 +0400
+
+    changed styling of nav bar
+
+commit 91659244eab675d364ff8a5087a3f20f621d42d8
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 24 16:44:18 2016 +0400
+
+    Implemented delete user profile functionality.
+
+commit c86d571bf6dadfb3745627ffb8b3e6b068c86cf7
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 24 16:01:41 2016 +0400
+
+    Added comments for the function added in previous commit.
+
+commit cd8b5da6b2791fac2389cf1a85434f5983cadf08
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 24 15:57:18 2016 +0400
+
+    Implemented user profile updates
+
+commit ad5b7821449acdaa32a588b8c745681df256d091
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 24 10:14:49 2016 +0400
+
+    restored templates/displayed_my_ad - was deleted by mistake
+
+commit 4a9599fe17b4d30483c986f33a7e15c85356fd5e
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 22:26:49 2016 +0400
+
+    Started updating user profile page to have modifyable fields (name and phone number)
+
+commit 661ca942f5a313487f612a291453494d6a445c9f
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 22:03:55 2016 +0400
+
+    Fixed user status display for current ad page. Deleted one more unused template.
+
+commit 2144581e0a1a24f634a8903af9e2c1c035a8db17
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 21:57:11 2016 +0400
+
+    included standard bav bar into ad page
+
+commit 36def46d1537e288b5a247c502806c1522607441
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 21:53:38 2016 +0400
+
+    some code clean-up - removed unused pages/templates
+
+commit 5a70b978e4121e0aee4c1123e2b55430f4674391
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 15:45:34 2016 +0400
+
+    added error processing to simple regitration post requests
+
+commit 0425bad06bc46277ce01fd5f4e40a5e6bab77cde
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 14:17:54 2016 +0400
+
+    added error handling for simple login
+
+commit cfad41acdefa14c24a4866ad1fcb18fc42ba9aae
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 11:37:37 2016 +0400
+
+    styled login or register page
+
+commit 9db8aed1907a5a8c15709d325a6b4c7fdd2abfed
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 23 10:24:10 2016 +0400
+
+    merged google login, normal login and normal registration into one page
+
+commit 9b06374eec917d76a411b93c8c53ed2a29056198
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 22 07:49:28 2016 +0400
+
+    started working on login or register page
+
+commit 257916b099c3b18a0b3d829a8c70cd88e12c271c
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 22 06:34:32 2016 +0400
+
+    Moved commong portion of new and edit ad into common include file. Made small udpates to styling of these pages.
+
+commit 9f5b16d7eb7a8c868af920677b9d19530ebc281e
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Dec 22 05:50:50 2016 +0400
+
+    Changed styling of search panel title
+
+commit 5762f4e53142df6389e1eef8fa40040470a9f795
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 21 21:58:32 2016 +0400
+
+    modified affected pages to use navbar include
+
+commit af2256343767c19707caa8179630c5be6465f915
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 21 08:11:01 2016 +0400
+
+    1) added readme file 2) modified nav logig into a standard nav bar and moved it into an include file so it can be used by all pages
+
+commit 8703a8ab7017848355eb5bff2ad946f13364a76f
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Dec 21 06:02:13 2016 +0400
+
+    added json endpoints for list of cities and ads per city
+
+commit ee4921f75bd50be71a55712c0a95923c9d0c5387
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 19 21:46:14 2016 +0400
+
+    merged ad displaay for current ad and delete ad
+
+commit 4297aa995641263c73580d8c067fd9ef26b7acd4
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 19 21:33:09 2016 +0400
+
+    Using include for search panel in my ads as well
+
+commit 86a0278fe493a806141cff4985d641228604f998
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 19 08:51:46 2016 +0400
+
+    moved left search panel into a separate file
+
+commit 1010e0468c29a09bf82a936d933a5f340a328987
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 19 08:34:32 2016 +0400
+
+    Ensured url_for is used in redirects
+
+commit faa2a6c3c14477c32d58bc5b8b353f59a919c713
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 19 08:14:34 2016 +0400
+
+    Ensured url_for is used in templates for css and js
+
+commit 607770de25150d3f2582c7019ee7ce537b75342f
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 19 07:36:35 2016 +0400
+
+    styled main portion of current ad page
+
+commit 0948f7f28c8f3d4965d6f6effcd3380667a27308
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 22:23:21 2016 +0400
+
+    updated ad page
+
+commit ec5c3423f1492ea9f6988aeb35e32e372ba56cd3
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 20:52:52 2016 +0400
+
+    basic functionality for adding new ad
+
+commit e88fa88acd55b2181c7714699c46af1420722934
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 08:50:02 2016 +0400
+
+    Continued working on addition of new ad. Commiting current code.
+
+commit ee1065802fdfd0ca9a610b58f1fb48abd25da181
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 08:44:05 2016 +0400
+
+    Added form for new add addition
+
+commit 565742ade6f2399df2125af6db6856dd533d8bb8
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 08:09:31 2016 +0400
+
+    Added sceleton of new ad page
+
+commit 46d50965eaf16617f17ac1d5e98652d14c769020
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 07:59:51 2016 +0400
+
+    Added basic functionality for delete ad
+
+commit 8d90d5b25de3c7cc0fe93e000cf2985a72edba5b
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 18 07:23:02 2016 +0400
+
+    Improved layout of edit my ad page: smaller boxes for entries
+
+commit 25eca38584ea3c72a2cc073eba42d41640b20137
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 17 18:40:28 2016 +0400
+
+    changed colors in edit my ad page
+
+commit 1dedfc2bfc3aece495ebc6bbd49f5ed738769fc1
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 17 18:27:41 2016 +0400
+
+    modified myads page so that only cities in which user actually has ads are displayed
+
+commit e87c2a712ee79dbcaa1aeebc3a8ac2450c65422d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 17 18:00:15 2016 +0400
+
+    modified search manu for my ads page so that only user-specific categories and sub-categories are displayed
+
+commit 969d2e6bbea335c038a01b132d5865a532026ae6
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 17 17:07:25 2016 +0400
+
+    added functions to get user-specific categories and sub-categories (ones in which user has ads)
+
+commit 76ef18f5b497570d3eeba4d7f1ea17aef670580b
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 17 14:41:41 2016 +0400
+
+    added functions list_of_int_to_int and int_to_list_of_int to the library
+
+commit 456142128cd7875e8d3370fa4c14a4066c538225
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 16 21:18:38 2016 +0400
+
+    added display of contact emails in the list of ads
+
+commit 7aa24b03d160d969e749b27d1c8f225d6630ff09
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 16 18:33:06 2016 +0400
+
+    added basic functionality for ad updates
+
+commit da32820fa4eea87744bf51b3a0acf15d25d7e407
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 13 07:57:03 2016 +0400
+
+    added names to all form fields in edit ad form
+
+commit 656d633e1bdbd74329626760ea0ec4300a702952
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Dec 13 06:24:59 2016 +0400
+
+    removed code not used for this page
+
+commit 822941998ff3f39c0697d3c66de052836853f40b
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 12 23:37:31 2016 +0400
+
+    implemented proper auto-selection of sub-category on edit page load/reload
+
+commit 2e1d02879b7ae3878ab6c7db81c1629e0dd2c268
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 12 09:27:48 2016 +0400
+
+    automatic selection of current category in the edit form
+
+commit acec80b22a7f3d4a5537b794ba1ded25993e68ab
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 12 09:20:52 2016 +0400
+
+    categories and sub categories selection working
+
+commit f9827713d539af62a152b9c5991a189afb1e8ff9
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 12 08:59:01 2016 +0400
+
+    Added city selection drop-down menu
+
+commit d1dd8874a2fe376fd871f41d6438ad661b477bf1
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Dec 12 08:43:04 2016 +0400
+
+    converted edit ad page into a form
+
+commit 4d1e7fe0fc4f74c70f59c5047bd09af97fdea40a
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 11 22:25:33 2016 +0400
+
+    added edit my ad page
+
+commit ded486f86d0ac826470ed3414c6bc181559fc7c9
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 11 21:41:21 2016 +0400
+
+    my ads page with filtering and user access
+
+commit b156bcfdd23644f586a7c787a85e935e3f2c0496
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 11 16:01:13 2016 +0400
+
+    added some basic handling for my ads page
+
+commit 754a679174da6c77231c0fd01803acefcac4e530
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Dec 11 13:04:28 2016 +0400
+
+    first iteration of combining flask-login and oauth2
+
+commit 5c1a5f8e74cec115a0ffbdc1785c4d2a7b806f85
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 10 16:09:58 2016 +0400
+
+    added user login with e-mail and password without using Google
+
+commit 7593b327fd146b58a7a462d06ff41d836b5be02e
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 3 16:25:02 2016 +0400
+
+    fixed a bug in previous commit - now if user name is not set it will alway be displayed as "no set"
+
+commit 6cde6e9821cbd5fad3b9cfd1ea24301b31bec656
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Dec 3 16:08:34 2016 +0400
+
+    1) Modified code so user is automatically added if they signed in with Google
+    2) Added user profile page
+
+commit 27389b48cbe1b2c65dc69d1ab4b4d5e61d9f970e
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 2 21:59:27 2016 +0400
+
+    modified google login code
+    added log out
+
+commit cc7498bda4a40965fe1a57355348b6b6c9fd51cd
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Dec 2 14:25:59 2016 +0400
+
+    initial version of goodle signin
+
+commit 49a8a37c251e6b447c1686375e1775909e3eb220
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Nov 26 20:56:58 2016 +0400
+
+    worked on styling main page
+
+commit 24a2ba02a81f0da4c85ed47d59bcfcc148c4fc15
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Nov 26 09:47:11 2016 +0400
+
+    updated front end to display selected search items titles properly
+
+commit fab345258ea8f34aac7318f0b3063d3d28a995d5
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Nov 26 08:37:50 2016 +0400
+
+    small front end change in line of previous commit
+
+commit cc4f21981f309e6b0fa2deba3d38fc0873da1b16
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Nov 26 06:35:25 2016 +0400
+
+    corrected back end behavior for the case where number of returned ads is zero
+
+commit 9cab0c3abfbf75ec784b9be3a580e4543b5a0917
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Nov 26 05:53:57 2016 +0400
+
+    corrected city selection menu so that city id is used instead of city name.
+
+commit 1e6c4e1e57d0360a1d093b1459ef61cb33c92cb2
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Nov 24 21:40:30 2016 +0400
+
+    Converted second search bar into search status diaplay (no need to have second
+    instance  of search GUI)
+
+commit 3c96eb388c1f149a4609d124a38d3ced4df106f2
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 20 19:29:23 2016 +0400
+
+    added interface for sorting options
+
+commit 269e5a46a1747be274ab072050622bb539805862
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 20 19:13:28 2016 +0400
+
+    ensured min and max values displayed are always correctly aligned with database
+    data
+
+commit fcaad945f532ba2fae2cf4a96a9d1bd7cec32b96
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 20 17:27:00 2016 +0400
+
+    added display of min and max number of ads
+
+commit 3b4cb33495b14e52d2a4cd867c022145ffae5c9e
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 20 17:17:06 2016 +0400
+
+    added display of total number of ads selected
+
+commit 43a8e62276398dc5735e421d0546e9b6237fd066
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 20 16:22:28 2016 +0400
+
+    Added initialization of list of ads when page is loaded first time.
+
+commit b3b3e805747ddb726354bc97bd62cb10b31a2198
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Nov 16 07:17:23 2016 +0400
+
+    latest updates on filters
+
+commit c053d35529316fc3b28d652403af7c01c21afaf1
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 13 08:49:40 2016 +0400
+
+    started building filters
+
+commit c7012839605e3946c9bba24b0b8aaf0f7c70297f
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Nov 13 08:08:20 2016 +0400
+
+    changed code so that categories and subcategories are available by id
+
+commit 8c663ec746c8b0f9119b06dfebefc99296116504
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sat Nov 12 08:24:14 2016 +0400
+
+    added filtering function for back end
+
+commit 4f8172e2a9b20aa8ff94871663a1ffeb6fb3715d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Nov 11 22:20:23 2016 +0400
+
+    started implementing AJAX requests for showing more ads
+
+commit 4d0f3679f695b366bf40e466cb0d1fc9f4f4a851
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Nov 11 17:34:01 2016 +0400
+
+    moved javascript form end of page into a js file.
+    added more and less buttons to the index page - started working on
+    displayign list of ads.
+
+commit 5f5ca0422c9e0792f20eaa165e805aa4ecefae7e
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Nov 11 16:15:54 2016 +0400
+
+    modified ad view so that data is taken from the database
+
+commit bd7168ba9f017d1abd4bc65eddb167bf4ccf09b7
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Nov 10 08:05:32 2016 +0400
+
+    started working on ad template with real DB data
+
+commit ee87c1b800cd280fa4357239d32d1aface7cfb5b
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Nov 10 07:44:36 2016 +0400
+
+    added code to populate ads table
+
+commit 425cd00289a9a36faa9fa7881369605fee3110b6
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Nov 10 06:46:35 2016 +0400
+
+    refactored populate_database and deleted non-used modules
+
+commit 1ed7526e31466034d8001c1d0e210266701f4096
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Nov 9 08:46:25 2016 +0400
+
+    added function to populate database with testing user data
+
+commit bebb68b61e6d56d9dc07ed0e892b4151158cc881
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Nov 9 08:16:38 2016 +0400
+
+    made categories subcategories and cities populated by data from the database
+
+commit e03c02f4e9c26320ae0fc30270efd5072c2b16d6
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Nov 9 08:02:50 2016 +0400
+
+    added code to create initial database tables in postgres.
+    started switching to real database data in the applciation.
+
+commit 9973a853a28815ef392d5cd786612626e274e553
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Nov 8 08:30:23 2016 +0400
+
+    modified delete database functionality so that all tables are properly
+    deleted
+
+commit 074b280500a7c47599c37096db4a6de29def276d
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Nov 8 08:10:52 2016 +0400
+
+    added code to create database schema
+
+commit b34fa5cf9e7e3ab5b5b8d0717027903d6352d61f
+Author: developer2020 <dev276236@gmail.com>
+Date:   Fri Nov 4 09:53:26 2016 +0400
+
+    1) Continue working on the database
+    2) Added more info to current ad display
+
+commit 2a720a1c5862d1e21b3784845edf7d135cf20f9c
+Author: developer2020 <dev276236@gmail.com>
+Date:   Thu Nov 3 08:59:28 2016 +0400
+
+    Started working on databse integrarion (postgresql). Added some workign sample code.
+
+commit e7e0c7b7582bb4f8fa9f941785e66bca7d6ad121
+Author: developer2020 <dev276236@gmail.com>
+Date:   Wed Nov 2 09:15:57 2016 +0400
+
+    Started working on displaying selected ad.
+
+commit d3b97a925613d4fbdcf55ee3b6f7d6cb4f1614d6
+Author: developer2020 <dev276236@gmail.com>
+Date:   Tue Nov 1 08:52:31 2016 +0400
+
+    Added module that generates random data for testing and demo purposes.
+
+commit aceb1c904945f5070b8deca50162f4002eb9eb38
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Oct 31 08:54:49 2016 +0400
+
+    Added module to be used for data generation for testing and development purposes.
+
+commit a66b64745f0308371b2af1ecad3c1c54da9860c3
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Oct 31 08:49:22 2016 +0400
+
+    Implemented proper templating for city names
+
+commit 0eb70c51eda6d8dff90d68df06544ca23f7c7cdc
+Author: developer2020 <dev276236@gmail.com>
+Date:   Mon Oct 31 08:30:12 2016 +0400
+
+    Implemented templating for sub-categories search selection on the main browsing page
+
+commit 43fb62e2a80bade0d703f588d60af8786eda0401
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Oct 30 22:15:44 2016 +0400
+
+    Added database tables mock up code. Started converting index.html into template.
+
+commit 15bde2a7110bb1b1f41eb1b598bd90fdbfdfafa5
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Oct 30 07:48:14 2016 +0400
+
+    added main file for Flask project for back end
+
+commit 48795ad9484afa9fcb439227512a25e3dc979517
+Author: developer2020 <dev276236@gmail.com>
+Date:   Sun Oct 30 07:33:00 2016 +0400
+
+    initial commit: protorype of main index page

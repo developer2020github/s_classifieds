@@ -43,6 +43,7 @@ from flask import session as login_session
 from forms import LoginForm, RegisterForm, UpdateUserInfoForm
 import database
 import create_database
+import populate_database
 import json
 import lib
 import os
@@ -826,10 +827,29 @@ def print_current_session(printing_on = options.DEBUG_PRINT_ON):
     for i in login_session:
         print str(i) + " : " + str(login_session[i])
 
-if __name__ == '__main__':
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 #debug option to be sure updates are applied right away
+
+def run_heroku():
+    """
+    Runs application in deployed configuration on Heroku
+    :return:
+    """
+    app.secret_key = "secret key"  # used to sign sessions, need to change it to a properly generated key in production
+
+    create_database.connect_to_db_and_populate_initial_data()
+    populate_database.repopulate_all_tables()
+    #app.debug = True
+    #app.run(port=5000)
+    app.run(host='0.0.0.0')
+
+
+def run_debug():
+    """
+    Runs application with debug on, normally to be used for local debugging and development
+    :return:
+    """
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # debug option to be sure updates are applied right away
     app.debug = True
-    app.secret_key = "secret key" #used to sign sessions, need to change it to a properly generated key in production
+    app.secret_key = "secret key"  # used to sign sessions, need to change it to a properly generated key in production
 
     if options.LOCAL_HOST == options.LOCAL_HOST_WINDOWS:
         app.run(port=5000)
@@ -837,5 +857,12 @@ if __name__ == '__main__':
         app.run(host='0.0.0.0', port=5000)
     else:
         app.run(port=5000)
+
+if __name__ == '__main__':
+    if options.DEPLOYED_TO_HEROKU:
+        run_heroku()
+    else:
+        run_debug()
+
 else:
-    app.secret_key="secret key"
+    app.secret_key = "secret key"

@@ -122,6 +122,14 @@ class Ad(Base):
     title = Column(String(250))
 
 
+def connect_to_db_and_populate_initial_data():
+    engine = create_engine(options.DATABASE_URL)
+    Base.metadata.create_all(engine)
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    populate_application_initial_data(session)
+
+
 def populate_application_initial_data(current_session):
     """
     This function populates database tables that are required to
@@ -152,21 +160,18 @@ def populate_application_initial_data(current_session):
         current_session.commit()
 
 
-def create_database_and_populate_initial_data():
+def create_database_and_populate_initial_data(force_create_database=False):
     """
-    This function creates database and calls populate_application_initial_data to add initial dato
+    This function creates database and calls populate_application_initial_data to add initial data
     into tables that need to be populated before application can be used.
+    :param force_create_database: if set to True, there will be no check if database already exists
     :return: None
     """
-    if not lib.database_exists(options.DATABASE_URL):
+    if force_create_database or not lib.database_exists(options.DATABASE_URL):
         if options.DATABASE_TO_USE == options.DATABASE_POSTGRES:
             lib.create_postgres_database(options.DATABASE_NAME)
 
-    engine = create_engine(options.DATABASE_URL)
-    Base.metadata.create_all(engine)
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
-    populate_application_initial_data(session)
+    connect_to_db_and_populate_initial_data()
 
 if __name__ == "__main__":
     create_database_and_populate_initial_data()
