@@ -834,9 +834,9 @@ def run_heroku():
     :return:
     """
     app.secret_key = "secret key"  # used to sign sessions, need to change it to a properly generated key in production
-
-    create_database.connect_to_db_and_populate_initial_data()
-    populate_database.repopulate_all_tables()
+    if not create_database.table_exists("user"):
+        create_database.connect_to_db_and_populate_initial_data()
+        populate_database.repopulate_all_tables()
     #app.debug = True
     #app.run(port=5000)
     app.run(host='0.0.0.0')

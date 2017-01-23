@@ -173,6 +173,22 @@ def create_database_and_populate_initial_data(force_create_database=False):
 
     connect_to_db_and_populate_initial_data()
 
+
+def table_exists(table_name, database_url=options.DATABASE_URL):
+    """
+    To be used to determine if a table exixts in the database.
+    :param table_name: table name
+    :param database_url:  database URL
+    :return: True if table already exists in the database, False otherwise
+    """
+    engine = create_engine(database_url)
+    exists = False
+    if engine.dialect.has_table(engine, table_name):
+        exists = True
+    engine.dispose()
+    return exists
+
+
 if __name__ == "__main__":
     create_database_and_populate_initial_data()
 

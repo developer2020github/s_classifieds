@@ -95,3 +95,7 @@ def test_get_user_id_by_email():
     non_existing_user_email = "does.notexits@nomail.com"
     print database.get_user_from_email(existing_user_email)
     print database.get_user_from_email(non_existing_user_email)
+
+database_url = "postgresql://postgres:postgres@localhost/s_classifieds"
+print create_database.table_exists("user", database_url)
+print create_database.table_exists("somebody", database_url)

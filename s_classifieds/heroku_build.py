@@ -13,7 +13,7 @@ HEROKU_FOLDER_PATH = os.path.join(os.path.dirname(APPLICATION_FOLDER), HEROKU_FO
 
 SUBFOLDERS_TO_COPY = ("templates", "static")
 FILE_EXTENSIONS_TO_INCLUDE = (".css", ".html", ".py")
-OTHER_FILES_TO_INCLUDE = ("Procfile", "requirements.txt")
+OTHER_FILES_TO_INCLUDE = ("Procfile", "requirements.txt", "client_secret.json")
 HEROKU_OPTION_TAG = "DEPLOYED_TO_HEROKU"
 OPTIONS_FILE_NAME = "options.py"
 
