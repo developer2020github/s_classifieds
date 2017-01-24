@@ -1,6 +1,7 @@
 *.pyc
 ref/
 *test_module*.py
+*misc_test*.py
 s_classifieds/static/bower_components
 s_classifieds/backups
 s_classifieds/s_classifieds.db

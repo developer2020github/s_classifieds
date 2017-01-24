@@ -16,6 +16,7 @@ FILE_EXTENSIONS_TO_INCLUDE = (".css", ".html", ".py")
 OTHER_FILES_TO_INCLUDE = ("Procfile", "requirements.txt", "client_secret.json")
 HEROKU_OPTION_TAG = "DEPLOYED_TO_HEROKU"
 OPTIONS_FILE_NAME = "options.py"
+FILES_TO_IGNORE = ("misc_test.py",)
 
 
 def update_heroku_option(option_file_name, heroku_option_tag=HEROKU_OPTION_TAG):
@@ -32,11 +33,13 @@ def file_should_be_copied(file_name):
     for ext in FILE_EXTENSIONS_TO_INCLUDE:
         if file_name.endswith(ext):
             copy_file = True
-            return copy_file
 
     if file_name in OTHER_FILES_TO_INCLUDE:
         copy_file = True
-        return copy_file
+
+    if file_name in FILES_TO_IGNORE:
+        copy_file = False
+        
     return copy_file
 
 if not os.path.exists(HEROKU_FOLDER_PATH):
