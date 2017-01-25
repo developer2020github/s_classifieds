@@ -39,7 +39,7 @@ def file_should_be_copied(file_name):
 
     if file_name in FILES_TO_IGNORE:
         copy_file = False
-        
+
     return copy_file
 
 if not os.path.exists(HEROKU_FOLDER_PATH):

@@ -836,10 +836,12 @@ def run_heroku():
     app.secret_key = "secret key"  # used to sign sessions, need to change it to a properly generated key in production
     if not create_database.table_exists("user"):
         create_database.connect_to_db_and_populate_initial_data()
-        populate_database.repopulate_all_tables()
+        #populate_database.repopulate_all_tables()
     #app.debug = True
     #app.run(port=5000)
-    app.run(host='0.0.0.0')
+    port = int(os.environ.get("PORT", 33507))
+    app.run(host="0.0.0.0", port=port)
+
 
 
 def run_debug():
@@ -865,4 +867,4 @@ if __name__ == '__main__':
         run_debug()
 
 else:
-    app.secret_key = "secret key"
+    app.secret_key = "secret key" # need to change this in production
