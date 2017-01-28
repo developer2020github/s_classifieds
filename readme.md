@@ -1,5 +1,5 @@
 ##S-classifieds
-[S-classifieds](http://35.166.234.43/)
+[S-classifieds](https://s-classifieds.herokuapp.com/)
 is a personal/demo project: a simple classifieds board.
 It allows to post textual ads, filter them by location, category, subcategory and date posted
 and sort by date and price.
@@ -10,20 +10,29 @@ They can also update and delete their profile information.
 1. JavaScript, HTML, CSS: jQuery, Bootstrap
 2. Python: Flask, SQLAlchemy
 3. Database: PostgreSQL
+4. Deployed on Heroku
 
 ##Installing and running project
-######1. Ensure you have latest version of Python 2.7.* installed. Note application was dveloped with Python 2.7.8 but should work with later versions of Python 2.7.
-######2. Install Python packages as specified in the file requirements.txt (Refer to https://pip.pypa.io/en/stable/reference/pip_freeze/ for installation procedure). There are multiple packages to install, so you may want to use a Virtual Environment (http://docs.python-guide.org/en/latest/dev/virtualenvs/).
-######3. Application supports two options for databases: postgresql and sqlite. Default configuration is sqlite. For testing and evaluation purposes there is no need to install postgresql.
-######4. Create database (see "Creating database" section)
-######5. Run module main.py
-######6. In a browser, navigate to http://localhost:5000/
+1. Ensure you have latest version of Python 2.7.* installed. 
+2. Install Python packages as specified in the file requirements.txt (Refer to https://pip.pypa.io/en/stable/reference/pip_freeze/ for installation procedure). There are multiple packages to install, so you may want to use a Virtual Environment (http://docs.python-guide.org/en/latest/dev/virtualenvs/).
+3. Application supports two options for databases: postgresql and sqlite. For testing and evaluation purposes there is no need to install postgresql.
+4. Create database (see "Creating database" section)
+5. Run module main.py
+6. In a browser, navigate to http://localhost:5000/
+
 #####Creating database
-Step 1: To create an empty database, run module create_database. This is sufficient to run the application.
-Step 2: To populate it with fake ads and users for testing (for example, to evaluate how filtering and sorting works) run module populate_database.
-populate_database will output list of created user accounts(emails) to console.
-It is not possible to log in to any of these accounts with option
-ENABLE_EMAIL_AND_PASSWORD_LOGIN_AND_REGISTRATION set to False. However, if desired, enable option (refer to module options.py), restart application and login into any of these accounts with password "s_classifieds" and e-mail that was output to console by populate_database.
+######Local setup
+Step 1: To create an empty database, run module create_database. Note for PostrgeSQL user postres with password postres should exist.
+Step 2: For PotgresSQL, login to psql and run script setup_user_access.sql. This wil setup user catalog which is utilized by the applciation for 
+normal access. 
+This is sufficient to run the application.
+
+Step 3: To populated datase with fake ads and users for testing (for example, to evaluate how filtering and sorting works) run module populate_database.
+populate_database will output list of created user accounts(emails) to console and populate database with random ads.
+######On Heroku 
+Application will create the database and populate it test data when it is initialized for the first time. 
+If needed test data can also be populated by running command 
+heroku run heroku run python populate_database.py
 
 
 #####API endpoints###

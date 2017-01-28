@@ -129,4 +129,7 @@ def repopulate_all_tables():
 
 
 if __name__ == "__main__":
-    repopulate_all_tables()
+    if options.DEPLOYED_TO_HEROKU:
+        populate_application_test_data()
+    else:
+        repopulate_all_tables()
