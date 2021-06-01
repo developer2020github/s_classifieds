@@ -30,7 +30,7 @@ rsa==3.4.2
 six==1.10.0
 SQLAlchemy==1.0.15
 uritemplate==3.0.0
-urllib3==1.19.1
+urllib3==1.26.5
 Werkzeug==0.11.11
 wrapt==1.10.8
 WTForms==2.1
